@@ -19,8 +19,8 @@ export const fetchProvinces = async () => {
             }
         });
         return response.data;
-    } catch (error) {
-        console.error('Lỗi khi lấy dữ liệu tỉnh thành:', error);
+    } catch {
+        return;
     }
 };
 
@@ -33,8 +33,8 @@ export const fetchDistrictsByProvinceCode = async (provinceCode) => {
             },
         });
         return response.data;
-    } catch (error) {
-        console.error('Lỗi khi lấy dữ liệu thành phố/huyện:', error);
+    } catch {
+        return;
     }
 };
 
@@ -48,7 +48,7 @@ export const fetchWardsByDistrictCode = async (districtCode) => {
             },
         });
         return response.data;
-    } catch (error) {
-        console.error('Lỗi khi lấy dữ liệu phường/xã:', error);
+    } catch {
+        return;
     }
 };

@@ -2,9 +2,9 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const IP = process.env.EXPO_PUBLIC_IP_ADDRESS;
-const LOGIN=process.env.EXPO_PUBLIC_API_LOGIN;
+const API_LOGIN=process.env.EXPO_PUBLIC_API_LOGIN;
 
-const REST_API_LOGIN = IP+LOGIN;
+const REST_API_LOGIN = IP+API_LOGIN;
 
 export const loginUser = async (userName, password) => {
     try {

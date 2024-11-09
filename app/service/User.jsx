@@ -1,10 +1,9 @@
 import axios from 'axios'
 
-
 const IP = process.env.EXPO_PUBLIC_IP_ADDRESS;
-const REGISTER=process.env.EXPO_PUBLIC_API_REGISTER;
+const API_REGISTER=process.env.EXPO_PUBLIC_API_REGISTER;
 
-const REST_API_REGISTER = IP+REGISTER;
+const REST_API_REGISTER = IP+API_REGISTER;
 
 export const createUser = async (userData) => {
     try {

@@ -16,7 +16,10 @@ export default function Login() {
     
     if (response) {
       await setToken('accessToken', response.token);
-      console.log(response.token);
+      await setIdLogin('customerId',response.id);
+
+      console.log("id: "+response.id);
+      console.log("token: "+response.token);
       
       navigator.navigate('(tabs)/Home');
 
