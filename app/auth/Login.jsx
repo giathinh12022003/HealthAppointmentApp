@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, Button, ToastAndroid } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, ToastAndroid, TouchableOpacity } from 'react-native';
 import React from 'react'
 import { Link, useNavigation } from 'expo-router'
 import { useState } from 'react';
@@ -13,14 +13,14 @@ export default function Login() {
 
   const handleLogin = async () => {
     const response = await loginUser(userName, password);
-    
+
     if (response) {
       await setToken('accessToken', response.token);
-      await setIdLogin('customerId',response.id);
+      await setIdLogin('customerId', response.id);
 
-      console.log("id: "+response.id);
-      console.log("token: "+response.token);
-      
+      console.log("id: " + response.id);
+      console.log("token: " + response.token);
+
       navigator.navigate('(tabs)/Home');
 
       ToastAndroid.show('Đăng nhập thành công!', ToastAndroid.BOTTOM);
@@ -32,24 +32,29 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      <Text style={tw`text-lg font-bold mb-2`}>Email hoặc Số điện thoại:</Text>
+      <Text style={tw`text-lg font-bold mb-1 text-left w-full`}>Email hoặc Số điện thoại:</Text>
       <TextInput
-        style={tw`w-full h-10 border border-gray-300 rounded-md px-3 mb-4`}
+        style={tw`w-full h-12 border border-gray-300 rounded-md px-3 mb-4 text-lg`}
         value={userName}
         onChangeText={setUserName}
         placeholder="Nhập email hoặc số điện thoại"
         keyboardType="email-address"
       />
 
-      <Text style={tw`text-lg font-bold mb-2`}>Mật khẩu:</Text>
+      <Text style={tw`text-lg font-bold mb-1 text-left w-full`}>Mật khẩu:</Text>
       <TextInput
-        style={tw`w-full h-10 border border-gray-300 rounded-md px-3 mb-6`}
+        style={tw`w-full h-12 border border-gray-300 rounded-md px-3 mb-6 text-lg`}
         value={password}
         onChangeText={setPassword}
         placeholder="Nhập mật khẩu"
         secureTextEntry={true}
       />
-      <Button title="Đăng nhập" onPress={handleLogin} color="#3b82f6" />
+      <TouchableOpacity
+        style={tw`rounded-full bg-blue-500 p-4 w-full flex items-center justify-center`}
+        onPress={handleLogin}
+      >
+        <Text style={tw`text-white text-lg`}>Đăng nhập</Text>
+      </TouchableOpacity>
 
       <Link href="/auth/Register" style={tw`mt-4 text-blue-600`}>
         Đăng ký tài khoản

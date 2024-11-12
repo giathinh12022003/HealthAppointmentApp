@@ -4,7 +4,7 @@ import { getToken } from './Token';
 const IP = process.env.EXPO_PUBLIC_IP_ADDRESS;
 const API_GET_DOCTOR_DATA = process.env.EXPO_PUBLIC_API_GET_DOCTOR_DATA;
 
-const REST_API_DOCTOR = IP + API_GET_DOCTOR_DATA;
+const REST_API_DOCTOR = `${IP}${API_GET_DOCTOR_DATA}`;
 
 export const getDoctors = async (page, size) => {
   try {

@@ -1,4 +1,4 @@
-import { Modal, Text, View, TextInput, Button, ToastAndroid, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+import { FlatList, Modal, Text, View, TextInput, Button, ToastAndroid, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigation } from 'expo-router';
 import { RadioButton } from 'react-native-paper';
@@ -111,7 +111,6 @@ export default function PatientProfile() {
       console.error('Error fetching wards:', error);
     }
   };
-
 
   // Format date for display
   const formatDate = (date) => {
@@ -236,18 +235,19 @@ export default function PatientProfile() {
 
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Dân tộc:</Text>
           <Picker
+            mode="dropdown"
             selectedValue={nation}
             onValueChange={(value) => setNation(value)}
             style={tw`w-full mb-4`}
           >
-            <Picker.Item label="Chọn dân tộc" value=""/>
+            <Picker.Item label="Chọn dân tộc" value="" />
             {nations.map((item, index) => (
-              <Picker.Item key={index} label={item.name} value={item.code}/>
+              <Picker.Item key={index} label={item.name} value={item.code} />
             ))}
           </Picker>
 
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Nghề nghiệp:</Text>
-          <Picker selectedValue={occupation} onValueChange={(value) => setOccupation(value)} style={tw`w-full mb-4`}>
+          <Picker mode="dropdown" selectedValue={occupation} onValueChange={(value) => setOccupation(value)} style={tw`w-full mb-4`}>
             <Picker.Item label="Chọn nghề nghiệp" value="" />
             {/* Add additional options here */}
           </Picker>
@@ -272,11 +272,12 @@ export default function PatientProfile() {
 
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Quốc gia sinh sống:</Text>
           <Picker
+            mode="dropdown"
             selectedValue={country}
             onValueChange={(value) => setCountry(value)}
             style={tw`w-full mb-4`}
           >
-            <Picker.Item label="Chọn quốc gia" value=""/>
+            <Picker.Item label="Chọn quốc gia" value="" />
             {countries.map((item, index) => (
               <Picker.Item key={index} label={item.label} value={item.code} />
             ))}
@@ -284,6 +285,7 @@ export default function PatientProfile() {
 
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Tỉnh thành:</Text>
           <Picker
+            mode="dropdown"
             selectedValue={province}
             onValueChange={handleProvinceChange}
             style={tw`w-full mb-4`}
@@ -297,6 +299,7 @@ export default function PatientProfile() {
 
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Thành phố/huyện:</Text>
           <Picker
+            mode="dropdown"
             selectedValue={district}
             onValueChange={handleDistrictChange}
             style={tw`w-full mb-4`}
@@ -311,6 +314,7 @@ export default function PatientProfile() {
 
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Phường/xã:</Text>
           <Picker
+            mode="dropdown"
             selectedValue={ward}
             onValueChange={(value) => setWard(value)}
             style={tw`w-full mb-4`}
@@ -339,7 +343,7 @@ export default function PatientProfile() {
           />
 
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Quan hệ:</Text>
-          <Picker selectedValue={occupation} onValueChange={(value) => setRelationship(value)} style={tw`w-full mb-4`}>
+          <Picker mode="dropdown" selectedValue={occupation} onValueChange={(value) => setRelationship(value)} style={tw`w-full mb-4`}>
             <Picker.Item label="Quan hệ với bệnh nhân" value="" />
             {/* Add additional options here */}
           </Picker>
