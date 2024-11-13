@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, Text, StyleSheet, ActivityIndicator, Button } from 'react-native';
+import { View, FlatList, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { getDoctors } from '../service/Doctor';
 import tw from 'tailwind-react-native-classnames';
 
@@ -26,25 +26,67 @@ export default function DoctorList() {
         }
     };
 
-    const handleNextPage = () => {
-        if (page < totalPages) setPage(page + 1);
-    };
-
-    const handlePrevPage = () => {
-        if (page > 1) setPage(page - 1);
-    };
-
     const renderDoctor = ({ item }) => (
-        <View style={styles.card}>
-            <Text style={styles.name}>{item.fullName}</Text>
+        <View style={tw`bg-white p-4 my-2 rounded-lg shadow`}>
+            <Text style={tw`text-lg font-bold mb-2`}>{item.fullName}</Text>
             <Text>{`Giới tính: ${item.gender}`}</Text>
             <Text>{`Trạng thái: ${item.status}`}</Text>
             <Text>{`Cập nhật lần cuối: ${new Date(item.lastUpdated).toLocaleDateString()}`}</Text>
         </View>
     );
 
+    const renderPagination = () => {
+        if (totalPages <= 1) return null;
+
+        const visiblePages = 3; // Số lượng trang hiển thị xung quanh trang hiện tại
+        const pages = [];
+        const startEllipsis = page > visiblePages + 1;
+        const endEllipsis = page < totalPages - visiblePages;
+
+        // Nút đầu tiên
+        pages.push(1);
+        if (startEllipsis) pages.push('startEllipsis');
+
+        // Các trang lân cận
+        for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) {
+            pages.push(i);
+        }
+
+        if (endEllipsis) pages.push('endEllipsis');
+
+        // Nút cuối cùng
+        if (totalPages > 1) pages.push(totalPages);
+
+        return (
+            <View style={tw`flex-row justify-center flex-wrap mt-4`}>
+                {pages.map((pageNumber, index) => {
+                    if (pageNumber === 'startEllipsis' || pageNumber === 'endEllipsis') {
+                        return (
+                            <Text key={`ellipsis-${index}`} style={tw`px-4 py-2 text-gray-500`}>
+                                ...
+                            </Text>
+                        );
+                    }
+                    return (
+                        <TouchableOpacity
+                            key={`page-${pageNumber}`}
+                            onPress={() => setPage(pageNumber)}
+                            disabled={page === pageNumber}
+                            style={tw`m-1 px-4 py-2 ${page === pageNumber ? 'bg-blue-500' : 'bg-gray-200'} rounded-lg`}
+
+                        >
+                            <Text style={tw`text-center text-base ${page === pageNumber ? 'text-white' : 'text-black'}`}>
+                                {pageNumber}
+                            </Text>
+                        </TouchableOpacity>
+                    );
+                })}
+            </View>
+        );
+    };
+
     return (
-        <View style={styles.container}>
+        <View style={tw`flex-1 p-4 bg-gray-100`}>
             {loading ? (
                 <ActivityIndicator size="large" color="#0000ff" />
             ) : (
@@ -54,45 +96,9 @@ export default function DoctorList() {
                         keyExtractor={(item) => item.id}
                         renderItem={renderDoctor}
                     />
-                    <View style={styles.pagination}>
-                        <Button title="Trước" onPress={handlePrevPage} disabled={page === 1} />
-                        <Text style={styles.pageInfo}>{`Trang ${page} / ${totalPages}`}</Text>
-                        <Button title="Tiếp" onPress={handleNextPage} disabled={page === totalPages} />
-                    </View>
+                    {renderPagination()}
                 </>
             )}
         </View>
     );
-};
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 16,
-        backgroundColor: '#f8f8f8',
-    },
-    card: {
-        backgroundColor: '#fff',
-        padding: 16,
-        marginVertical: 8,
-        borderRadius: 8,
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 3,
-    },
-    name: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 4,
-    },
-    pagination: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginTop: 16,
-    },
-    pageInfo: {
-        fontSize: 16,
-    },
-});
+}

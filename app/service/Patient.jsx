@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getToken } from './Token';
 
 const IP = process.env.EXPO_PUBLIC_IP_ADDRESS;
-const API_CREATE_PATIENT=process.env.EXPO_PUBLIC_API_CREATE_PATIENT;
+const API_CREATE_PATIENT = process.env.EXPO_PUBLIC_API_CREATE_PATIENT;
 
 const REST_API_PATIENT = `${IP}${API_CREATE_PATIENT}`;
 
@@ -15,6 +15,7 @@ export const createPatientRecord = async (patientData) => {
         Authorization: `Bearer ${storedToken}`,
       }
     });
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('Error create record:', error);

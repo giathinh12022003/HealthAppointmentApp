@@ -11,7 +11,8 @@ import { Checkbox } from 'react-native-paper';
 import { getIdLogin } from '../service/Authenticate';
 import nationsData from '../data/nations'; // Import file dữ liệu dân tộc
 import countriesData from '../data/countries'; // Import file dữ liệu quốc gia
-
+import occupationsData from '../data/occupation';
+import relationshipsData from '../data/relationship';
 
 export default function PatientProfile() {
   const [fullName, setFullName] = useState('');
@@ -31,13 +32,23 @@ export default function PatientProfile() {
   const [country, setCountry] = useState('');
   const [countries, setCountries] = useState([]); // Tất cả các quốc gia
   const [occupation, setOccupation] = useState('');
-  const [province, setProvince] = useState('');
-  const [provinces, setProvinces] = useState([]);
-  const [district, setDistrict] = useState('');
-  const [districts, setDistricts] = useState([]);
-  const [ward, setWard] = useState('');
-  const [wards, setWards] = useState([]);
+  const [occupations, setOccupations] = useState([]);
   const [relationship, setRelationship] = useState('');
+  const [relationships, setRelationships] = useState([]);
+
+  // State lưu mã code cho API
+  const [provinceCode, setProvinceCode] = useState('');
+  const [districtCode, setDistrictCode] = useState('');
+  const [wardCode, setWardCode] = useState('');
+
+  // State lưu tên đầy đủ cho hiển thị
+  const [provinceName, setProvinceName] = useState('');
+  const [districtName, setDistrictName] = useState('');
+  const [wardName, setWardName] = useState('');
+
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
 
   const navigator = useNavigation();
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -70,18 +81,50 @@ export default function PatientProfile() {
     loadProvinces();
   }, []);
 
-  const handleProvinceChange = async (selectedProvince) => {
-    setProvince(selectedProvince);
-    setDistrict(''); // Reset district when province changes
-    setWard(''); // Reset ward when province changes
+  const handleProvinceChange = async (selectedProvinceCode) => {
+    const selectedProvince = provinces.find(p => p.code === selectedProvinceCode);
+
+    setProvinceCode(selectedProvinceCode);
+    setProvinceName(selectedProvince?.fullName || '');
+
+    // Reset district and ward when province changes
+    setDistrictCode('');
+    setDistrictName('');
+    setWardCode('');
+    setWardName('');
 
     try {
-      const data = await fetchDistrictsByProvinceCode(selectedProvince);
+      const data = await fetchDistrictsByProvinceCode(selectedProvinceCode);
       setDistricts(data || []);
     } catch (error) {
       ToastAndroid.show('Lỗi khi lấy dữ liệu thành phố/huyện!', ToastAndroid.BOTTOM);
       console.error('Error fetching districts:', error);
     }
+  };
+
+  const handleDistrictChange = async (selectedDistrictCode) => {
+    const selectedDistrict = districts.find(d => d.code === selectedDistrictCode);
+
+    setDistrictCode(selectedDistrictCode);
+    setDistrictName(selectedDistrict?.fullName || '');
+
+    // Reset ward when district changes
+    setWardCode('');
+    setWardName('');
+    try {
+      const data = await fetchWardsByDistrictCode(selectedDistrictCode);
+      setWards(data || []);
+    } catch (error) {
+      ToastAndroid.show('Lỗi khi lấy dữ liệu phường/xã!', ToastAndroid.BOTTOM);
+      console.error('Error fetching wards:', error);
+    }
+  };
+
+  const handleWardChange = (selectedWardCode) => {
+    const selectedWard = wards.find(w => w.code === selectedWardCode);
+
+    setWardCode(selectedWardCode);
+    setWardName(selectedWard?.fullName || '');
   };
 
   useEffect(() => {
@@ -95,22 +138,20 @@ export default function PatientProfile() {
       setCountries(countriesData); // Dữ liệu từ file dữ liệu tĩnh
     };
 
+    // Load danh sách nghề nghiệp
+    const loadOccupations = () => {
+      setOccupations(occupationsData);
+    };
+
+    const loadRelationShips = () => {
+      setRelationships(relationshipsData);
+    };
+
     loadNations();
     loadCountries();
+    loadOccupations();
+    loadRelationShips();
   }, []);
-
-  const handleDistrictChange = async (selectedDistrict) => {
-    setDistrict(selectedDistrict);
-    setWard(''); // Reset ward when district changes
-
-    try {
-      const data = await fetchWardsByDistrictCode(selectedDistrict);
-      setWards(data || []);
-    } catch (error) {
-      ToastAndroid.show('Lỗi khi lấy dữ liệu phường/xã!', ToastAndroid.BOTTOM);
-      console.error('Error fetching wards:', error);
-    }
-  };
 
   // Format date for display
   const formatDate = (date) => {
@@ -140,9 +181,9 @@ export default function PatientProfile() {
       occupation,
       email,
       country,
-      province,
-      district,
-      ward,
+      province: provinceName,
+      district: districtName,
+      ward: wardName,
       address,
       relationship,
       note,
@@ -152,7 +193,7 @@ export default function PatientProfile() {
     try {
       await createPatientRecord(patientData);
       ToastAndroid.show('Đăng ký thông tin bệnh nhân thành công!', ToastAndroid.BOTTOM);
-      navigator.navigate('index');
+      navigator.navigate('(tabs)/Home');
     } catch (error) {
       ToastAndroid.show('Đăng ký thất bại!', ToastAndroid.BOTTOM);
       console.error('Registration error:', error);
@@ -242,14 +283,16 @@ export default function PatientProfile() {
           >
             <Picker.Item label="Chọn dân tộc" value="" />
             {nations.map((item, index) => (
-              <Picker.Item key={index} label={item.name} value={item.code} />
+              <Picker.Item key={index} label={item.name} value={item.name} />
             ))}
           </Picker>
 
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Nghề nghiệp:</Text>
           <Picker mode="dropdown" selectedValue={occupation} onValueChange={(value) => setOccupation(value)} style={tw`w-full mb-4`}>
             <Picker.Item label="Chọn nghề nghiệp" value="" />
-            {/* Add additional options here */}
+            {occupations.map((item, index) => (
+              <Picker.Item key={index} label={item.name} value={item.name} />
+            ))}
           </Picker>
 
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Số điện thoại:</Text>
@@ -279,31 +322,31 @@ export default function PatientProfile() {
           >
             <Picker.Item label="Chọn quốc gia" value="" />
             {countries.map((item, index) => (
-              <Picker.Item key={index} label={item.label} value={item.code} />
+              <Picker.Item key={index} label={item.label} value={item.label} />
             ))}
           </Picker>
 
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Tỉnh thành:</Text>
           <Picker
             mode="dropdown"
-            selectedValue={province}
+            selectedValue={provinceCode}
             onValueChange={handleProvinceChange}
             style={tw`w-full mb-4`}
-
           >
             <Picker.Item label="Chọn tỉnh thành" value="" />
-            {provinces && provinces.length > 0 && provinces.map((item) => (
+            {provinces.map((item) => (
               <Picker.Item key={item.code} label={item.fullName} value={item.code} />
             ))}
           </Picker>
 
+
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Thành phố/huyện:</Text>
           <Picker
             mode="dropdown"
-            selectedValue={district}
+            selectedValue={districtCode}
             onValueChange={handleDistrictChange}
             style={tw`w-full mb-4`}
-            enabled={province !== ''} // Disable if no province selected
+            enabled={provinceCode !== ''}
           >
             <Picker.Item label="Chọn thành phố/huyện" value="" />
             {districts.map((item) => (
@@ -315,10 +358,10 @@ export default function PatientProfile() {
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Phường/xã:</Text>
           <Picker
             mode="dropdown"
-            selectedValue={ward}
-            onValueChange={(value) => setWard(value)}
+            selectedValue={wardCode}
+            onValueChange={handleWardChange}
             style={tw`w-full mb-4`}
-            enabled={district !== ''} // Disable if no district selected
+            enabled={districtCode !== ''}
           >
             <Picker.Item label="Chọn phường/xã" value="" />
             {wards.map((item) => (
@@ -345,23 +388,29 @@ export default function PatientProfile() {
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Quan hệ:</Text>
           <Picker mode="dropdown" selectedValue={occupation} onValueChange={(value) => setRelationship(value)} style={tw`w-full mb-4`}>
             <Picker.Item label="Quan hệ với bệnh nhân" value="" />
-            {/* Add additional options here */}
+            {relationships.map((item) => (
+              <Picker.Item key={item.label} label={item.label} value={item.label} />
+            ))}
           </Picker>
 
           <View style={tw`flex-row items-center mb-4 w-full`}>
             <Checkbox
               status={isInfoConfirmed ? 'checked' : 'unchecked'}
               onPress={() => setIsInfoConfirmed(!isInfoConfirmed)}
+              color='blue'
             />
             <Text style={tw`text-sm`}>Tôi cam kết thông tin trên hồ sơ là đúng sự thật</Text>
           </View>
 
-          <Button
-            title="Tạo hồ sơ"
-            onPress={handlePatient}
-            color="#3b82f6"
-            disabled={!isInfoConfirmed}  // Điều kiện để kích hoạt nút Đăng kí
-          />
+          <View style={tw`w-full mt-4 mb-8 px-4`}>
+            <TouchableOpacity
+              style={tw`h-12 rounded-full justify-center items-center ${isInfoConfirmed ? 'bg-blue-500' : 'bg-gray-400'}`}
+              onPress={handlePatient}
+              disabled={!isInfoConfirmed}
+            >
+              <Text style={tw`text-white text-lg font-bold`}>Tạo hồ sơ</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
