@@ -14,12 +14,12 @@ export default function App() {
             <Text style={styles.menuItemText}>Đặt lịch khám</Text>
           </TouchableOpacity>
         </Link>
-        <Link href="/(tabs)/PatientProfile" asChild>
+        <Link href="/(tabs)/patient/RecordPatientList" asChild>
           <TouchableOpacity style={styles.menuItem}>
             <Text style={styles.menuItemText}>Hồ sơ khám bệnh</Text>
           </TouchableOpacity>
         </Link>
-        <Link href="/(tabs)/DoctorList" asChild>
+        <Link href="/(tabs)/doctor/DoctorList" asChild>
           <TouchableOpacity style={styles.menuItem}>
             <Text style={styles.menuItemText}>Tìm kiếm bác sĩ</Text>
           </TouchableOpacity>

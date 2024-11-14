@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, TextInput, Button, ToastAndroid, TouchableOpaci
 import React from 'react'
 import { Link, useNavigation } from 'expo-router'
 import { useState } from 'react';
-import { loginUser, setIdLogin } from '../service/Authenticate';
+import { loginUser, setIdLogin } from '../service/identity/Authenticate';
 import { setToken } from '../service/Token';
 import tw from 'tailwind-react-native-classnames';
 

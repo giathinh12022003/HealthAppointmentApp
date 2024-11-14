@@ -45,7 +45,7 @@ export default function _layout() {
         }}
       />
       <Stack.Screen
-        name='(tabs)/DoctorList'
+        name='(tabs)/doctor/DoctorList'
         options={{
           title: 'Danh sách bác sĩ',
           headerBackVisible: true,
@@ -56,9 +56,20 @@ export default function _layout() {
         }}
       />
       <Stack.Screen
-        name='(tabs)/PatientProfile'
+        name='(tabs)/patient/RecordPatientList'
         options={{
-          title: 'Hồ sơ khám bệnh',
+          title: 'Danh sách hồ sơ khám bệnh',
+          headerBackVisible: true,
+          headerStyle: {
+            backgroundColor: '#2563eb',
+          },
+          headerTitleStyle: { color: 'white' },
+        }}
+      />
+      <Stack.Screen
+        name='(tabs)/patient/RecordPatient'
+        options={{
+          title: 'Tạo hồ sơ khám bệnh',
           headerBackVisible: true,
           headerStyle: {
             backgroundColor: '#2563eb',

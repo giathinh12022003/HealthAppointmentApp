@@ -1,20 +1,20 @@
-import { FlatList, Modal, Text, View, TextInput, Button, ToastAndroid, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+import { Text, View, TextInput, Button, ToastAndroid, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigation } from 'expo-router';
 import { RadioButton } from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
-import { createPatientRecord } from '../service/Patient';
-import { fetchProvinces, fetchDistrictsByProvinceCode, fetchWardsByDistrictCode } from '../service/VietNamUnits';
+import { createPatientRecord } from '../../service/patient/CreateRecordPatient';
+import { fetchProvinces, fetchDistrictsByProvinceCode, fetchWardsByDistrictCode } from '../../service/VietNamUnits';
 import tw from 'tailwind-react-native-classnames';
 import { Checkbox } from 'react-native-paper';
-import { getIdLogin } from '../service/Authenticate';
-import nationsData from '../data/nations'; // Import file dữ liệu dân tộc
-import countriesData from '../data/countries'; // Import file dữ liệu quốc gia
-import occupationsData from '../data/occupation';
-import relationshipsData from '../data/relationship';
+import { getIdLogin } from '../../service/identity/Authenticate';
+import nationsData from '../../data/nations'; // Import file dữ liệu dân tộc
+import countriesData from '../../data/countries'; // Import file dữ liệu quốc gia
+import occupationsData from '../../data/occupation';// dữ liệu nghề nghiệp
+import relationshipsData from '../../data/relationship';//mối quan hệ với bệnh nhân
 
-export default function PatientProfile() {
+export default function PatientRecord() {
   const [fullName, setFullName] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState(new Date());
   const [gender, setGender] = useState('');
@@ -193,7 +193,7 @@ export default function PatientProfile() {
     try {
       await createPatientRecord(patientData);
       ToastAndroid.show('Đăng ký thông tin bệnh nhân thành công!', ToastAndroid.BOTTOM);
-      navigator.navigate('(tabs)/Home');
+      navigator.navigate('(tabs)/patient/RecordPatientList');
     } catch (error) {
       ToastAndroid.show('Đăng ký thất bại!', ToastAndroid.BOTTOM);
       console.error('Registration error:', error);

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getToken } from './Token';
+import { getToken } from '../Token';
 
 const IP = process.env.EXPO_PUBLIC_IP_ADDRESS;
 const API_GET_DOCTOR_DATA = process.env.EXPO_PUBLIC_API_GET_DOCTOR_DATA;

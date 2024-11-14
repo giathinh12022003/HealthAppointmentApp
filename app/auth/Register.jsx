@@ -2,7 +2,7 @@ import { Text, View, TextInput, Button, ToastAndroid, TouchableOpacity, Keyboard
 import React, { useState } from 'react';
 import { Link, useNavigation } from 'expo-router';
 import { RadioButton } from 'react-native-paper';
-import { createUser } from '../service/User';
+import { createUser } from '../service/identity/User';
 import tw from 'tailwind-react-native-classnames';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
