@@ -20,7 +20,7 @@ export const loginUser = async (userName, password) => {
             return;
         }
     } catch (error) {
-        console.error('login error',error);
+        return;
     }
 };
 

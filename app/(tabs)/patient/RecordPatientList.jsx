@@ -1,8 +1,8 @@
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import tw from 'tailwind-react-native-classnames';
 import { getPatientRecord } from '../../service/patient/GetRecordPatient';
-import { useNavigation } from 'expo-router';
+import { useNavigation, useFocusEffect } from 'expo-router';
 
 export default function RecordPatientList() {
     const [recordPatients, setRecordPatients] = useState([]);
@@ -12,9 +12,11 @@ export default function RecordPatientList() {
 
     const navigation = useNavigation();
 
-    useEffect(() => {
-        fetchPatientDetails();
-    }, [page]);
+    useFocusEffect(
+        useCallback(() => {
+            fetchPatientDetails(page);
+        }, [page])
+    );
 
     const fetchPatientDetails = async () => {
         setLoading(true);

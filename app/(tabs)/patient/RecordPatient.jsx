@@ -385,7 +385,7 @@ export default function PatientRecord() {
             placeholder="Nhập ghi chú"
           />
 
-          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Quan hệ:</Text>
+          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Bạn tạo hồ sơ cho:</Text>
           <Picker mode="dropdown" selectedValue={occupation} onValueChange={(value) => setRelationship(value)} style={tw`w-full mb-4`}>
             <Picker.Item label="Quan hệ với bệnh nhân" value="" />
             {relationships.map((item) => (
