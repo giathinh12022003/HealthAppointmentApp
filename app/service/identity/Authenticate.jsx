@@ -2,7 +2,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const IP = process.env.EXPO_PUBLIC_IP_ADDRESS;
-const API_LOGIN=process.env.EXPO_PUBLIC_API_LOGIN;
+const API_LOGIN = process.env.EXPO_PUBLIC_API_LOGIN;
 
 const REST_API_LOGIN = `${IP}${API_LOGIN}`;
 
@@ -40,4 +40,10 @@ export const getIdLogin = async (token) => {
         console.error('Error getting token:', error);
         return null;
     }
+};
+
+export default {
+    loginUser,
+    setIdLogin,
+    getIdLogin,
 };

@@ -56,9 +56,9 @@ export default function Register() {
       const response = await createUser(userData);
       if (response) {
         ToastAndroid.show('Tạo tài khoản thành công!', ToastAndroid.BOTTOM);
-        navigator.navigate('index');
+        navigator.goBack('index');
       }
-      else{
+      else {
         ToastAndroid.show('Đăng kí thất bại!', ToastAndroid.BOTTOM);
       }
     } catch (error) {
@@ -159,7 +159,12 @@ export default function Register() {
             secureTextEntry={true}
           />
 
-          <Button title="Đăng kí" onPress={handleRegister} color="#3b82f6" />
+          <TouchableOpacity
+            style={tw`rounded-full bg-blue-500 p-4 w-full flex items-center justify-center`}
+            onPress={handleRegister}
+          >
+            <Text style={tw`text-white text-lg`}>Đăng ký</Text>
+          </TouchableOpacity>
           <Link href="/" style={tw`mt-4 text-blue-600`}>
             Quay lại
           </Link>

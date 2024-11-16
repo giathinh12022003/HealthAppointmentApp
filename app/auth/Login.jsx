@@ -3,8 +3,9 @@ import React from 'react'
 import { Link, useNavigation } from 'expo-router'
 import { useState } from 'react';
 import { loginUser, setIdLogin } from '../service/identity/Authenticate';
-import { setToken } from '../service/Token';
 import tw from 'tailwind-react-native-classnames';
+import { setToken } from '../service/Token';
+import { StatusBar } from 'expo-status-bar';
 
 export default function Login() {
   const [userName, setUserName] = useState('');
@@ -15,7 +16,7 @@ export default function Login() {
     const response = await loginUser(userName, password);
 
     if (response) {
-      await setToken('accessToken', response.token);
+      await setToken('accessToken', response.token)
       await setIdLogin('customerId', response.id);
 
       console.log("id: " + response.id);
@@ -30,8 +31,13 @@ export default function Login() {
     }
   }
 
+  const handleRegisterNavigation = () => {
+    navigator.navigate('auth/Register');
+  };
+
   return (
     <View style={styles.container}>
+      <StatusBar style="light" />
       <Text style={tw`text-lg font-bold mb-1 text-left w-full`}>Email hoặc Số điện thoại:</Text>
       <TextInput
         style={tw`w-full h-12 border border-gray-300 rounded-md px-3 mb-4 text-lg`}
@@ -56,9 +62,12 @@ export default function Login() {
         <Text style={tw`text-white text-lg`}>Đăng nhập</Text>
       </TouchableOpacity>
 
-      <Link href="/auth/Register" style={tw`mt-4 text-blue-600`}>
-        Đăng ký tài khoản
-      </Link>
+      <TouchableOpacity
+        style={tw`mt-4`}
+        onPress={handleRegisterNavigation}
+      >
+        <Text style={tw`text-blue-600`}>Đăng ký tài khoản</Text>
+      </TouchableOpacity>
     </View>
   );
 }

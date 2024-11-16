@@ -27,3 +27,7 @@ export const getPatientRecord = async (page, size) => {
     return;
   }
 };
+
+export default {
+  getPatientRecord
+};

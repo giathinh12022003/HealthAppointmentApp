@@ -52,3 +52,9 @@ export const fetchWardsByDistrictCode = async (districtCode) => {
         return;
     }
 };
+
+export default {
+    fetchProvinces,
+    fetchDistrictsByProvinceCode,
+    fetchWardsByDistrictCode
+};

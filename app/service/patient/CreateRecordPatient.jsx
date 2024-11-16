@@ -21,3 +21,7 @@ export const createPatientRecord = async (patientData) => {
     throw error;
   }
 };
+
+export default {
+  createPatientRecord
+};

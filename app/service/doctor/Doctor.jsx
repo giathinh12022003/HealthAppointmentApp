@@ -16,13 +16,33 @@ export const getDoctors = async (page, size) => {
 
     const response = await axios.get(`${REST_API_DOCTOR}`, {
       params: { page, size },
-      headers: {
-        Authorization: `Bearer ${storedToken}`,
-      }
+
     });
     return response.data;
   } catch (error) {
     console.error('Error fetching doctors:', error);
     throw error;
   }
+};
+
+export const setDoctorId = async (id, value) => {
+  try {
+    await AsyncStorage.setItem(id, value);
+  } catch (error) {
+    console.error('Error setting token:', error);
+  }
+};
+
+export const getDoctorId = async (id) => {
+  try {
+      const doctorId = await AsyncStorage.getItem(id);
+      return doctorId != null ? doctorId : null;
+  } catch (error) {
+      console.error('Error getting token:', error);
+      return null;
+  }
+};
+
+export default {
+  getDoctors
 };

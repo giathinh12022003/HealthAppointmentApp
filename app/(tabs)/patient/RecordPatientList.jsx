@@ -98,7 +98,7 @@ export default function RecordPatientList() {
                 style={tw`bg-blue-500 p-4 rounded-lg mb-4`}
                 onPress={() => navigation.navigate('(tabs)/patient/RecordPatient')}
             >
-                <Text style={tw`text-white text-center text-lg`}>Thêm Hồ Sơ</Text>
+                <Text style={tw`text-white font-bold text-center text-lg`}>Thêm Hồ Sơ</Text>
             </TouchableOpacity>
             {loading ? (
                 <ActivityIndicator size="large" color="#0000ff" />

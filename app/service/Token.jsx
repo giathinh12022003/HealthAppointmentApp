@@ -1,7 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const KEY_TOKEN='accessToken';
-
 export const setToken = async (token, value) => {
   try {
     await AsyncStorage.setItem(token, JSON.stringify(value));
@@ -26,4 +24,10 @@ export const removeToken = async (token) => {
   } catch (error) {
     console.error('Error removing token:', error);
   }
+};
+
+export default {
+  setToken,
+  getToken,
+  removeToken
 };

@@ -17,3 +17,7 @@ export const createUser = async (userData) => {
         console.error('Error posting data:', error);
     }
 };
+
+export default{
+    createUser
+};

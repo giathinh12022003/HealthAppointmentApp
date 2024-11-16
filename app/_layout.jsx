@@ -21,7 +21,7 @@ export default function _layout() {
         name='auth/Register'
         options={{
           title: 'Register',
-          headerBackVisible: false,
+          headerBackVisible: true,
           headerStyle: {
             backgroundColor: '#2563eb',
           },
@@ -70,6 +70,17 @@ export default function _layout() {
         name='(tabs)/patient/RecordPatient'
         options={{
           title: 'Tạo hồ sơ khám bệnh',
+          headerBackVisible: true,
+          headerStyle: {
+            backgroundColor: '#2563eb',
+          },
+          headerTitleStyle: { color: 'white' },
+        }}
+      />
+      <Stack.Screen
+        name='(tabs)/medical_services/doctor/DoctorService'
+        options={{
+          title: 'Danh sách dịch vụ bác sĩ',
           headerBackVisible: true,
           headerStyle: {
             backgroundColor: '#2563eb',
