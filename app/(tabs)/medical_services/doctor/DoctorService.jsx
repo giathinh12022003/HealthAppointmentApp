@@ -1,28 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, Text, ActivityIndicator } from 'react-native';
+import { View, FlatList, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { getDoctorService } from '../../../service/medical_services/doctor/GetDoctorService'; // API mới
 import tw from 'tailwind-react-native-classnames';
+import { useLocalSearchParams } from 'expo-router';
 
 export default function DoctorService() {
- 
-  
+  const { doctorId, doctorName } = useLocalSearchParams();
   const [services, setServices] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
-    fetchServices();
-  }, [page]);
+    if (doctorId) {
+      fetchServices();
+    } else {
+      console.error('doctorId is missing!');
+    }
+  }, [page, doctorId]);
 
   const fetchServices = async () => {
     setLoading(true);
     try {
-      const data = await getDoctorService(doctorId, page, 4);
-      if (data?.service) {
-        setServices(data.service.data);
-      }
+      const data = await getDoctorService(doctorId, page, 5);
       setTotalPages(data.totalPages);
+      setServices(data.data);
     } catch (error) {
       console.error('Failed to fetch services:', error);
     } finally {
@@ -32,10 +34,10 @@ export default function DoctorService() {
 
   const renderService = ({ item }) => (
     <View style={tw`bg-white p-4 my-2 rounded-lg shadow`}>
-      <Text style={tw`text-lg font-bold mb-2`}>{item.name}</Text>
-      <Text>{`Giá dịch vụ: ${item.unitPrice} VND`}</Text>
-      <Text>{`Trạng thái: ${item.status}`}</Text>
-      <Text>{`Cập nhật: ${new Date(item.lastUpdated).toLocaleDateString()}`}</Text>
+      <Text style={tw`text-lg font-bold mb-2`}>{item.service.name}</Text>
+      <Text>{`Giá dịch vụ: ${item.service.unitPrice} VND`}</Text>
+      <Text>{`Trạng thái: ${item.service.status}`}</Text>
+      <Text>{`Cập nhật: ${new Date(item.service.lastUpdated).toLocaleDateString()}`}</Text>
     </View>
   );
 
@@ -91,6 +93,7 @@ export default function DoctorService() {
 
   return (
     <View style={tw`flex-1 p-4 bg-gray-100`}>
+      <Text style={tw`text-lg font-bold mb-1 text-left w-full`}>Dịch vụ bác sĩ: {doctorName}</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (

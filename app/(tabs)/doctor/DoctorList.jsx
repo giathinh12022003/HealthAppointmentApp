@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, FlatList, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { getDoctors } from '../../service/doctor/Doctor';
 import tw from 'tailwind-react-native-classnames';
-import { useNavigation,useRouter  } from 'expo-router';
+import { useNavigation, router } from 'expo-router';
 
 export default function DoctorList() {
     const [doctors, setDoctors] = useState([]);
@@ -37,8 +37,10 @@ export default function DoctorList() {
             <Text>{`Cập nhật lần cuối: ${new Date(item.lastUpdated).toLocaleDateString()}`}</Text>
             <TouchableOpacity
                 style={tw`mt-4 bg-blue-500 py-2 px-4 rounded-lg`}
-                onPress={() => navigator.navigate('(tabs)/medical_services/doctor/DoctorService', { doctorId: item.id })}
-                  
+                onPress={() =>
+                    router.push({ pathname: '(tabs)/medical_services/doctor/DoctorService', params: { doctorId: item.id, doctorName: item.fullName } })
+                }
+
             >
                 <Text style={tw`text-center text-white text-base`}>Đặt lịch ngay</Text>
             </TouchableOpacity>

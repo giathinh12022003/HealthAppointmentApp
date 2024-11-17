@@ -50,7 +50,7 @@ export default function PatientRecord() {
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
 
-  const navigator = useNavigation();
+  const navigation = useNavigation();
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const [isInfoConfirmed, setIsInfoConfirmed] = useState(false);
@@ -193,7 +193,7 @@ export default function PatientRecord() {
     try {
       await createPatientRecord(patientData);
       ToastAndroid.show('Đăng ký thông tin bệnh nhân thành công!', ToastAndroid.BOTTOM);
-      navigator.goBack('(tabs)/patient/RecordPatientList');
+      navigation.goBack('(tabs)/patient/RecordPatientList');
     } catch (error) {
       ToastAndroid.show('Đăng ký thất bại!', ToastAndroid.BOTTOM);
       console.error('Registration error:', error);
