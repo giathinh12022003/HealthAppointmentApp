@@ -22,9 +22,9 @@ export default function RecordPatientList() {
         setLoading(true);
         try {
             const data = await getPatientRecord(page, 4);
-            if (data?.patientDetails) {
-                setRecordPatients(data.patientDetails.data);
-                setTotalPages(data.patientDetails.totalPages);
+            if (data?.data) {
+                setRecordPatients(data.data);
+                setTotalPages(data.totalPages);
             }
         } catch (error) {
             console.error('Error fetching patient details:', error);

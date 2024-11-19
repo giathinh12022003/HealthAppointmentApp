@@ -8,7 +8,6 @@ import { createPatientRecord } from '../../service/patient/CreateRecordPatient';
 import { fetchProvinces, fetchDistrictsByProvinceCode, fetchWardsByDistrictCode } from '../../service/VietNamUnits';
 import tw from 'tailwind-react-native-classnames';
 import { Checkbox } from 'react-native-paper';
-import { getIdLogin } from '../../service/identity/Authenticate';
 import nationsData from '../../data/nations'; // Import file dữ liệu dân tộc
 import countriesData from '../../data/countries'; // Import file dữ liệu quốc gia
 import occupationsData from '../../data/occupation';// dữ liệu nghề nghiệp
@@ -24,7 +23,6 @@ export default function PatientRecord() {
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [note, setNote] = useState('');
-  const [customerId, setCustomerId] = useState('');
 
   // Combo box values for drop-down menus
   const [nation, setNation] = useState('');
@@ -54,18 +52,6 @@ export default function PatientRecord() {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const [isInfoConfirmed, setIsInfoConfirmed] = useState(false);
-
-  useEffect(() => {
-    const loadCustomerId = async () => {
-      try {
-        const id = await getIdLogin('customerId');
-        setCustomerId(id);
-      } catch (error) {
-        console.error("Failed to load customerId from storage", error);
-      }
-    };
-    loadCustomerId();
-  }, []);
 
   useEffect(() => {
     const loadProvinces = async () => {
@@ -187,7 +173,6 @@ export default function PatientRecord() {
       address,
       relationship,
       note,
-      customerId,
     };
 
     try {

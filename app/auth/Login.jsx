@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View, TextInput, Button, ToastAndroid, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, ToastAndroid, TouchableOpacity } from 'react-native';
 import React from 'react'
-import { Link, useNavigation } from 'expo-router'
+import { useNavigation } from 'expo-router'
 import { useState } from 'react';
-import { loginUser, setIdLogin } from '../service/identity/Authenticate';
 import tw from 'tailwind-react-native-classnames';
 import { setToken } from '../service/Token';
 import { StatusBar } from 'expo-status-bar';
+import { loginUser } from '../service/identity/Authenticate';
 
 export default function Login() {
   const [userName, setUserName] = useState('');
@@ -17,9 +17,6 @@ export default function Login() {
 
     if (response) {
       await setToken('accessToken', response.token)
-      await setIdLogin('customerId', response.id);
-
-      console.log("id: " + response.id);
       console.log("token: " + response.token);
 
       navigator.navigate('(tabs)/Home');

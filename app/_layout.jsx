@@ -88,6 +88,17 @@ export default function _layout() {
           headerTitleStyle: { color: 'white' },
         }}
       />
+      <Stack.Screen
+        name='(tabs)/medical_services/doctor/DoctorServiceDetails'
+        options={{
+          title: 'Chọn ngày khám dịch vụ',
+          headerBackVisible: true,
+          headerStyle: {
+            backgroundColor: '#2563eb',
+          },
+          headerTitleStyle: { color: 'white' },
+        }}
+      />
     </Stack>
   );
 }

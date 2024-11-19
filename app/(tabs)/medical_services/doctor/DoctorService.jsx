@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, FlatList, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { getDoctorService } from '../../../service/medical_services/doctor/GetDoctorService'; // API mới
 import tw from 'tailwind-react-native-classnames';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, router } from 'expo-router';
 
 export default function DoctorService() {
   const { doctorId, doctorName } = useLocalSearchParams();
@@ -38,6 +38,15 @@ export default function DoctorService() {
       <Text>{`Giá dịch vụ: ${item.service.unitPrice} VND`}</Text>
       <Text>{`Trạng thái: ${item.service.status}`}</Text>
       <Text>{`Cập nhật: ${new Date(item.service.lastUpdated).toLocaleDateString()}`}</Text>
+      <TouchableOpacity
+        style={tw`mt-4 bg-blue-500 py-2 px-4 rounded-lg`}
+        onPress={() =>
+          router.push({ pathname: '(tabs)/medical_services/doctor/DoctorServiceDetails', params: { serviceId: item.id,serviceName:item.service.name ,doctorId: doctorId } })
+        }
+
+      >
+        <Text style={tw`text-center text-white text-base`}>Chọn dịch vụ</Text>
+      </TouchableOpacity>
     </View>
   );
 
