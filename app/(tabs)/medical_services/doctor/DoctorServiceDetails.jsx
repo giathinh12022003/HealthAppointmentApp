@@ -1,48 +1,62 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, ActivityIndicator, Alert, FlatList, ScrollView, TouchableOpacity } from 'react-native';
 import tw from 'tailwind-react-native-classnames';
-import { useLocalSearchParams } from 'expo-router';
-import { getDoctorServiceDay } from '../../../service/medical_services/doctor/GetDoctorServiceDay';
+import { useLocalSearchParams, router } from 'expo-router';
+import { getDoctorServiceDay, getDoctorServiceTimeFrame } from '../../../service/medical_services/doctor/GetDoctorServiceDay';
 import { Calendar } from 'react-native-calendars';
 
 export default function DoctorServiceDetails() {
   const { serviceId, serviceName } = useLocalSearchParams();
   const [availableDays, setAvailableDays] = useState({});
   const [loading, setLoading] = useState(true);
+  const [selectedDay, setSelectedDay] = useState(null);
+  const [serviceDetails, setServiceDetails] = useState([]);
+  const [fetchingDetails, setFetchingDetails] = useState(false);
 
   useEffect(() => {
     fetchAvailableDays();
   }, [serviceId]);
 
+  const formatDate = (date) => {
+    const [year, month, day] = date.split('-');
+    return `${day}/${month}/${year}`;
+  };
+
   const fetchAvailableDays = async () => {
     try {
       setLoading(true);
       const data = await getDoctorServiceDay(serviceId);
-      console.log('Available days from API:', data);
+
       const today = new Date();
-      today.setHours(today.getHours() + 7);
-      const todayDateString = today.toISOString().split('T')[0]; // Ngày hiện tại (YYYY-MM-DD)
-  
+      today.setHours(today.getHours());
+      const todayDateString = today.toISOString().split('T')[0];
+
       const markedDays = {};
-  
-      // Lặp qua các ngày trong 31 ngày tiếp theo từ ngày hiện tại
       for (let i = 0; i < 31; i++) {
         const date = new Date();
         date.setDate(today.getDate() + i);
-        const dayOfWeek = date.getDay(); // 0: Chủ nhật, 1: Thứ 2, ..., 6: Thứ 7
+
+        const dayOfWeek = date.getDay() + 1; // Chuyển đổi sang chuẩn từ 1-7 (Monday-Sunday)
         const dateString = date.toISOString().split('T')[0];
-  
-        // Chỉ đánh dấu nếu ngày thuộc JSON và >= ngày hiện tại
-        if (data.includes(dayOfWeek.toString()) && dateString >= todayDateString) {
-          console.log(`Ngày hợp lệ: ${dateString}, Thứ: ${dayOfWeek}`);
+
+        if (data.includes(dayOfWeek.toString()) && dateString > todayDateString) {
           markedDays[dateString] = {
-            selected: true,
-            marked: true,
-            selectedColor: 'blue',
+            customStyles: {
+              container: {
+                backgroundColor: 'blue',
+                borderRadius: 8,
+                borderWidth: dateString === selectedDay ? 4 : 0, // Tăng độ dày viền
+                borderColor: dateString === selectedDay ? 'red' : 'transparent',
+              },
+              text: {
+                color: 'white',
+                fontWeight: dateString === selectedDay ? 'bold' : 'normal',
+              },
+            },
           };
         }
       }
-  
+
       setAvailableDays(markedDays);
     } catch (error) {
       console.error('Error fetching available days:', error);
@@ -51,14 +65,102 @@ export default function DoctorServiceDetails() {
       setLoading(false);
     }
   };
-  
+
+  const fetchServiceDetails = async (dayOfWeek, day) => {
+    try {
+      setFetchingDetails(true);
+      const data = await getDoctorServiceTimeFrame(serviceId, dayOfWeek, day);
+      setServiceDetails(data);
+    } catch (error) {
+      console.error('Error fetching service details:', error);
+      Alert.alert('Lỗi', 'Không thể tải dữ liệu chi tiết dịch vụ');
+    } finally {
+      setFetchingDetails(false);
+    }
+  };
 
   const onDayPress = (day) => {
-    if (availableDays[day.dateString]) {
-      Alert.alert('Ngày đã chọn', `Bạn đã chọn ngày ${day.dateString}`);
+    const { dateString } = day;
+    const date = new Date(dateString);
+    const dayOfWeek = date.getDay() + 1;
+
+    if (availableDays[dateString]) {
+      // Cập nhật ngày đã chọn
+      setSelectedDay(dateString);
+
+      // Thay đổi trạng thái để hiển thị viền cho ngày đã chọn
+      setAvailableDays((prevDays) => {
+        const updatedDays = { ...prevDays };
+
+        // Reset các viền cho tất cả các ngày khả dụng
+        Object.keys(updatedDays).forEach((key) => {
+          updatedDays[key] = {
+            ...updatedDays[key],
+            customStyles: {
+              ...updatedDays[key].customStyles,
+              container: {
+                ...updatedDays[key].customStyles.container,
+                borderWidth: 0, // Xóa viền
+                borderColor: 'transparent',
+              },
+            },
+          };
+        });
+
+        // Cập nhật viền cho ngày được chọn
+        updatedDays[dateString] = {
+          ...updatedDays[dateString],
+          customStyles: {
+            ...updatedDays[dateString].customStyles,
+            container: {
+              ...updatedDays[dateString].customStyles.container,
+              borderWidth: 4, // Tăng viền
+              borderColor: 'red',
+            },
+          },
+        };
+
+        return updatedDays;
+      });
+
+      // Tải thông tin chi tiết cho ngày được chọn
+      fetchServiceDetails(dayOfWeek, dateString);
     } else {
-      Alert.alert('Ngày không khả dụng', `Ngày ${day.dateString} không khả dụng.`);
+      Alert.alert('Ngày không khả dụng', `Ngày ${dateString} không khả dụng.`);
     }
+  };
+
+
+  const renderServiceItem = ({ item }) => {
+    const formatTime = (start, end) => {
+      const startPeriod = start < 12 ? 'sáng' : 'chiều';
+      const endPeriod = end < 12 ? 'sáng' : 'chiều';
+
+      if (startPeriod === endPeriod) {
+        return `${start} - ${end} giờ (${startPeriod})`;
+      }
+      return `${start} ${startPeriod} - ${end} ${endPeriod}`;
+    };
+
+    return (
+      <View style={tw`p-4 mb-2 bg-white rounded-lg shadow`}>
+        <Text style={tw`text-lg font-bold text-blue-600`}>
+          Thời gian: {formatTime(item.startTime, item.endTime)}
+        </Text>
+        <Text style={tw`text-gray-700`}>
+          Ngày khám: {`thứ ${item.dayOfWeek} ngày `}{selectedDay ? formatDate(selectedDay) : ''}
+        </Text>
+        <Text style={tw`text-gray-700`}>Số lượng tối đa: {item.maximumQuantity}</Text>
+        <Text style={tw`text-gray-700`}>Phòng: {item.roomResponse.name}</Text>
+        <Text style={tw`text-gray-700`}>Trạng thái: {item.status}</Text>
+        <TouchableOpacity
+          style={tw`mt-6 bg-blue-600 py-3 rounded-lg shadow`}
+          onPress={() => router.push({ pathname: '', params: {} })}
+        >
+          <Text style={tw`text-center text-white font-bold text-base`}>Chọn lịch khám</Text>
+        </TouchableOpacity>
+      </View>
+    );
   };
 
   return (
@@ -70,6 +172,7 @@ export default function DoctorServiceDetails() {
         <Calendar
           markedDates={availableDays}
           onDayPress={onDayPress}
+          markingType={'custom'}
           theme={{
             selectedDayBackgroundColor: 'blue',
             todayTextColor: 'red',
@@ -81,6 +184,28 @@ export default function DoctorServiceDetails() {
           style={tw`border rounded-lg bg-white shadow`}
         />
       )}
+      <View style={tw`mt-4`}>
+        {selectedDay ? (
+          fetchingDetails ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : serviceDetails.length > 0 ? (
+            <View style={tw`h-72`}>
+              <FlatList
+                data={serviceDetails}
+                renderItem={renderServiceItem}
+                keyExtractor={(item) => item.id}
+                contentContainerStyle={tw`pb-4`}
+              />
+            </View>
+          ) : (
+            <Text style={tw`text-center text-gray-600`}>
+              Không có dịch vụ khả dụng cho ngày {formatDate(selectedDay)}
+            </Text>
+          )
+        ) : (
+          <Text style={tw`text-center text-gray-600`}>Vui lòng chọn ngày khám</Text>
+        )}
+      </View>
     </View>
   );
 }

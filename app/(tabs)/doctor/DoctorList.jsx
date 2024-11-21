@@ -31,16 +31,12 @@ export default function DoctorList() {
 
     const renderDoctor = ({ item }) => (
         <View style={tw`bg-white p-4 my-2 rounded-lg shadow`}>
-            <Text style={tw`text-lg font-bold mb-2`}>{item.fullName}</Text>
-            <Text>{`Giới tính: ${item.gender}`}</Text>
-            <Text>{`Trạng thái: ${item.status}`}</Text>
-            <Text>{`Cập nhật lần cuối: ${new Date(item.lastUpdated).toLocaleDateString()}`}</Text>
+            <Text style={tw`text-lg font-bold mb-2`}>{`${item.qualificationName}: ${item.fullName}`}</Text>
             <TouchableOpacity
                 style={tw`mt-4 bg-blue-500 py-2 px-4 rounded-lg`}
                 onPress={() =>
                     router.push({ pathname: '(tabs)/medical_services/doctor/DoctorService', params: { doctorId: item.id, doctorName: item.fullName } })
                 }
-
             >
                 <Text style={tw`text-center text-white text-base`}>Đặt lịch ngay</Text>
             </TouchableOpacity>
