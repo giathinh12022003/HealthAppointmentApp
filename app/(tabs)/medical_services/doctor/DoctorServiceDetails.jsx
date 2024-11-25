@@ -6,7 +6,7 @@ import { getDoctorServiceDay, getDoctorServiceTimeFrame } from '../../../service
 import { Calendar } from 'react-native-calendars';
 
 export default function DoctorServiceDetails() {
-  const { serviceId, serviceName } = useLocalSearchParams();
+  const { serviceId, serviceName, doctorId, doctorName } = useLocalSearchParams();
   const [availableDays, setAvailableDays] = useState({});
   const [loading, setLoading] = useState(true);
   const [selectedDay, setSelectedDay] = useState(null);
@@ -26,20 +26,31 @@ export default function DoctorServiceDetails() {
     try {
       setLoading(true);
       const data = await getDoctorServiceDay(serviceId);
+      // console.log(data);
 
       const today = new Date();
-      today.setHours(today.getHours());
-      const todayDateString = today.toISOString().split('T')[0];
+      const todayDateString = today.toLocaleDateString('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' });
 
       const markedDays = {};
       for (let i = 0; i < 31; i++) {
         const date = new Date();
         date.setDate(today.getDate() + i);
 
-        const dayOfWeek = date.getDay() + 1; // Chuyển đổi sang chuẩn từ 1-7 (Monday-Sunday)
-        const dateString = date.toISOString().split('T')[0];
+        ///////////////////////////////////
+        const dayOfWeek = date.getDay() + 1;
+        // 0 = sunday
+        // 1 = monday
+        // 2 = tuesday
+        // 3 = wednesday
+        // 4 = thursday
+        // 5 = friday
+        // 6 = saturday
+        ///////////////////////////////////
+        
+        const dateString = date.toLocaleDateString('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' });
 
         if (data.includes(dayOfWeek.toString()) && dateString > todayDateString) {
+          // console.log(`${dateString} ${dayOfWeek}`);
           markedDays[dateString] = {
             customStyles: {
               container: {
@@ -59,7 +70,7 @@ export default function DoctorServiceDetails() {
 
       setAvailableDays(markedDays);
     } catch (error) {
-      console.error('Error fetching available days:', error);
+      // console.error('Error fetching available days:', error);
       Alert.alert('Lỗi', 'Không thể tải dữ liệu ngày');
     } finally {
       setLoading(false);
@@ -72,7 +83,7 @@ export default function DoctorServiceDetails() {
       const data = await getDoctorServiceTimeFrame(serviceId, dayOfWeek, day);
       setServiceDetails(data);
     } catch (error) {
-      console.error('Error fetching service details:', error);
+      // console.error('Error fetching service details:', error);
       Alert.alert('Lỗi', 'Không thể tải dữ liệu chi tiết dịch vụ');
     } finally {
       setFetchingDetails(false);
@@ -81,7 +92,7 @@ export default function DoctorServiceDetails() {
 
   const onDayPress = (day) => {
     const { dateString } = day;
-    const date = new Date(dateString);
+    const date = new Date(dateString + 'T00:00:00+07:00');
     const dayOfWeek = date.getDay() + 1;
 
     if (availableDays[dateString]) {
@@ -155,9 +166,23 @@ export default function DoctorServiceDetails() {
         <Text style={tw`text-gray-700`}>Trạng thái: {item.status}</Text>
         <TouchableOpacity
           style={tw`mt-6 bg-blue-600 py-3 rounded-lg shadow`}
-          onPress={() => router.push({ pathname: '', params: {} })}
+          onPress={() => router.push({
+            pathname: '(tabs)/patient/ChooseRecordPatient', params: {
+              serviceId: serviceId,
+              serviceName: serviceName,
+              doctorId: doctorId,
+              doctorName: doctorName,
+              day: selectedDay,
+              serviceTimeFrameId: item.id,
+              dayOfWeek: item.dayOfWeek,
+              startTime: item.startTime,
+              endTime: item.endTime,
+              room: item.roomResponse.name,
+              session: formatTime(item.startTime, item.endTime)
+            }
+          })}
         >
-          <Text style={tw`text-center text-white font-bold text-base`}>Chọn lịch khám</Text>
+          <Text style={tw`text-center text-white font-bold text-base`}>Chọn khung giờ</Text>
         </TouchableOpacity>
       </View>
     );

@@ -15,7 +15,7 @@ export const getDoctorServiceDay = async (doctorServiceId) => {
         });
         return response.data;
     } catch (error) {
-        console.error('Error fetching doctor services day:', error);
+        // console.error('Error fetching doctor services day:', error);
         throw error;
     }
 };
@@ -27,7 +27,7 @@ export const getDoctorServiceTimeFrame = async (doctorServiceId, dayOfWeek, day)
         });
         return response.data;
     } catch (error) {
-        console.error('Error fetching doctor services day:', error);
+        // console.error('Error fetching doctor services day:', error);
         throw error;
     }
 };

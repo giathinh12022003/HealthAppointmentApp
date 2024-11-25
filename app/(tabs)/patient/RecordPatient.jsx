@@ -60,7 +60,7 @@ export default function PatientRecord() {
         setProvinces(data);
       } catch (error) {
         ToastAndroid.show('Lỗi khi lấy dữ liệu tỉnh thành!', ToastAndroid.BOTTOM);
-        console.error('Error fetching provinces:', error);
+        // console.error('Error fetching provinces:', error);
       }
     };
 
@@ -84,7 +84,7 @@ export default function PatientRecord() {
       setDistricts(data || []);
     } catch (error) {
       ToastAndroid.show('Lỗi khi lấy dữ liệu thành phố/huyện!', ToastAndroid.BOTTOM);
-      console.error('Error fetching districts:', error);
+      // console.error('Error fetching districts:', error);
     }
   };
 
@@ -102,7 +102,7 @@ export default function PatientRecord() {
       setWards(data || []);
     } catch (error) {
       ToastAndroid.show('Lỗi khi lấy dữ liệu phường/xã!', ToastAndroid.BOTTOM);
-      console.error('Error fetching wards:', error);
+      // console.error('Error fetching wards:', error);
     }
   };
 
@@ -181,7 +181,7 @@ export default function PatientRecord() {
       navigation.goBack('(tabs)/patient/RecordPatientList');
     } catch (error) {
       ToastAndroid.show('Đăng ký thất bại!', ToastAndroid.BOTTOM);
-      console.error('Registration error:', error);
+      // console.error('Registration error:', error);
     }
   };
 

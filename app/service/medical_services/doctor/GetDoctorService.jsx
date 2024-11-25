@@ -18,7 +18,7 @@ export const getDoctorService = async (doctorId, page, size) => {
         });
         return response.data;
     } catch (error) {
-        console.error('Error fetching doctor services:', error);
+        // console.error('Error fetching doctor services:', error);
         throw error;
     }
 };

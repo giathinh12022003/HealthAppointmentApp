@@ -99,6 +99,61 @@ export default function _layout() {
           headerTitleStyle: { color: 'white' },
         }}
       />
+      <Stack.Screen
+        name='(tabs)/patient/ChooseRecordPatient'
+        options={{
+          title: 'Chọn hồ sơ khám bệnh',
+          headerBackVisible: true,
+          headerStyle: {
+            backgroundColor: '#2563eb',
+          },
+          headerTitleStyle: { color: 'white' },
+        }}
+      />
+      <Stack.Screen
+        name='(tabs)/appointment/CreateAppointment'
+        options={{
+          title: 'Thông tin lịch hẹn',
+          headerBackVisible: true,
+          headerStyle: {
+            backgroundColor: '#2563eb',
+          },
+          headerTitleStyle: { color: 'white' },
+        }}
+      />
+      <Stack.Screen
+        name='(tabs)/medical_services/MedicalServiceList'
+        options={{
+          title: 'Đặt lịch khám',
+          headerBackVisible: true,
+          headerStyle: {
+            backgroundColor: '#2563eb',
+          },
+          headerTitleStyle: { color: 'white' },
+        }}
+      />
+      <Stack.Screen
+        name='(tabs)/specialty/SpecialtyList'
+        options={{
+          title: 'Danh sách chuyên khoa',
+          headerBackVisible: true,
+          headerStyle: {
+            backgroundColor: '#2563eb',
+          },
+          headerTitleStyle: { color: 'white' },
+        }}
+      />
+      <Stack.Screen
+        name='(tabs)/medical_services/specialty/Specialty'
+        options={{
+          title: 'Danh sách dịch vụ',
+          headerBackVisible: true,
+          headerStyle: {
+            backgroundColor: '#2563eb',
+          },
+          headerTitleStyle: { color: 'white' },
+        }}
+      />
     </Stack>
   );
 }

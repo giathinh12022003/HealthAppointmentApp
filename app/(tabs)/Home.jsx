@@ -9,7 +9,7 @@ export default function App() {
       <StatusBar style="light" />
 
       <View style={styles.menu}>
-        <Link href="/tab/booking" asChild>
+        <Link href="/(tabs)/medical_services/MedicalServiceList" asChild>
           <TouchableOpacity style={styles.menuItem}>
             <Text style={styles.menuItemText}>Đặt lịch khám</Text>
           </TouchableOpacity>

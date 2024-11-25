@@ -1,4 +1,4 @@
-import { Text, View, TextInput, Button, ToastAndroid, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+import { Text, View, TextInput, Alert, ToastAndroid, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import React, { useState } from 'react';
 import { Link, useNavigation } from 'expo-router';
 import { RadioButton } from 'react-native-paper';
@@ -58,11 +58,18 @@ export default function Register() {
         ToastAndroid.show('Tạo tài khoản thành công!', ToastAndroid.BOTTOM);
         navigator.goBack('index');
       }
-      else {
-        ToastAndroid.show('Đăng kí thất bại!', ToastAndroid.BOTTOM);
-      }
     } catch (error) {
-      console.error(error);
+      // Hiển thị thông báo lỗi từ backend
+      if (error.message) {
+        Alert.alert(
+          'Thông báo',
+          error.message,
+          [{ text: 'OK' }],
+          { cancelable: true }
+        );
+      } else {
+        ToastAndroid.show('Đăng ký thất bại!', ToastAndroid.BOTTOM);
+      }
     }
   };
 

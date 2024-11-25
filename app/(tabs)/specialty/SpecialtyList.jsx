@@ -1,59 +1,47 @@
+import { View, FlatList, Text, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
-import { getDoctorService } from '../../../service/medical_services/doctor/GetDoctorService'; // API mới
 import tw from 'tailwind-react-native-classnames';
-import { useLocalSearchParams, router } from 'expo-router';
+import { router } from 'expo-router';
+import { getSpecialties } from '../../service/medical_services/specialty/SpecialtyList'
 
-export default function DoctorService() {
-  const { doctorId, doctorName } = useLocalSearchParams();
-  const [services, setServices] = useState([]);
+export default function SpecialtyList() {
+  const [specialties, setSpecialties] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
-    if (doctorId) {
-      fetchServices();
-    } else {
-      // console.error('doctorId is missing!');
-    }
-  }, [page, doctorId]);
+    fetchSpecialties();
+  }, [page]);
 
-  const fetchServices = async () => {
+  const fetchSpecialties = async () => {
     setLoading(true);
     try {
-      const data = await getDoctorService(doctorId, page, 5);
+      const data = await getSpecialties(page, 5);
+      setSpecialties(data.data);
       setTotalPages(data.totalPages);
-      setServices(data.data);
     } catch (error) {
-      // console.error('Failed to fetch services:', error);
+      // console.error('Failed to fetch:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const renderService = ({ item }) => (
+  const renderSpecialty = ({ item }) => (
     <View style={tw`bg-white p-4 my-2 rounded-lg shadow`}>
-      <Text style={tw`text-lg font-bold mb-2`}>{item.service.name}</Text>
-      <Text>{`Giá dịch vụ: ${item.service.unitPrice} VND`}</Text>
-      <Text>{`Trạng thái: ${item.service.status}`}</Text>
-      <Text>{`Cập nhật: ${new Date(item.service.lastUpdated).toLocaleDateString()}`}</Text>
+      <Text style={tw`text-lg font-bold mb-2`}>
+        {item.specialtyName}
+      </Text>
       <TouchableOpacity
         style={tw`mt-4 bg-blue-500 py-2 px-4 rounded-lg`}
         onPress={() =>
           router.push({
-            pathname: '(tabs)/medical_services/doctor/DoctorServiceDetails',
-            params: {
-              serviceId: item.id,
-              serviceName: item.service.name,
-              doctorId: doctorId,
-              doctorName: doctorName
-            }
+            pathname: '(tabs)/medical_services/specialty/Specialty',
+            params: { specialtyId: item.specialtyId },
           })
         }
-
       >
-        <Text style={tw`text-center text-white text-base`}>Chọn dịch vụ</Text>
+        <Text style={tw`text-center text-white text-base`}>Đặt lịch ngay</Text>
       </TouchableOpacity>
     </View>
   );
@@ -144,17 +132,17 @@ export default function DoctorService() {
     );
   };
 
+
   return (
     <View style={tw`flex-1 p-4 bg-gray-100`}>
-      <Text style={tw`text-lg font-bold mb-1 text-left w-full`}>Dịch vụ bác sĩ: {doctorName}</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
         <>
           <FlatList
-            data={services}
-            keyExtractor={(item) => item.id}
-            renderItem={renderService}
+            data={specialties}
+            keyExtractor={(item) => item.specialtyId}
+            renderItem={renderSpecialty}
           />
           {renderPagination()}
         </>

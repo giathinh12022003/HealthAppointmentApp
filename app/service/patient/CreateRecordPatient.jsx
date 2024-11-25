@@ -15,9 +15,9 @@ export const createPatientRecord = async (patientData) => {
         Authorization: `Bearer ${storedToken}`,
       }
     });
-    console.log(response.data);
+    // console.log(response.data);
   } catch (error) {
-    console.error('Error create record:', error);
+    // console.error('Error create record:', error);
     throw error;
   }
 };
