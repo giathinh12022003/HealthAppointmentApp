@@ -55,7 +55,7 @@ export default function ChooseRecordPatient() {
       <TouchableOpacity
         style={tw`mt-6 bg-blue-600 py-3 rounded-lg shadow`}
         onPress={() => router.push({
-          pathname: '(tabs)/appointment/CreateAppointment', params: {
+          pathname: 'screen/appointment/CreateAppointment', params: {
             serviceId: serviceId,
             serviceName: serviceName,
             doctorId: doctorId,

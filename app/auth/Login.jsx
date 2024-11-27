@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TextInput, ToastAndroid, TouchableOpacity } from 'react-native';
 import React from 'react'
-import { useNavigation } from 'expo-router'
+import { useNavigation, router } from 'expo-router'
 import { useState } from 'react';
 import tw from 'tailwind-react-native-classnames';
 import { setToken } from '../service/Token';
@@ -19,7 +19,10 @@ export default function Login() {
       await setToken('accessToken', response.token)
       console.log("token: " + response.token);
 
-      navigator.navigate('(tabs)/Home');
+      navigator.reset({
+        index: 0,
+        routes: [{ name: 'screen' }],
+      });
 
       ToastAndroid.show('Đăng nhập thành công!', ToastAndroid.BOTTOM);
     }

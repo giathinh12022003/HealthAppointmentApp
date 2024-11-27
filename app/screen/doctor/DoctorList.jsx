@@ -1,46 +1,76 @@
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
-import React, { useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
+import { View, FlatList, Text, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
+import { getDoctors } from '../../service/doctor/Doctor';
 import tw from 'tailwind-react-native-classnames';
-import { getAllPatientRecord } from '../../service/patient/GetRecordPatient';
-import { useNavigation, useFocusEffect } from 'expo-router';
+import { useNavigation, router } from 'expo-router';
 
-export default function RecordPatientList() {
-    const [recordPatients, setRecordPatients] = useState([]);
+export default function DoctorList() {
+    const [doctors, setDoctors] = useState([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
 
-    const navigation = useNavigation();
+    const navigator = useNavigation();
 
-    useFocusEffect(
-        useCallback(() => {
-            fetchPatientDetails(page);
-        }, [page])
-    );
+    useEffect(() => {
+        fetchDoctors();
+    }, [page]);
 
-    const fetchPatientDetails = async () => {
+    const fetchDoctors = async () => {
         setLoading(true);
         try {
-            const data = await getAllPatientRecord(page, 4);
-            if (data?.data) {
-                setRecordPatients(data.data);
-                setTotalPages(data.totalPages);
-            }
+            const data = await getDoctors(page, 5);
+            setDoctors(data.data);
+            setTotalPages(data.totalPages);
         } catch (error) {
-            // console.error('Error fetching patient details:', error);
+            // console.error('Failed to fetch doctors:', error);
         } finally {
             setLoading(false);
         }
     };
 
-    const renderPatientItem = ({ item }) => (
-        <View style={tw`border p-4 mb-2 bg-white rounded-lg`}>
-            <Text style={tw`text-lg font-bold`}>{item.id}</Text>
-            <Text>Ngày sinh: {item.dateOfBirth}</Text>
-            <Text>Giới tính: {item.gender}</Text>
-            <Text>Số điện thoại: {item.phoneNumber}</Text>
-        </View>
-    );
+    const getAvatar = (gender) => {
+        if (gender === 'Nam') {
+            return require('../../assets/male_doctor_img.jpg'); // Đường dẫn đến ảnh bác sĩ nam
+        } else if (gender === 'Nữ') {
+            return require('../../assets/female_doctor_img.jpg'); // Đường dẫn đến ảnh bác sĩ nữ
+        }
+    };
+
+    const renderDoctor = ({ item }) => {
+        const specialtyNames = item.specialties.map((specialty) => specialty.specialtyName).join(', ');
+
+        return (
+            <View style={tw`bg-white p-4 my-2 rounded-lg shadow relative`}>
+                <View style={tw`absolute top-4 right-4`}>
+                    <Image
+                        source={getAvatar(item.gender)}
+                        style={tw`w-20 h-20 rounded-md border border-gray-300`}
+                    />
+                </View>
+                <Text style={tw`text-base font-bold mb-2`}>
+                    {`${item.qualificationName}: ${item.fullName}`}
+                </Text>
+                <Text style={tw`text-gray-600 text-sm mb-2`}>
+                    Giới tính: {item.gender}
+                </Text>
+                <Text style={tw`text-gray-600 text-sm mb-2`}>
+                    Chuyên khoa: {specialtyNames}
+                </Text>
+                <TouchableOpacity
+                    style={tw`mt-4 bg-blue-500 py-2 px-4 rounded-lg`}
+                    onPress={() =>
+                        router.push({
+                            pathname: 'screen/doctor/DoctorService',
+                            params: { doctorId: item.id, doctorName: item.fullName },
+                        })
+                    }
+                >
+                    <Text style={tw`text-center text-white text-base`}>Đặt lịch ngay</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    };
 
     const renderPagination = () => {
         if (totalPages <= 1) return null;
@@ -126,24 +156,18 @@ export default function RecordPatientList() {
                 </TouchableOpacity>
             </View>
         );
-    };    
-
+    };
+    
     return (
         <View style={tw`flex-1 p-4 bg-gray-100`}>
-            <TouchableOpacity
-                style={tw`bg-blue-500 p-4 rounded-lg mb-4`}
-                onPress={() => navigation.navigate('(tabs)/patient/RecordPatient')}
-            >
-                <Text style={tw`text-white font-bold text-center text-lg`}>Thêm Hồ Sơ</Text>
-            </TouchableOpacity>
             {loading ? (
                 <ActivityIndicator size="large" color="#0000ff" />
             ) : (
                 <>
                     <FlatList
-                        data={recordPatients}
+                        data={doctors}
                         keyExtractor={(item) => item.id}
-                        renderItem={renderPatientItem}
+                        renderItem={renderDoctor}
                     />
                     {renderPagination()}
                 </>

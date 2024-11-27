@@ -9,17 +9,17 @@ export default function App() {
       <StatusBar style="light" />
 
       <View style={styles.menu}>
-        <Link href="/(tabs)/medical_services/MedicalServiceList" asChild>
+        <Link href="screen/medical_services/MedicalServiceList" asChild>
           <TouchableOpacity style={styles.menuItem}>
             <Text style={styles.menuItemText}>Đặt lịch khám</Text>
           </TouchableOpacity>
         </Link>
-        <Link href="/(tabs)/patient/RecordPatientList" asChild>
+        <Link href="screen/patient/RecordPatientList" asChild>
           <TouchableOpacity style={styles.menuItem}>
             <Text style={styles.menuItemText}>Hồ sơ khám bệnh</Text>
           </TouchableOpacity>
         </Link>
-        <Link href="/(tabs)/doctor/DoctorList" asChild>
+        <Link href="screen/doctor/DoctorList" asChild>
           <TouchableOpacity style={styles.menuItem}>
             <Text style={styles.menuItemText}>Tìm kiếm bác sĩ</Text>
           </TouchableOpacity>

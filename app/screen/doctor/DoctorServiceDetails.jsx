@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, Alert, FlatList, ScrollView, TouchableOpacity } from 'react-native';
 import tw from 'tailwind-react-native-classnames';
 import { useLocalSearchParams, router } from 'expo-router';
-import { getDoctorServiceDay, getDoctorServiceTimeFrame } from '../../../service/medical_services/doctor/GetDoctorServiceDay';
+import { getDoctorServiceDay, getDoctorServiceTimeFrame } from '../../service/medical_services/doctor/GetDoctorServiceDay';
 import { Calendar } from 'react-native-calendars';
 
 export default function DoctorServiceDetails() {
@@ -156,7 +156,7 @@ export default function DoctorServiceDetails() {
     return (
       <View style={tw`p-4 mb-2 bg-white rounded-lg shadow`}>
         <Text style={tw`text-lg font-bold text-blue-600`}>
-          Thời gian: {formatTime(item.startTime, item.endTime)}
+          Thời gian: {item.timeFrameResponse.fullName}
         </Text>
         <Text style={tw`text-gray-700`}>
           Ngày khám: {`thứ ${item.dayOfWeek} ngày `}{selectedDay ? formatDate(selectedDay) : ''}
@@ -167,18 +167,14 @@ export default function DoctorServiceDetails() {
         <TouchableOpacity
           style={tw`mt-6 bg-blue-600 py-3 rounded-lg shadow`}
           onPress={() => router.push({
-            pathname: '(tabs)/patient/ChooseRecordPatient', params: {
-              serviceId: serviceId,
+            pathname: 'screen/patient/ChooseRecordPatient', params: {
               serviceName: serviceName,
-              doctorId: doctorId,
               doctorName: doctorName,
               day: selectedDay,
               serviceTimeFrameId: item.id,
               dayOfWeek: item.dayOfWeek,
-              startTime: item.startTime,
-              endTime: item.endTime,
               room: item.roomResponse.name,
-              session: formatTime(item.startTime, item.endTime)
+              session: item.timeFrameResponse.fullName,
             }
           })}
         >

@@ -1,6 +1,6 @@
 import { Text, View, TextInput, Alert, ToastAndroid, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import React, { useState } from 'react';
-import { Link, useNavigation } from 'expo-router';
+import { Link, useNavigation, router } from 'expo-router';
 import { RadioButton } from 'react-native-paper';
 import { createUser } from '../service/identity/User';
 import tw from 'tailwind-react-native-classnames';
@@ -172,9 +172,11 @@ export default function Register() {
           >
             <Text style={tw`text-white text-lg`}>Đăng ký</Text>
           </TouchableOpacity>
-          <Link href="/" style={tw`mt-4 text-blue-600`}>
-            Quay lại
-          </Link>
+          <TouchableOpacity
+            onPress={() => navigator.goBack()}
+          >
+            <Text style={tw`mt-4 text-blue-600`}>Quay lại</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

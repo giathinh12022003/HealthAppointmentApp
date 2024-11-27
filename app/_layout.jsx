@@ -21,7 +21,7 @@ export default function _layout() {
         name='auth/Register'
         options={{
           title: 'Register',
-          headerBackVisible: true,
+          headerBackVisible: false,
           headerStyle: {
             backgroundColor: '#2563eb',
           },
@@ -29,129 +29,9 @@ export default function _layout() {
         }}
       />
       <Stack.Screen
-        name='(tabs)/Home'
+        name='screen'
         options={{
-          title: 'Home',
-          headerBackVisible: true,
-          headerStyle: {
-            backgroundColor: '#2563eb',
-          },
-          headerTitleStyle: { color: 'white' },
-          headerRight: () => (
-            <TouchableOpacity onPress={() => console.log('Go to profile')}>
-              <Ionicons name="person-circle-outline" size={28} color="white" style={tw`mr-4`} />
-            </TouchableOpacity>
-          ),
-        }}
-      />
-      <Stack.Screen
-        name='(tabs)/doctor/DoctorList'
-        options={{
-          title: 'Danh sách bác sĩ',
-          headerBackVisible: true,
-          headerStyle: {
-            backgroundColor: '#2563eb',
-          },
-          headerTitleStyle: { color: 'white' },
-        }}
-      />
-      <Stack.Screen
-        name='(tabs)/patient/RecordPatientList'
-        options={{
-          title: 'Danh sách hồ sơ khám bệnh',
-          headerBackVisible: true,
-          headerStyle: {
-            backgroundColor: '#2563eb',
-          },
-          headerTitleStyle: { color: 'white' },
-        }}
-      />
-      <Stack.Screen
-        name='(tabs)/patient/RecordPatient'
-        options={{
-          title: 'Tạo hồ sơ khám bệnh',
-          headerBackVisible: true,
-          headerStyle: {
-            backgroundColor: '#2563eb',
-          },
-          headerTitleStyle: { color: 'white' },
-        }}
-      />
-      <Stack.Screen
-        name='(tabs)/medical_services/doctor/DoctorService'
-        options={{
-          title: 'Danh sách dịch vụ bác sĩ',
-          headerBackVisible: true,
-          headerStyle: {
-            backgroundColor: '#2563eb',
-          },
-          headerTitleStyle: { color: 'white' },
-        }}
-      />
-      <Stack.Screen
-        name='(tabs)/medical_services/doctor/DoctorServiceDetails'
-        options={{
-          title: 'Chọn ngày khám dịch vụ',
-          headerBackVisible: true,
-          headerStyle: {
-            backgroundColor: '#2563eb',
-          },
-          headerTitleStyle: { color: 'white' },
-        }}
-      />
-      <Stack.Screen
-        name='(tabs)/patient/ChooseRecordPatient'
-        options={{
-          title: 'Chọn hồ sơ khám bệnh',
-          headerBackVisible: true,
-          headerStyle: {
-            backgroundColor: '#2563eb',
-          },
-          headerTitleStyle: { color: 'white' },
-        }}
-      />
-      <Stack.Screen
-        name='(tabs)/appointment/CreateAppointment'
-        options={{
-          title: 'Thông tin lịch hẹn',
-          headerBackVisible: true,
-          headerStyle: {
-            backgroundColor: '#2563eb',
-          },
-          headerTitleStyle: { color: 'white' },
-        }}
-      />
-      <Stack.Screen
-        name='(tabs)/medical_services/MedicalServiceList'
-        options={{
-          title: 'Đặt lịch khám',
-          headerBackVisible: true,
-          headerStyle: {
-            backgroundColor: '#2563eb',
-          },
-          headerTitleStyle: { color: 'white' },
-        }}
-      />
-      <Stack.Screen
-        name='(tabs)/specialty/SpecialtyList'
-        options={{
-          title: 'Danh sách chuyên khoa',
-          headerBackVisible: true,
-          headerStyle: {
-            backgroundColor: '#2563eb',
-          },
-          headerTitleStyle: { color: 'white' },
-        }}
-      />
-      <Stack.Screen
-        name='(tabs)/medical_services/specialty/Specialty'
-        options={{
-          title: 'Danh sách dịch vụ',
-          headerBackVisible: true,
-          headerStyle: {
-            backgroundColor: '#2563eb',
-          },
-          headerTitleStyle: { color: 'white' },
+          headerShown:false,
         }}
       />
     </Stack>

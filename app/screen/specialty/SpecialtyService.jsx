@@ -2,9 +2,9 @@ import { View, FlatList, Text, ActivityIndicator, TouchableOpacity, Image } from
 import React, { useEffect, useState } from 'react';
 import tw from 'tailwind-react-native-classnames';
 import { useLocalSearchParams, router } from 'expo-router';
-import { getServiceSpecialty } from '../../../service/medical_services/specialty/SpecialtyService'
+import { getServiceSpecialty } from '../../service/medical_services/specialty/SpecialtyService'
 
-export default function Specialty() {
+export default function SpecialtyService() {
   const { specialtyId } = useLocalSearchParams();
   const [specialtyServices, setSpecialtyServices] = useState([]);
   const [page, setPage] = useState(1);

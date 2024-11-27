@@ -10,14 +10,14 @@ export default function MedicalServiceList() {
       title: 'Đặt lịch khám theo bác sĩ',
       description: 'Tìm và đặt lịch với bác sĩ phù hợp.',
       image: 'https://via.placeholder.com/150/doctor.png',
-      route: '(tabs)/doctor/DoctorList', // Đường dẫn cho dịch vụ này
+      route: 'doctor', // Đường dẫn cho dịch vụ này
     },
     {
       id: 2,
       title: 'Đặt lịch khám theo chuyên khoa',
       description: 'Khám theo chuyên môn mong muốn.',
       image: 'https://via.placeholder.com/150/specialist.png',
-      route: '(tabs)/specialty/SpecialtyList', // Đường dẫn cho chuyên khoa
+      route: 'specialty', // Đường dẫn cho chuyên khoa
     },
     {
       id: 3,
