@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, FlatList, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
-import { getDoctorService } from '../../service/medical_services/doctor/GetDoctorService'; // API mới
+import { getDoctorService } from '../../service/medical_services/doctor/GetDoctorService';
 import tw from 'tailwind-react-native-classnames';
 import { useLocalSearchParams, router } from 'expo-router';
 
@@ -35,14 +35,14 @@ export default function DoctorService() {
   const renderService = ({ item }) => (
     <View style={tw`bg-white p-4 my-2 rounded-lg shadow`}>
       <Text style={tw`text-lg font-bold mb-2`}>{item.service.name}</Text>
-      <Text>{`Giá dịch vụ: ${item.service.unitPrice} VND`}</Text>
+      <Text>{`Giá dịch vụ: ${item.unitPrice} VND`}</Text>
       <Text>{`Trạng thái: ${item.service.status}`}</Text>
       <Text>{`Cập nhật: ${new Date(item.service.lastUpdated).toLocaleDateString()}`}</Text>
       <TouchableOpacity
         style={tw`mt-4 bg-blue-500 py-2 px-4 rounded-lg`}
         onPress={() =>
           router.push({
-            pathname: 'screen/doctor/DoctorServiceDetails',
+            pathname: 'screen/doctor/DoctorServiceTimeFrame',
             params: {
               serviceId: item.id,
               serviceName: item.service.name,

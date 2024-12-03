@@ -16,6 +16,7 @@ export const createAppointment = async (appointmentData) => {
             }
         });
         console.log(response.data);
+        return response.data;
     } catch (error) {
         // console.error('Error create record:', error);
         throw error;
@@ -24,4 +25,4 @@ export const createAppointment = async (appointmentData) => {
 
 export default {
     createAppointment
-  };
+};

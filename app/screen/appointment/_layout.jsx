@@ -18,6 +18,16 @@ export default function _layout() {
                     headerTitleStyle: { color: 'white' },
                 }}
             />
+            <Stack.Screen
+                name='AppointmentConfirm'
+                options={{
+                    title: 'Xác nhận lịch hẹn',
+                    headerStyle: {
+                        backgroundColor: '#2563eb',
+                    },
+                    headerTitleStyle: { color: 'white' },
+                }}
+            />
         </Stack>
     )
 }

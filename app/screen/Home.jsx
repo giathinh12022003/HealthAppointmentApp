@@ -1,65 +1,66 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Link } from 'expo-router';
+import tw from 'tailwind-react-native-classnames';
 
-export default function App() {
+export default function Home() {
   return (
-    <View style={styles.container}>
+    <View style={tw`flex-1 bg-blue-50 items-center`}>
       <StatusBar style="light" />
 
-      <View style={styles.menu}>
+      <View style={tw`mt-36 flex-row flex-wrap justify-around w-11/12`}>
         <Link href="screen/medical_services/MedicalServiceList" asChild>
-          <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuItemText}>Đặt lịch khám</Text>
+          <TouchableOpacity style={tw`w-5/12 py-4 bg-blue-500 my-1 rounded-lg items-center`}>
+            <Text style={tw`text-white font-semibold text-lg`}>Đặt lịch khám</Text>
           </TouchableOpacity>
         </Link>
         <Link href="screen/patient/RecordPatientList" asChild>
-          <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuItemText}>Hồ sơ khám bệnh</Text>
+          <TouchableOpacity style={tw`w-5/12 py-4 bg-blue-500 my-1 rounded-lg items-center`}>
+            <Text style={tw`text-white font-semibold text-lg`}>Hồ sơ khám bệnh</Text>
           </TouchableOpacity>
         </Link>
         <Link href="screen/doctor/DoctorList" asChild>
-          <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuItemText}>Tìm kiếm bác sĩ</Text>
+          <TouchableOpacity style={tw`w-5/12 py-4 bg-blue-500 my-1 rounded-lg items-center`}>
+            <Text style={tw`text-white font-semibold text-lg`}>Tìm kiếm bác sĩ</Text>
           </TouchableOpacity>
         </Link>
         <Link href="/tab/inpatient-treatment" asChild>
-          <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuItemText}>Điều trị nội trú</Text>
+          <TouchableOpacity style={tw`w-5/12 py-4 bg-blue-500 my-1 rounded-lg items-center`}>
+            <Text style={tw`text-white font-semibold text-lg`}>Điều trị nội trú</Text>
           </TouchableOpacity>
         </Link>
         <Link href="/tab/schedule" asChild>
-          <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuItemText}>Lịch khám bệnh</Text>
+          <TouchableOpacity style={tw`w-5/12 py-4 bg-blue-500 my-1 rounded-lg items-center`}>
+            <Text style={tw`text-white font-semibold text-lg`}>Lịch hẹn khám bệnh</Text>
           </TouchableOpacity>
         </Link>
         <Link href="/tab/insurance" asChild>
-          <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuItemText}>Bảo hiểm y tế</Text>
+          <TouchableOpacity style={tw`w-5/12 py-4 bg-blue-500 my-1 rounded-lg items-center`}>
+            <Text style={tw`text-white font-semibold text-lg`}>Bảo hiểm y tế</Text>
           </TouchableOpacity>
         </Link>
         <Link href="/tab/procedure" asChild>
-          <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuItemText}>Quy trình khám bệnh</Text>
+          <TouchableOpacity style={tw`w-5/12 py-4 bg-blue-500 my-1 rounded-lg items-center`}>
+            <Text style={tw`text-white font-semibold text-lg`}>Quy trình khám bệnh</Text>
           </TouchableOpacity>
         </Link>
         <Link href="/tab/faq" asChild>
-          <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuItemText}>Giải đáp & tư vấn</Text>
+          <TouchableOpacity style={tw`w-5/12 py-4 bg-blue-500 my-1 rounded-lg items-center`}>
+            <Text style={tw`text-white font-semibold text-lg`}>Giải đáp & tư vấn</Text>
           </TouchableOpacity>
         </Link>
       </View>
 
-      <View style={styles.activities}>
-        <Text style={styles.activitiesTitle}>HOẠT ĐỘNG</Text>
+      <View style={tw`mt-5 w-11/12`}>
+        <Text style={tw`text-lg font-bold mb-2`}>HOẠT ĐỘNG</Text>
         <ScrollView horizontal>
           <Image
-            style={styles.activityImage}
+            style={tw`w-36 h-24 mr-2 rounded-lg`}
             source={{ uri: 'https://example.com/activity1.jpg' }} // Thay thế bằng URL ảnh thật
           />
           <Image
-            style={styles.activityImage}
+            style={tw`w-36 h-24 mr-2 rounded-lg`}
             source={{ uri: 'https://example.com/activity2.jpg' }} // Thay thế bằng URL ảnh thật
           />
         </ScrollView>
@@ -67,46 +68,3 @@ export default function App() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f2f9ff',
-    alignItems: 'center',
-  },
-  menu: {
-    marginTop: 150,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    width: '90%',
-  },
-  menuItem: {
-    width: '45%',
-    padding: 15,
-    backgroundColor: '#3b82f6',
-    marginVertical: 5,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  menuItemText: {
-    color: 'white',
-    fontWeight: '600',
-    fontSize: 16,
-  },
-  activities: {
-    marginTop: 20,
-    width: '90%',
-  },
-  activitiesTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  activityImage: {
-    width: 150,
-    height: 100,
-    marginRight: 10,
-    borderRadius: 8,
-  },
-});

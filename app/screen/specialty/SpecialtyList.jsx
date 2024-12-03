@@ -36,8 +36,8 @@ export default function SpecialtyList() {
         style={tw`mt-4 bg-blue-500 py-2 px-4 rounded-lg`}
         onPress={() =>
           router.push({
-            pathname: '(tabs)/medical_services/specialty/Specialty',
-            params: { specialtyId: item.specialtyId },
+            pathname: 'screen/specialty/SpecialtyService',
+            params: { specialtyId: item.specialtyId},
           })
         }
       >

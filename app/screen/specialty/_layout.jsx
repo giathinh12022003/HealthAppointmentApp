@@ -21,7 +21,29 @@ export default function _layout() {
             <Stack.Screen
                 name='SpecialtyService'
                 options={{
-                    title: 'Danh sách chuyên khoa',
+                    title: 'Danh sách dịch vụ chuyên khoa',
+                    headerBackVisible: true,
+                    headerStyle: {
+                        backgroundColor: '#2563eb',
+                    },
+                    headerTitleStyle: { color: 'white' },
+                }}
+            />
+            <Stack.Screen
+                name='DoctorSpecialtyService'
+                options={{
+                    title: 'Danh sách dịch vụ bác sĩ',
+                    headerBackVisible: true,
+                    headerStyle: {
+                        backgroundColor: '#2563eb',
+                    },
+                    headerTitleStyle: { color: 'white' },
+                }}
+            />
+            <Stack.Screen
+                name='SpecialtyServiceTimeFrame'
+                options={{
+                    title: 'Chọn ngày khám',
                     headerBackVisible: true,
                     headerStyle: {
                         backgroundColor: '#2563eb',

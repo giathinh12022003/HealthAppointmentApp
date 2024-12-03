@@ -143,15 +143,15 @@ export default function DoctorServiceDetails() {
 
 
   const renderServiceItem = ({ item }) => {
-    const formatTime = (start, end) => {
-      const startPeriod = start < 12 ? 'sáng' : 'chiều';
-      const endPeriod = end < 12 ? 'sáng' : 'chiều';
+    // const formatTime = (start, end) => {
+    //   const startPeriod = start < 12 ? 'sáng' : 'chiều';
+    //   const endPeriod = end < 12 ? 'sáng' : 'chiều';
 
-      if (startPeriod === endPeriod) {
-        return `${start} - ${end} giờ (${startPeriod})`;
-      }
-      return `${start} ${startPeriod} - ${end} ${endPeriod}`;
-    };
+    //   if (startPeriod === endPeriod) {
+    //     return `${start} - ${end} giờ (${startPeriod})`;
+    //   }
+    //   return `${start} ${startPeriod} - ${end} ${endPeriod}`;
+    // };
 
     return (
       <View style={tw`p-4 mb-2 bg-white rounded-lg shadow`}>
@@ -220,7 +220,7 @@ export default function DoctorServiceDetails() {
             </View>
           ) : (
             <Text style={tw`text-center text-gray-600`}>
-              Không có dịch vụ khả dụng cho ngày {formatDate(selectedDay)}
+              Dịch vụ ở ngày {formatDate(selectedDay)} đã hết chỗ
             </Text>
           )
         ) : (

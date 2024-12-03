@@ -41,11 +41,12 @@ export default function SpecialtyService() {
         style={tw`mt-4 bg-blue-500 py-2 px-4 rounded-lg`}
         onPress={() =>
           router.push({
-
+            pathname:'screen/specialty/DoctorSpecialtyService',
+            params:{ serviceId: item.id,serviceName:item.name},
           })
         }
       >
-        <Text style={tw`text-center text-white text-base`}>Đặt lịch ngay</Text>
+        <Text style={tw`text-center text-white text-base`}>Chọn dịch vụ</Text>
       </TouchableOpacity>
     </View>
   );

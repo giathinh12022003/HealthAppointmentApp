@@ -56,7 +56,7 @@ export default function Register() {
       const response = await createUser(userData);
       if (response) {
         ToastAndroid.show('Tạo tài khoản thành công!', ToastAndroid.BOTTOM);
-        navigator.goBack('index');
+        navigator.goBack();
       }
     } catch (error) {
       // Hiển thị thông báo lỗi từ backend

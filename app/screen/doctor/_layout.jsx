@@ -30,7 +30,7 @@ export default function _layout() {
                 }}
             />
             <Stack.Screen
-                name='DoctorServiceDetails'
+                name='DoctorServiceTimeFrame'
                 options={{
                     title: 'Chọn ngày khám',
                     headerBackVisible: true,

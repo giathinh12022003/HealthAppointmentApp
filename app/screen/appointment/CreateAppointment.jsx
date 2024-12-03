@@ -32,22 +32,28 @@ export default function AppointmentSummary() {
     const formattedDate = convertDateToApiFormat(day);
     const appointmentData = {
       date: formattedDate,
-      session: session,
       serviceTimeFrameId: serviceTimeFrameId,
       patientsId: patientId,
     };
 
     try {
-      // await createAppointment(appointmentData);
+      const data = await createAppointment(appointmentData);
       Alert.alert(
         'Thành công',
-        'Lịch hẹn của bạn đã được lưu! Nhấn OK để quay lại trang chủ.',
+        'Lịch hẹn của bạn đã được lưu! Nhấn OK để tiếp tục.',
         [
           {
             text: 'OK',
-            onPress: () => navigator.reset({
-              index: 0,
-              routes: [{ name: 'screen' }],
+            onPress: () => router.push({
+              pathname: 'screen/appointment/AppointmentConfirm',
+              params: { serviceName,
+                doctorName,
+                day,
+                dayOfWeek,
+                room,
+                session,
+                orderNumber:data.orderNumber
+               },
             }),
           },
         ]
@@ -61,7 +67,7 @@ export default function AppointmentSummary() {
   return (
     <View style={tw`flex-1 bg-gray-100 p-4`}>
       <Text style={tw`text-lg font-bold text-center text-blue-600 mb-4`}>
-        Xác nhận Thông Tin Lịch Hẹn
+        Kiểm Tra Thông Tin Lịch Hẹn
       </Text>
 
       <View style={tw`bg-white p-5 rounded-lg shadow`}>
@@ -89,7 +95,7 @@ export default function AppointmentSummary() {
           style={tw`bg-blue-600 py-4 rounded-lg shadow mb-4`}
           onPress={handleConfirmAppointment}
         >
-          <Text style={tw`text-center text-white font-bold text-lg`}>Xác nhận</Text>
+          <Text style={tw`text-center text-white font-bold text-lg`}>Xác nhận đặt lịch</Text>
         </TouchableOpacity>
 
         <TouchableOpacity

@@ -1,6 +1,6 @@
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { useLocalSearchParams, router } from 'expo-router';
+import React, { useState, useEffect,useCallback } from 'react';
+import { useLocalSearchParams, router,useNavigation,useFocusEffect } from 'expo-router';
 import { getAllPatientRecord } from '../../service/patient/GetRecordPatient';
 import tw from 'tailwind-react-native-classnames';
 
@@ -9,6 +9,8 @@ export default function ChooseRecordPatient() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
+
+  const navigation=useNavigation();
 
   const { serviceId,
     serviceName,
@@ -27,9 +29,11 @@ export default function ChooseRecordPatient() {
     return `${day}/${month}/${year}`;
   };
 
-  useEffect(() => {
-    fetchPatientDetails();
-  }, [page]);
+  useFocusEffect(
+    useCallback(() => {
+        fetchPatientDetails(page);
+    }, [page])
+);
 
   const fetchPatientDetails = async () => {
     setLoading(true);
@@ -90,7 +94,7 @@ export default function ChooseRecordPatient() {
 
     // Các trang lân cận
     for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) {
-        pages.push(i);
+      pages.push(i);
     }
 
     if (endEllipsis) pages.push('endEllipsis');
@@ -99,73 +103,79 @@ export default function ChooseRecordPatient() {
     if (totalPages > 1) pages.push(totalPages);
 
     return (
-        <View style={tw`flex-row justify-center items-center flex-wrap mt-4`}>
-            {/* Nút đi đến trang đầu tiên */}
-            <TouchableOpacity
-                onPress={() => setPage(1)}
-                disabled={page === 1}
-                style={tw`m-1 px-3 py-2 bg-gray-200 rounded-lg ${page === 1 ? 'opacity-50' : ''}`}
-            >
-                <Text style={tw`text-center text-base text-black`}>{`<<`}</Text>
-            </TouchableOpacity>
+      <View style={tw`flex-row justify-center items-center flex-wrap mt-4`}>
+        {/* Nút đi đến trang đầu tiên */}
+        <TouchableOpacity
+          onPress={() => setPage(1)}
+          disabled={page === 1}
+          style={tw`m-1 px-3 py-2 bg-gray-200 rounded-lg ${page === 1 ? 'opacity-50' : ''}`}
+        >
+          <Text style={tw`text-center text-base text-black`}>{`<<`}</Text>
+        </TouchableOpacity>
 
-            {/* Nút lùi một trang */}
-            <TouchableOpacity
-                onPress={() => setPage(page - 1)}
-                disabled={page === 1}
-                style={tw`m-1 px-3 py-2 bg-gray-200 rounded-lg ${page === 1 ? 'opacity-50' : ''}`}
-            >
-                <Text style={tw`text-center text-base text-black`}>{`<`}</Text>
-            </TouchableOpacity>
+        {/* Nút lùi một trang */}
+        <TouchableOpacity
+          onPress={() => setPage(page - 1)}
+          disabled={page === 1}
+          style={tw`m-1 px-3 py-2 bg-gray-200 rounded-lg ${page === 1 ? 'opacity-50' : ''}`}
+        >
+          <Text style={tw`text-center text-base text-black`}>{`<`}</Text>
+        </TouchableOpacity>
 
-            {/* Hiển thị các trang */}
-            {pages.map((pageNumber, index) => {
-                if (pageNumber === 'startEllipsis' || pageNumber === 'endEllipsis') {
-                    return (
-                        <Text key={`ellipsis-${index}`} style={tw`px-4 py-2 text-gray-500`}>
-                            ...
-                        </Text>
-                    );
-                }
-                return (
-                    <TouchableOpacity
-                        key={`page-${pageNumber}`}
-                        onPress={() => setPage(pageNumber)}
-                        disabled={page === pageNumber}
-                        style={tw`m-1 px-4 py-2 ${page === pageNumber ? 'bg-blue-500' : 'bg-gray-200'} rounded-lg`}
-                    >
-                        <Text style={tw`text-center text-base ${page === pageNumber ? 'text-white' : 'text-black'}`}>
-                            {pageNumber}
-                        </Text>
-                    </TouchableOpacity>
-                );
-            })}
-
-            {/* Nút tiến một trang */}
+        {/* Hiển thị các trang */}
+        {pages.map((pageNumber, index) => {
+          if (pageNumber === 'startEllipsis' || pageNumber === 'endEllipsis') {
+            return (
+              <Text key={`ellipsis-${index}`} style={tw`px-4 py-2 text-gray-500`}>
+                ...
+              </Text>
+            );
+          }
+          return (
             <TouchableOpacity
-                onPress={() => setPage(page + 1)}
-                disabled={page === totalPages}
-                style={tw`m-1 px-3 py-2 bg-gray-200 rounded-lg ${page === totalPages ? 'opacity-50' : ''}`}
+              key={`page-${pageNumber}`}
+              onPress={() => setPage(pageNumber)}
+              disabled={page === pageNumber}
+              style={tw`m-1 px-4 py-2 ${page === pageNumber ? 'bg-blue-500' : 'bg-gray-200'} rounded-lg`}
             >
-                <Text style={tw`text-center text-base text-black`}>{`>`}</Text>
+              <Text style={tw`text-center text-base ${page === pageNumber ? 'text-white' : 'text-black'}`}>
+                {pageNumber}
+              </Text>
             </TouchableOpacity>
+          );
+        })}
 
-            {/* Nút đi đến trang cuối */}
-            <TouchableOpacity
-                onPress={() => setPage(totalPages)}
-                disabled={page === totalPages}
-                style={tw`m-1 px-3 py-2 bg-gray-200 rounded-lg ${page === totalPages ? 'opacity-50' : ''}`}
-            >
-                <Text style={tw`text-center text-base text-black`}>{`>>`}</Text>
-            </TouchableOpacity>
-        </View>
+        {/* Nút tiến một trang */}
+        <TouchableOpacity
+          onPress={() => setPage(page + 1)}
+          disabled={page === totalPages}
+          style={tw`m-1 px-3 py-2 bg-gray-200 rounded-lg ${page === totalPages ? 'opacity-50' : ''}`}
+        >
+          <Text style={tw`text-center text-base text-black`}>{`>`}</Text>
+        </TouchableOpacity>
+
+        {/* Nút đi đến trang cuối */}
+        <TouchableOpacity
+          onPress={() => setPage(totalPages)}
+          disabled={page === totalPages}
+          style={tw`m-1 px-3 py-2 bg-gray-200 rounded-lg ${page === totalPages ? 'opacity-50' : ''}`}
+        >
+          <Text style={tw`text-center text-base text-black`}>{`>>`}</Text>
+        </TouchableOpacity>
+      </View>
     );
-};
+  };
 
 
   return (
     <View style={tw`flex-1 p-4 bg-gray-100`}>
       <Text style={tw`text-black font-bold text-left text-lg`}>Danh sách hồ sơ:</Text>
+      <TouchableOpacity
+        style={tw`bg-blue-500 p-4 rounded-lg mb-4`}
+        onPress={() => navigation.navigate('RecordPatient')}
+      >
+        <Text style={tw`text-white font-bold text-center text-lg`}>Thêm Hồ Sơ</Text>
+      </TouchableOpacity>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (

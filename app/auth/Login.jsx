@@ -17,7 +17,7 @@ export default function Login() {
 
     if (response) {
       await setToken('accessToken', response.token)
-      console.log("token: " + response.token);
+      console.log("token log-in: " + response.token);
 
       navigator.reset({
         index: 0,
