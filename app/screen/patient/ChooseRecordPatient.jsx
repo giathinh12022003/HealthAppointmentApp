@@ -1,7 +1,7 @@
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import React, { useState, useEffect,useCallback } from 'react';
 import { useLocalSearchParams, router,useNavigation,useFocusEffect } from 'expo-router';
-import { getAllPatientRecord } from '../../service/patient/GetRecordPatient';
+import { getPatientRecordNonExistsInAppointment } from '../../service/patient/GetRecordPatient';
 import tw from 'tailwind-react-native-classnames';
 
 export default function ChooseRecordPatient() {
@@ -38,7 +38,7 @@ export default function ChooseRecordPatient() {
   const fetchPatientDetails = async () => {
     setLoading(true);
     try {
-      const data = await getAllPatientRecord(page, 4);
+      const data = await getPatientRecordNonExistsInAppointment(page, 4,serviceTimeFrameId,day);
       if (data?.data) {
         setRecordPatients(data.data);
         setTotalPages(data.totalPages);

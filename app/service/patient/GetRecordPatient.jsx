@@ -3,11 +3,11 @@ import { getToken } from '../Token';
 
 const IP = process.env.EXPO_PUBLIC_IP_ADDRESS;
 const API_CREATE_PATIENT = process.env.EXPO_PUBLIC_API_GET_ALL_PATIENT;
-const API_CREATE_PATIENT_ID = process.env.EXPO_PUBLIC_API_GET_PATIENT_BY_ID;
+const API_GET_PATIENT_NON_EXISTS_APPOINTMENT = process.env.EXPO_PUBLIC_API_GET_PATIENT_NON_EXISTS_APPOINTMENT;
 
 const REST_API_GET_PATIENT = `${IP}${API_CREATE_PATIENT}`;
 
-const REST_API_GET_PATIENT_ID = `${IP}${API_CREATE_PATIENT_ID}`;
+const REST_API_GET_PATIENT_NON_EXISTS = `${IP}${API_GET_PATIENT_NON_EXISTS_APPOINTMENT}`;
 
 export const getAllPatientRecord = async (page, size) => {
   try {
@@ -29,11 +29,16 @@ export const getAllPatientRecord = async (page, size) => {
   }
 };
 
-export const getPatientRecord = async (id) => {
+export const getPatientRecordNonExistsInAppointment = async (page,size,serviceTimeFrameId, date) => {
   try {
     const storedToken = await getToken('accessToken');
 
-    const response = await axios.get(`${REST_API_GET_PATIENT_ID}/${id}`, {
+    if (!storedToken) {
+      return { data: [], totalPages: 0, totalElements: 0, currentPage: page };
+    }
+
+    const response = await axios.get(`${REST_API_GET_PATIENT_NON_EXISTS}`, {
+      params: {page,size, serviceTimeFrameId, date },
       headers: {
         Authorization: `Bearer ${storedToken}`,
       }
@@ -45,6 +50,6 @@ export const getPatientRecord = async (id) => {
 };
 
 export default {
-  getPatientRecord,
+  getPatientRecordNonExistsInAppointment,
   getAllPatientRecord
 };

@@ -10,7 +10,7 @@ export default function _layout() {
       <Stack.Screen
         name='index'
         options={{
-          title: 'Welcome',
+          title: 'Ứng dụng đặt lịch khám trực tuyến',
           headerStyle: {
             backgroundColor: '#2563eb',
           },
