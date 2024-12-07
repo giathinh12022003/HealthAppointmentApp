@@ -46,7 +46,8 @@ export default function DoctorSpecialtyService() {
                         params: {
                             doctorServiceId: item.id,
                             serviceName: item.service.name,
-                            doctorName:item.doctorResponse.fullName
+                            doctorName:item.doctorResponse.fullName,
+                            unitPrice:item.unitPrice
                         }
                     })
                 }

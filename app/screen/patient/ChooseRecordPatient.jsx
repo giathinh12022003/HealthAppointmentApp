@@ -22,7 +22,8 @@ export default function ChooseRecordPatient() {
     startTime,
     endTime,
     room,
-    session } = useLocalSearchParams();
+    session,
+    unitPrice } = useLocalSearchParams();
 
   const formatDate = (date) => {
     const [year, month, day] = date.split('-');
@@ -71,7 +72,8 @@ export default function ChooseRecordPatient() {
             endTime: endTime,
             room: room,
             session: session,
-            patientId: item.id
+            patientId: item.id,
+            unitPrice:unitPrice
           }
         })}
       >

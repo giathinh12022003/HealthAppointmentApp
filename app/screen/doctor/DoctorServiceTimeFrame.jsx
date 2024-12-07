@@ -6,7 +6,7 @@ import { getDoctorServiceDay, getDoctorServiceTimeFrame } from '../../service/me
 import { Calendar } from 'react-native-calendars';
 
 export default function DoctorServiceDetails() {
-  const { serviceId, serviceName, doctorId, doctorName } = useLocalSearchParams();
+  const { serviceId, serviceName, doctorId, doctorName,unitPrice } = useLocalSearchParams();
   const [availableDays, setAvailableDays] = useState({});
   const [loading, setLoading] = useState(true);
   const [selectedDay, setSelectedDay] = useState(null);
@@ -175,6 +175,7 @@ export default function DoctorServiceDetails() {
               dayOfWeek: item.dayOfWeek,
               room: item.roomResponse.name,
               session: item.timeFrameResponse.fullName,
+              unitPrice:unitPrice
             }
           })}
         >

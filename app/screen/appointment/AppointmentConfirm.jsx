@@ -12,6 +12,7 @@ export default function AppointmentConfirm() {
     room,
     session,
     orderNumber,
+    unitPrice
   } = useLocalSearchParams();
 
   const formatDate = (date) => {
@@ -36,10 +37,10 @@ export default function AppointmentConfirm() {
       </View>
 
       <View style={tw`bg-white p-5 rounded-lg shadow`}>
-        <Text style={tw`text-lg font-bold mb-3`}>Dịch vụ:</Text>
+        <Text style={tw`text-lg font-bold mb-0`}>Dịch vụ:</Text>
         <Text style={tw`text-gray-700 mb-4 text-base`}>{serviceName}</Text>
 
-        <Text style={tw`text-lg font-bold mb-3`}>Bác sĩ:</Text>
+        <Text style={tw`text-lg font-bold mb-0`}>Bác sĩ:</Text>
         <Text style={tw`text-gray-700 mb-4 text-base`}>{doctorName}</Text>
 
         <Text style={tw`text-lg font-bold mb-3`}>Thời gian khám:</Text>
@@ -48,8 +49,14 @@ export default function AppointmentConfirm() {
         </Text>
         <Text style={tw`text-gray-700 mb-4 text-base`}>Khung giờ: {session}</Text>
 
-        <Text style={tw`text-lg font-bold mb-3`}>Phòng:</Text>
+        <Text style={tw`text-lg font-bold mb-0`}>Phòng:</Text>
         <Text style={tw`text-gray-700 mb-4 text-base`}>{room}</Text>
+
+        <Text style={tw`text-lg font-bold mb-0`}>Phí khám:</Text>
+        <Text style={tw`text-gray-700 mb-4 text-base`}>{unitPrice}</Text>
+
+        <Text style={tw`text-lg font-bold mb-0`}>Trạng thái:</Text>
+        <Text style={tw`text-gray-700 text-base`}>Chờ phê duyệt</Text>
       </View>
       <TouchableOpacity
         style={tw`bg-blue-600 py-4 rounded-lg shadow mb-4`}

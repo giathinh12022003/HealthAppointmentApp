@@ -47,7 +47,8 @@ export default function DoctorService() {
               serviceId: item.id,
               serviceName: item.service.name,
               doctorId: doctorId,
-              doctorName: doctorName
+              doctorName: doctorName,
+              unitPrice:item.unitPrice
             }
           })
         }
