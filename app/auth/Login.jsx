@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TextInput, ToastAndroid, TouchableOpacity } from 'react-native';
 import React from 'react'
-import { useNavigation, router } from 'expo-router'
+import { useNavigation, router, Link } from 'expo-router'
 import { useState } from 'react';
 import tw from 'tailwind-react-native-classnames';
 import { setToken } from '../service/Token';
@@ -11,6 +11,7 @@ export default function Login() {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const navigator = useNavigation();
+  const [loginSuccess, setLoginSuccess] = useState(false);
 
   const handleLogin = async () => {
     const response = await loginUser(userName, password);
@@ -19,9 +20,8 @@ export default function Login() {
       await setToken('accessToken', response.token)
       console.log("token log-in: " + response.token);
 
-      navigator.reset({
-        index: 0,
-        routes: [{ name: 'screen' }],
+      router.replace({
+        pathname: "screen/Home"
       });
 
       ToastAndroid.show('Đăng nhập thành công!', ToastAndroid.BOTTOM);

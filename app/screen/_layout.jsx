@@ -33,8 +33,9 @@ export default function _layout() {
                 <Stack.Screen
                     name='Home'
                     options={{
+                        gestureEnabled:false,
                         title: 'Trang chủ',
-                        headerBackVisible: true,
+                        headerBackVisible: false,
                         headerStyle: {
                             backgroundColor: '#2563eb',
                         },
@@ -59,9 +60,9 @@ export default function _layout() {
                                         left:250
                                     }}
                                 >
-                                    <Menu.Item onPress={() => console.log('Profile clicked')} title="Profile" />
-                                    <Menu.Item onPress={() => console.log('Setting clicked')} title="Setting" />
-                                    <Menu.Item onPress={handleLogOut} title="Log Out" />
+                                    <Menu.Item onPress={() => console.log('Profile clicked')} title="Hồ sơ" />
+                                    <Menu.Item onPress={() => console.log('Setting clicked')} title="Tùy chỉnh" />
+                                    <Menu.Item onPress={handleLogOut} title="Đăng xuất" />
                                 </Menu>
 
                             </View>

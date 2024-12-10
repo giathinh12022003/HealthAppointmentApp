@@ -1,6 +1,6 @@
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
-import { useLocalSearchParams, router } from 'expo-router';
-import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, Alert, BackHandler } from 'react-native';
+import { useLocalSearchParams, router, useNavigation } from 'expo-router';
+import React, { useState, useEffect } from 'react';
 import tw from 'tailwind-react-native-classnames';
 import { WebView } from 'react-native-webview';
 import { createAppointment } from '../../service/appointment/CreateAppointment';
@@ -21,6 +21,23 @@ export default function AppointmentSummary() {
   const [webViewVisible, setWebViewVisible] = useState(false);
   const [paymentUrl, setPaymentUrl] = useState('');
   const [orderNumber, setOrderNumber] = useState('');
+
+  const navigator = useNavigation();
+
+  const handleBack = () => {
+    router.replace({
+      pathname: "screen/medical_services/MedicalServiceList"
+    })
+    return true;
+  }
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', handleBack);
+
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBack);
+    }
+  }, []);
 
   const formatDate = (date) => {
     const [year, month, day] = date.split('-');
@@ -51,8 +68,8 @@ export default function AppointmentSummary() {
   };
 
   const handlePaymentSuccess = () => {
-    setWebViewVisible(false); // Đóng WebView
-    router.push({
+    setWebViewVisible(false);
+    router.replace({
       pathname: 'screen/appointment/AppointmentConfirm',
       params: {
         serviceName: serviceName,
@@ -85,10 +102,11 @@ export default function AppointmentSummary() {
         <WebView
           source={{ uri: paymentUrl }}
           onNavigationStateChange={(event) => {
-            if (event.url.includes('https://www.example.com/index.html')) {
-              handlePaymentSuccess(); // Thanh toán thành công
-            } else if (event.url.includes('https://www.google.com')) {
-              handleCloseWebView(); // Hủy thanh toán
+            if (event.url.includes('vnp_TransactionStatus=00')) { // Kiểm tra URL thành công
+              handlePaymentSuccess();
+            }
+            if (event.url.includes('vnp_TransactionStatus=02')) {// Mã trả về đã hủy thanh toán
+              handleCloseWebView();
             }
           }}
           style={tw`flex-1`}

@@ -6,62 +6,45 @@ import tw from 'tailwind-react-native-classnames';
 
 export default function Home() {
   return (
-    <View style={tw`flex-1 bg-blue-50 items-center`}>
+    <View style={tw`flex-1 bg-blue-50`}>
       <StatusBar style="light" />
 
-      <View style={tw`mt-36 flex-row flex-wrap justify-around w-11/12`}>
-        <Link href="screen/medical_services/MedicalServiceList" asChild>
-          <TouchableOpacity style={tw`w-5/12 py-4 bg-blue-500 my-1 rounded-lg items-center`}>
-            <Text style={tw`text-white font-semibold text-lg`}>Đặt lịch khám</Text>
-          </TouchableOpacity>
-        </Link>
-        <Link href="screen/patient/RecordPatientList" asChild>
-          <TouchableOpacity style={tw`w-5/12 py-4 bg-blue-500 my-1 rounded-lg items-center`}>
-            <Text style={tw`text-white font-semibold text-lg`}>Hồ sơ khám bệnh</Text>
-          </TouchableOpacity>
-        </Link>
-        <Link href="screen/doctor/DoctorList" asChild>
-          <TouchableOpacity style={tw`w-5/12 py-4 bg-blue-500 my-1 rounded-lg items-center`}>
-            <Text style={tw`text-white font-semibold text-lg`}>Tìm kiếm bác sĩ</Text>
-          </TouchableOpacity>
-        </Link>
-        <Link href="/tab/inpatient-treatment" asChild>
-          <TouchableOpacity style={tw`w-5/12 py-4 bg-blue-500 my-1 rounded-lg items-center`}>
-            <Text style={tw`text-white font-semibold text-lg`}>Điều trị nội trú</Text>
-          </TouchableOpacity>
-        </Link>
-        <Link href="/tab/schedule" asChild>
-          <TouchableOpacity style={tw`w-5/12 py-4 bg-blue-500 my-1 rounded-lg items-center`}>
-            <Text style={tw`text-white font-semibold text-lg`}>Lịch hẹn khám bệnh</Text>
-          </TouchableOpacity>
-        </Link>
-        <Link href="/tab/insurance" asChild>
-          <TouchableOpacity style={tw`w-5/12 py-4 bg-blue-500 my-1 rounded-lg items-center`}>
-            <Text style={tw`text-white font-semibold text-lg`}>Bảo hiểm y tế</Text>
-          </TouchableOpacity>
-        </Link>
-        <Link href="/tab/procedure" asChild>
-          <TouchableOpacity style={tw`w-5/12 py-4 bg-blue-500 my-1 rounded-lg items-center`}>
-            <Text style={tw`text-white font-semibold text-lg`}>Quy trình khám bệnh</Text>
-          </TouchableOpacity>
-        </Link>
-        <Link href="/tab/faq" asChild>
-          <TouchableOpacity style={tw`w-5/12 py-4 bg-blue-500 my-1 rounded-lg items-center`}>
-            <Text style={tw`text-white font-semibold text-lg`}>Giải đáp & tư vấn</Text>
-          </TouchableOpacity>
-        </Link>
+      {/* Buttons Container */}
+      <View style={tw`mt-20 flex-row flex-wrap justify-center`}>
+        {/* Individual Buttons */}
+        {[
+          { title: "Đặt lịch khám", link: "screen/medical_services/MedicalServiceList" },
+          { title: "Hồ sơ khám bệnh", link: "screen/patient/RecordPatientList" },
+          { title: "Tìm kiếm bác sĩ", link: "screen/doctor/DoctorList" },
+          { title: "Điều trị nội trú", link: "/tab/inpatient-treatment" },
+          { title: "Lịch hẹn khám bệnh", link: "/tab/schedule" },
+          { title: "Bảo hiểm y tế", link: "/tab/insurance" },
+          { title: "Quy trình khám bệnh", link: "/tab/procedure" },
+          { title: "Giải đáp & tư vấn", link: "/tab/faq" },
+        ].map((item, index) => (
+          <Link key={index} href={item.link} asChild>
+            <TouchableOpacity
+              style={tw`w-40 h-20 bg-blue-500 m-2 rounded-lg items-center justify-center`}
+            >
+              <Text style={tw`text-white font-semibold text-center`}>
+                {item.title}
+              </Text>
+            </TouchableOpacity>
+          </Link>
+        ))}
       </View>
 
-      <View style={tw`mt-5 w-11/12`}>
+      {/* Activities Section */}
+      <View style={tw`mt-8 px-4 ml-4`}>
         <Text style={tw`text-lg font-bold mb-2`}>HOẠT ĐỘNG</Text>
-        <ScrollView horizontal>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <Image
-            style={tw`w-36 h-24 mr-2 rounded-lg`}
-            source={{ uri: 'https://example.com/activity1.jpg' }} // Thay thế bằng URL ảnh thật
+            style={tw`w-36 h-24 mr-4 rounded-lg`}
+            source={require('../../assets/banners/doctor_banner.jpg')}
           />
           <Image
-            style={tw`w-36 h-24 mr-2 rounded-lg`}
-            source={{ uri: 'https://example.com/activity2.jpg' }} // Thay thế bằng URL ảnh thật
+            style={tw`w-36 h-24 mr-4 rounded-lg`}
+            source={require('../../assets/banners/service_banner.jpg')}
           />
         </ScrollView>
       </View>

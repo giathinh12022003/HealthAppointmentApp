@@ -10,6 +10,7 @@ export default function _layout() {
       <Stack.Screen
         name='index'
         options={{
+          gestureEnabled: false,
           title: 'Ứng dụng đặt lịch khám trực tuyến',
           headerStyle: {
             backgroundColor: '#2563eb',
@@ -20,8 +21,8 @@ export default function _layout() {
       <Stack.Screen
         name='auth/Register'
         options={{
-          title: 'Register',
-          headerBackVisible: false,
+          title: 'Đăng ký tài khoản',
+          headerBackVisible: true,
           headerStyle: {
             backgroundColor: '#2563eb',
           },
@@ -31,7 +32,8 @@ export default function _layout() {
       <Stack.Screen
         name='screen'
         options={{
-          headerShown:false,
+          gestureEnabled: false,
+          headerShown: false,
         }}
       />
     </Stack>

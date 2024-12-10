@@ -1,6 +1,6 @@
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { useLocalSearchParams, useNavigation } from 'expo-router';
-import React from 'react';
+import { View, Text, ScrollView, TouchableOpacity, BackHandler } from 'react-native';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
+import React, { useEffect } from 'react';
 import tw from 'tailwind-react-native-classnames';
 
 export default function AppointmentConfirm() {
@@ -21,6 +21,21 @@ export default function AppointmentConfirm() {
   };
 
   const navigator = useNavigation();
+
+  const handleBack = () => {
+    router.replace({
+      pathname:"screen"
+    })
+    return true;
+  }
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress',handleBack);
+
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress',handleBack);
+    }
+  }, []);
 
   return (
     <View style={tw`flex-1 bg-gray-100 p-4`}>
@@ -62,10 +77,10 @@ export default function AppointmentConfirm() {
         style={tw`bg-blue-600 py-4 rounded-lg shadow mb-4`}
         onPress={() => navigator.reset({
           index: 0,
-          routes: [{ name: 'screen' }]
+          routes: [{ name: 'screen' }],
         })}
       >
-        <Text style={tw`text-center text-white font-bold text-lg`}>Xác nhận</Text>
+        <Text style={tw`text-center text-white font-bold text-lg`}>Thực hiện đặt lịch mới</Text>
       </TouchableOpacity>
     </View>
   );

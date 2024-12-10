@@ -59,7 +59,7 @@ export default function ChooseRecordPatient() {
       <Text>Số điện thoại: {item.phoneNumber}</Text>
       <TouchableOpacity
         style={tw`mt-6 bg-blue-600 py-3 rounded-lg shadow`}
-        onPress={() => router.push({
+        onPress={() => router.replace({
           pathname: 'screen/appointment/CreateAppointment', params: {
             serviceId: serviceId,
             serviceName: serviceName,

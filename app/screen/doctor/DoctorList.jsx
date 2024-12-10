@@ -29,11 +29,15 @@ export default function DoctorList() {
         }
     };
 
-    const getAvatar = (gender) => {
+    const getAvatar = (gender, image) => {
+        if (image) {
+            return { uri: image }; // Sử dụng ảnh từ JSON nếu có
+        }
+        // Sử dụng ảnh mặc định nếu không có ảnh trong JSON
         if (gender === 'Nam') {
-            return require('../../assets/male_doctor_img.jpg'); // Đường dẫn đến ảnh bác sĩ nam
+            return require('../../../assets/avatar_doctor/male_doctor_img.jpg');
         } else if (gender === 'Nữ') {
-            return require('../../assets/female_doctor_img.jpg'); // Đường dẫn đến ảnh bác sĩ nữ
+            return require('../../../assets/avatar_doctor/female_doctor_img.jpg');
         }
     };
 
@@ -44,7 +48,7 @@ export default function DoctorList() {
             <View style={tw`bg-white p-4 my-2 rounded-lg shadow relative`}>
                 <View style={tw`absolute top-4 right-4`}>
                     <Image
-                        source={getAvatar(item.gender)}
+                        source={getAvatar(item.gender, item.image)}
                         style={tw`w-20 h-20 rounded-md border border-gray-300`}
                     />
                 </View>
