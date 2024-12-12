@@ -17,7 +17,7 @@ export default function Home() {
           { title: "Hồ sơ khám bệnh", link: "screen/patient/RecordPatientList" },
           { title: "Tìm kiếm bác sĩ", link: "screen/doctor/DoctorList" },
           { title: "Điều trị nội trú", link: "/tab/inpatient-treatment" },
-          { title: "Lịch hẹn khám bệnh", link: "/tab/schedule" },
+          { title: "Lịch hẹn khám bệnh", link: "screen/appointment/AppointmentList" },
           { title: "Bảo hiểm y tế", link: "/tab/insurance" },
           { title: "Quy trình khám bệnh", link: "/tab/procedure" },
           { title: "Giải đáp & tư vấn", link: "/tab/faq" },

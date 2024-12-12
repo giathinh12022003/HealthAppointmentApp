@@ -24,21 +24,6 @@ export default function AppointmentSummary() {
 
   const navigator = useNavigation();
 
-  const handleBack = () => {
-    router.replace({
-      pathname: "screen/medical_services/MedicalServiceList"
-    })
-    return true;
-  }
-
-  useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', handleBack);
-
-    return () => {
-      BackHandler.removeEventListener('hardwareBackPress', handleBack);
-    }
-  }, []);
-
   const formatDate = (date) => {
     const [year, month, day] = date.split('-');
     return `${day}/${month}/${year}`;

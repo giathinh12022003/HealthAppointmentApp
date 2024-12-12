@@ -22,18 +22,27 @@ export default function AppointmentConfirm() {
 
   const navigator = useNavigation();
 
+  const newAppointment = () => {
+    setTimeout(() => {
+      router.replace({ pathname: "screen" });
+      setTimeout(() => {
+        router.push({ pathname: "screen/medical_services/MedicalServiceList" });
+      }, 0);
+    }, 0);
+  }
+
   const handleBack = () => {
     router.replace({
-      pathname:"screen"
+      pathname: "screen"
     })
     return true;
   }
 
   useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress',handleBack);
+    BackHandler.addEventListener('hardwareBackPress', handleBack);
 
     return () => {
-      BackHandler.removeEventListener('hardwareBackPress',handleBack);
+      BackHandler.removeEventListener('hardwareBackPress', handleBack);
     }
   }, []);
 
@@ -75,10 +84,7 @@ export default function AppointmentConfirm() {
       </View>
       <TouchableOpacity
         style={tw`bg-blue-600 py-4 rounded-lg shadow mb-4`}
-        onPress={() => navigator.reset({
-          index: 0,
-          routes: [{ name: 'screen' }],
-        })}
+        onPress={newAppointment}
       >
         <Text style={tw`text-center text-white font-bold text-lg`}>Thực hiện đặt lịch mới</Text>
       </TouchableOpacity>

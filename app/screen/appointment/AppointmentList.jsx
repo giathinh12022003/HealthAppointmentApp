@@ -1,46 +1,47 @@
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
-import React, { useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
+import { View, FlatList, Text, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
+import { getAllAppointment } from '../../service/appointment/GetAppointment';
 import tw from 'tailwind-react-native-classnames';
-import { getAllPatientRecord } from '../../service/patient/GetRecordPatient';
-import { useNavigation, useFocusEffect } from 'expo-router';
+import { useNavigation, router } from 'expo-router';
 
-export default function RecordPatientList() {
-    const [recordPatients, setRecordPatients] = useState([]);
+export default function AppointmentList() {
+    const [appointments, setAppointments] = useState([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
 
-    const navigation = useNavigation();
+    useEffect(() => {
+        fetchAppointments();
+    }, [page]);
 
-    useFocusEffect(
-        useCallback(() => {
-            fetchPatientDetails(page);
-        }, [page])
-    );
+    const formatDate = (date) => {
+        const [year, month, day] = date.split('-');
+        return `${day}/${month}/${year}`;
+    };
 
-    const fetchPatientDetails = async () => {
+    const fetchAppointments = async () => {
         setLoading(true);
         try {
-            const data = await getAllPatientRecord(page, 4);
-            if (data?.data) {
-                setRecordPatients(data.data);
-                setTotalPages(data.totalPages);
-            }
+            const data = await getAllAppointment(page, 5);
+            setAppointments(data.data);
+            setTotalPages(data.totalPages);
         } catch (error) {
-            // console.error('Error fetching patient details:', error);
+            // console.error('Failed to fetch appointmet:', error);
         } finally {
             setLoading(false);
         }
     };
 
-    const renderPatientItem = ({ item }) => (
-        <View style={tw`border p-4 mb-2 bg-white rounded-lg`}>
-            <Text style={tw`text-lg font-bold`}>{item.id}</Text>
-            <Text>Ngày sinh: {item.dateOfBirth}</Text>
-            <Text>Giới tính: {item.gender}</Text>
-            <Text>Số điện thoại: {item.phoneNumber}</Text>
-        </View>
-    );
+    const renderAppointment = ({ item }) => {
+        return (
+            <View style={tw`bg-white p-4 my-2 rounded-lg shadow`}>
+                <Text style={tw`text-lg font-bold`}>{item.id}</Text>
+                <Text>Số thứ tự: {item.orderNumber}</Text>
+                <Text>Ngày khám: {formatDate(item.date)}</Text>
+                <Text>Trạng thái: {item.status}</Text>
+            </View>
+        );
+    };
 
     const renderPagination = () => {
         if (totalPages <= 1) return null;
@@ -130,20 +131,14 @@ export default function RecordPatientList() {
 
     return (
         <View style={tw`flex-1 p-4 bg-gray-100`}>
-            <TouchableOpacity
-                style={tw`bg-blue-500 p-4 rounded-lg mb-4`}
-                onPress={() => navigation.navigate('RecordPatient')}
-            >
-                <Text style={tw`text-white font-bold text-center text-lg`}>Thêm Hồ Sơ</Text>
-            </TouchableOpacity>
             {loading ? (
                 <ActivityIndicator size="large" color="#0000ff" />
             ) : (
                 <>
                     <FlatList
-                        data={recordPatients}
+                        data={appointments}
                         keyExtractor={(item) => item.id}
-                        renderItem={renderPatientItem}
+                        renderItem={renderAppointment}
                     />
                     {renderPagination()}
                 </>
