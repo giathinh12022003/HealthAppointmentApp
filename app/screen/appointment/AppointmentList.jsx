@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, Text, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
+import { View, FlatList, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { getAllAppointment } from '../../service/appointment/GetAppointment';
 import tw from 'tailwind-react-native-classnames';
 import { useNavigation, router } from 'expo-router';
@@ -26,7 +26,7 @@ export default function AppointmentList() {
             setAppointments(data.data);
             setTotalPages(data.totalPages);
         } catch (error) {
-            // console.error('Failed to fetch appointmet:', error);
+            console.error('Failed to fetch appointments:', error);
         } finally {
             setLoading(false);
         }
@@ -34,11 +34,24 @@ export default function AppointmentList() {
 
     const renderAppointment = ({ item }) => {
         return (
-            <View style={tw`bg-white p-4 my-2 rounded-lg shadow`}>
+            <View style={tw`bg-white p-4 my-2 rounded-lg shadow relative`}>
                 <Text style={tw`text-lg font-bold`}>{item.id}</Text>
                 <Text>Số thứ tự: {item.orderNumber}</Text>
-                <Text>Ngày khám: {formatDate(item.date)}</Text>
+                <Text>Ngày khám: {item.date}</Text>
                 <Text>Trạng thái: {item.status}</Text>
+                <TouchableOpacity
+                    style={tw`absolute bottom-2 right-2 px-3 py-2 bg-blue-500 rounded-lg`}
+                    onPress={() =>
+                        router.push({
+                            pathname: 'screen/appointment/AppointmentDetail',
+                            params: {
+                                appointmentId: item.id,
+                            },
+                        })
+                    }
+                >
+                    <Text style={tw`text-white text-sm font-bold`}>Xem chi tiết</Text>
+                </TouchableOpacity>
             </View>
         );
     };
@@ -99,9 +112,15 @@ export default function AppointmentList() {
                             key={`page-${pageNumber}`}
                             onPress={() => setPage(pageNumber)}
                             disabled={page === pageNumber}
-                            style={tw`m-1 px-4 py-2 ${page === pageNumber ? 'bg-blue-500' : 'bg-gray-200'} rounded-lg`}
+                            style={tw`m-1 px-4 py-2 ${
+                                page === pageNumber ? 'bg-blue-500' : 'bg-gray-200'
+                            } rounded-lg`}
                         >
-                            <Text style={tw`text-center text-base ${page === pageNumber ? 'text-white' : 'text-black'}`}>
+                            <Text
+                                style={tw`text-center text-base ${
+                                    page === pageNumber ? 'text-white' : 'text-black'
+                                }`}
+                            >
                                 {pageNumber}
                             </Text>
                         </TouchableOpacity>

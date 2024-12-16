@@ -76,6 +76,18 @@ export default function _layout() {
                         headerTitleStyle: { color: 'white' },
                     }}
                 />
+                <Stack.Screen
+                    name='AppointmentDetail'
+                    options={{
+                        title: 'Chi tiết lịch hẹn',
+                        headerBackVisible: true,
+                        gestureEnabled: false,
+                        headerStyle: {
+                            backgroundColor: '#2563eb',
+                        },
+                        headerTitleStyle: { color: 'white' },
+                    }}
+                />
             </Stack>
             <Modal isVisible={isModalVisible}>
                 <View style={tw`bg-white p-5 rounded-lg items-center`}>
