@@ -9,6 +9,7 @@ export const createUser = async (userData) => {
     try {
       const response = await axios.post(`${REST_API_REGISTER}`, userData);
       if (response.status === 200) {
+        console.log(REST_API_REGISTER);
         return response.data;
       }
     } catch (error) {

@@ -37,7 +37,7 @@ export default function AppointmentDetail() {
 
   if (loading) {
     return (
-      <View style={tw`flex-1 justify-center items-center`}>
+      <View style={tw`flex-1 justify-center items-center bg-gray-100`}>
         <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );
@@ -45,10 +45,8 @@ export default function AppointmentDetail() {
 
   if (!appointment) {
     return (
-      <View style={tw`flex-1 justify-center items-center`}>
-        <Text style={tw`text-lg text-gray-600`}>
-          Không tìm thấy thông tin lịch hẹn.
-        </Text>
+      <View style={tw`flex-1 justify-center items-center bg-gray-100`}>
+        <Text style={tw`text-lg text-gray-600`}>Không tìm thấy thông tin lịch hẹn.</Text>
       </View>
     );
   }
@@ -63,54 +61,54 @@ export default function AppointmentDetail() {
   } = appointment;
 
   return (
-    <ScrollView style={tw`flex-1 bg-gray-100 p-4`}>
+    <ScrollView style={tw`flex-1 bg-gray-100`}>
       {/* Appointment Details */}
-      <View style={tw`bg-white p-4 rounded-lg shadow mb-4`}>
-        <Text style={tw`text-lg font-bold text-blue-600`}>Chi tiết lịch hẹn</Text>
-        <Text style={tw`text-base text-gray-700 mt-2`}>Mã lịch hẹn: {id}</Text>
-        <Text style={tw`text-base text-gray-700`}>Ngày hẹn: {dateFullName}</Text>
-        <Text style={tw`text-base text-gray-700`}>Số thứ tự: {orderNumber}</Text>
-        <Text style={tw`text-base text-gray-700`}>Trạng thái: {status}</Text>
+      <View style={tw`bg-white p-6 m-4 rounded-lg shadow-lg`}>
+        <Text style={tw`text-xl font-bold text-blue-600 mb-4 text-center`}>Chi tiết lịch hẹn</Text>
+        <View style={tw`border-b border-gray-300 mb-2`} />
+        <Text style={tw`text-base text-gray-700`}>Mã lịch hẹn: <Text style={tw`font-semibold`}>{id}</Text></Text>
+        <Text style={tw`text-base text-gray-700`}>Ngày hẹn: <Text style={tw`font-semibold`}>{dateFullName}</Text></Text>
+        <Text style={tw`text-base text-gray-700`}>Số thứ tự: <Text style={tw`font-semibold`}>{orderNumber}</Text></Text>
+        <Text style={tw`text-base text-gray-700`}>Trạng thái: <Text style={tw`font-semibold text-green-500`}>{status}</Text></Text>
       </View>
 
       {/* Service Information */}
-      <View style={tw`bg-white p-4 rounded-lg shadow mb-4`}>
-        <Text style={tw`text-lg font-bold text-blue-600`}>Thông tin dịch vụ</Text>
-        <Text style={tw`text-base text-gray-700 mt-2`}>
-          Dịch vụ: {serviceTimeFrame?.serviceName}
+      <View style={tw`bg-white p-6 m-4 rounded-lg shadow-lg`}>
+        <Text style={tw`text-xl font-bold text-blue-600 mb-4 text-center`}>Thông tin dịch vụ</Text>
+        <View style={tw`border-b border-gray-300 mb-2`} />
+        <Text style={tw`text-base text-gray-700`}>Dịch vụ: <Text style={tw`font-semibold`}>{serviceTimeFrame?.serviceName}</Text></Text>
+        <Text style={tw`text-base text-gray-700`}>Giờ khám: <Text style={tw`font-semibold`}>{serviceTimeFrame?.timeFrameNameFullName}</Text></Text>
+        <Text style={tw`text-base text-gray-700`}>Phòng khám: <Text style={tw`font-semibold`}>{serviceTimeFrame?.roomName}</Text></Text>
+        <Text style={tw`text-base text-gray-700`}>
+          Bác sĩ: <Text style={tw`font-semibold`}>{serviceTimeFrame?.doctorName} ({serviceTimeFrame?.doctorQualificationName})</Text>
         </Text>
         <Text style={tw`text-base text-gray-700`}>
-          Giờ khám: {serviceTimeFrame?.timeFrameNameFullName}
-        </Text>
-        <Text style={tw`text-base text-gray-700`}>
-          Phòng khám: {serviceTimeFrame?.roomName}
-        </Text>
-        <Text style={tw`text-base text-gray-700`}>
-          Bác sĩ: {serviceTimeFrame?.doctorName} (
-          {serviceTimeFrame?.doctorQualificationName})
-        </Text>
-        <Text style={tw`text-base text-gray-700`}>
-          Đơn giá: {serviceTimeFrame?.unitPrice?.toLocaleString('vi-VN')} VND
+          Đơn giá: <Text style={tw`font-semibold text-green-500`}>{serviceTimeFrame?.unitPrice?.toLocaleString('vi-VN')} VND</Text>
         </Text>
       </View>
 
       {/* Check Results */}
-      {checkResultResponseList?.length > 0 && (
-        <View style={tw`bg-white p-4 rounded-lg shadow`}>
-          <Text style={tw`text-lg font-bold text-blue-600`}>Kết quả khám</Text>
-          {checkResultResponseList.map((result) => (
-            <Text key={result.id} style={tw`text-base text-blue-500 mt-2`}>
-              {result.name}:{' '}
+      <View style={tw`bg-white p-6 m-4 rounded-lg shadow-lg`}>
+        <Text style={tw`text-xl font-bold text-blue-600 mb-4 text-center`}>Kết quả khám</Text>
+        <View style={tw`border-b border-gray-300 mb-2`} />
+        {checkResultResponseList?.length > 0 ? (
+          checkResultResponseList.map((result) => (
+            <View key={result.id} style={tw`flex-row justify-between mt-2`}>
+              <Text style={tw`text-base text-gray-700`}>{result.name}:</Text>
               <Text
-                style={tw`underline`}
+                style={tw`text-base text-blue-500 underline`}
                 onPress={() => handleOpenLink(result.url)}
               >
                 Tải về
               </Text>
-            </Text>
-          ))}
-        </View>
-      )}
+            </View>
+          ))
+        ) : (
+          <Text style={tw`text-base text-gray-700 mt-2 text-center`}>
+            Vẫn chưa có kết quả khám, vui lòng chờ.
+          </Text>
+        )}
+      </View>
     </ScrollView>
   );
 }

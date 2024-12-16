@@ -23,6 +23,7 @@ export const getAllAppointment = async (page, size) => {
                 Authorization: `Bearer ${storedToken}`,
             }
         });
+        console.log(REST_API_GET_ALL_APPOINTMENT);
         return response.data;
     } catch (error) {
         // console.error('Error get record:', error);
@@ -39,6 +40,7 @@ export const getAllAppointmentById = async (id) => {
                 Authorization: `Bearer ${storedToken}`,
             }
         });
+        console.log(REST_API_GET_APPOINTMENT_BY_ID);
         return response.data;
     } catch (error) {
         throw error;

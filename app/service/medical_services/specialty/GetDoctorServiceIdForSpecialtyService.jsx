@@ -11,6 +11,7 @@ export const getDoctorServiceId = async (serviceId, page, size) => {
         const response = await axios.get(`${REST_API_DOCTOR_SERVICE_ID}`, {
             params: {serviceId, page, size },
         });
+        console.log(REST_API_DOCTOR_SERVICE_ID);
         return response.data;
     } catch (error) {
         // console.error('Error fetching doctor services:', error);

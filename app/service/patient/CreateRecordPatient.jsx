@@ -15,7 +15,7 @@ export const createPatientRecord = async (patientData) => {
         Authorization: `Bearer ${storedToken}`,
       }
     });
-    // console.log(response.data);
+    console.log(REST_API_PATIENT);
   } catch (error) {
     // console.error('Error create record:', error);
     throw error;

@@ -13,6 +13,7 @@ export const loginUser = async (userName, password) => {
         };
         const response = await axios.post(`${REST_API_LOGIN}`, data);
         if (response.status == 200) {
+            console.log(REST_API_LOGIN);
             return response.data;
         }
         else {

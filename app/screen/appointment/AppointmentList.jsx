@@ -6,9 +6,11 @@ import { useNavigation, router } from 'expo-router';
 
 export default function AppointmentList() {
     const [appointments, setAppointments] = useState([]);
+    const [filteredAppointments, setFilteredAppointments] = useState([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
+    const [filter, setFilter] = useState('all'); // Trạng thái lọc
 
     useEffect(() => {
         fetchAppointments();
@@ -16,6 +18,14 @@ export default function AppointmentList() {
 
     const formatDate = (date) => {
         const [year, month, day] = date.split('-');
+        return `${day}/${month}/${year}`;
+    };
+
+    const formatDateTime = (dateTime) => {
+        const date = new Date(dateTime);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Tháng tính từ 0
+        const year = date.getFullYear();
         return `${day}/${month}/${year}`;
     };
 
@@ -33,11 +43,14 @@ export default function AppointmentList() {
     };
 
     const renderAppointment = ({ item }) => {
+        const date = formatDate(item.date);
+        const bookingDate = formatDateTime(item.dateTime);
         return (
             <View style={tw`bg-white p-4 my-2 rounded-lg shadow relative`}>
                 <Text style={tw`text-lg font-bold`}>{item.id}</Text>
                 <Text>Số thứ tự: {item.orderNumber}</Text>
-                <Text>Ngày khám: {item.date}</Text>
+                <Text>Ngày khám: {date}</Text>
+                <Text>Ngày đặt lịch: {bookingDate}</Text>
                 <Text>Trạng thái: {item.status}</Text>
                 <TouchableOpacity
                     style={tw`absolute bottom-2 right-2 px-3 py-2 bg-blue-500 rounded-lg`}
@@ -112,15 +125,9 @@ export default function AppointmentList() {
                             key={`page-${pageNumber}`}
                             onPress={() => setPage(pageNumber)}
                             disabled={page === pageNumber}
-                            style={tw`m-1 px-4 py-2 ${
-                                page === pageNumber ? 'bg-blue-500' : 'bg-gray-200'
-                            } rounded-lg`}
+                            style={tw`m-1 px-4 py-2 ${page === pageNumber ? 'bg-blue-500' : 'bg-gray-200'} rounded-lg`}
                         >
-                            <Text
-                                style={tw`text-center text-base ${
-                                    page === pageNumber ? 'text-white' : 'text-black'
-                                }`}
-                            >
+                            <Text style={tw`text-center text-base ${page === pageNumber ? 'text-white' : 'text-black'}`}>
                                 {pageNumber}
                             </Text>
                         </TouchableOpacity>
