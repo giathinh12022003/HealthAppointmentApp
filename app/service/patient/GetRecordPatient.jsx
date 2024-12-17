@@ -23,7 +23,7 @@ export const getAllPatientRecord = async (page, size) => {
         Authorization: `Bearer ${storedToken}`,
       }
     });
-    console.log(REST_API_GET_PATIENT);
+    // console.log(REST_API_GET_PATIENT);
     return response.data;
   } catch (error) {
     return;
@@ -44,7 +44,7 @@ export const getPatientRecordNonExistsInAppointment = async (page,size,serviceTi
         Authorization: `Bearer ${storedToken}`,
       }
     });
-    console.log(REST_API_GET_PATIENT_NON_EXISTS);
+    // console.log(REST_API_GET_PATIENT_NON_EXISTS);
     return response.data;
   } catch (error) {
     return;

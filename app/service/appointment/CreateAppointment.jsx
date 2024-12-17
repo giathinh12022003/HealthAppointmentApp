@@ -15,7 +15,7 @@ export const createAppointment = async (appointmentData) => {
                 Authorization: `Bearer ${storedToken}`,
             }
         });
-        console.log(REST_API_APPOINTMENT);
+        // console.log(REST_API_APPOINTMENT);
         console.log(response.data);
         return response.data;
     } catch (error) {

@@ -11,7 +11,7 @@ export const getSpecialties = async (page, size) => {
         const response = await axios.get(`${REST_API_SPECIALTY}`, {
             params: { page, size },
         });
-        console.log(REST_API_SPECIALTY);
+        // console.log(REST_API_SPECIALTY);
         return response.data;
     } catch (error) {
         // console.error('Error fetching specialty:', error);

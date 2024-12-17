@@ -18,9 +18,9 @@ export default function _layout() {
     const handleLogOut = async () => {
         closeMenu();
         try {
-            // const token = await getToken('accessToken');
-            // console.log("Token log out:", token);
-            // await logOut(token);
+            const token = await getToken('accessToken');
+            console.log("Token log out:", token);
+            await logOut(token);
             router.replace('/');
         } catch (error) {
             console.error('Error logging out:', error);

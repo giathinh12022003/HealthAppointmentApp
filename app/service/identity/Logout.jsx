@@ -13,7 +13,7 @@ export const logOut = async (token) => {
         };
         const response = await axios.post(`${REST_API_LOGOUT}`, data);
         await removeToken('accessToken');
-        console.log(REST_API_LOGOUT);
+        // console.log(REST_API_LOGOUT);
     } catch (error) {
         return;
     }

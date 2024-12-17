@@ -18,7 +18,6 @@ export const getDoctors = async (page, size) => {
       params: { page, size },
 
     });
-    console.log(REST_API_DOCTOR);
     return response.data;
   } catch (error) {
     // console.error('Error fetching doctors:', error);

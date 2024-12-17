@@ -13,7 +13,7 @@ export const getDoctorServiceDay = async (doctorServiceId) => {
         const response = await axios.get(`${REST_API_DOCTOR_SERVICE_DAY}`, {
             params: { doctorServiceId },
         });
-        console.log(REST_API_DOCTOR_SERVICE_DAY);
+        // console.log(REST_API_DOCTOR_SERVICE_DAY);
         return response.data;
     } catch (error) {
         // console.error('Error fetching doctor services day:', error);
@@ -26,7 +26,7 @@ export const getDoctorServiceTimeFrame = async (doctorServiceId, dayOfWeek, day)
         const response = await axios.get(`${REST_API_DOCTOR_SERVICE_TIME_FRAME}`, {
             params: { doctorServiceId, dayOfWeek, day },
         });
-        console.log(REST_API_DOCTOR_SERVICE_TIME_FRAME);
+        // console.log(REST_API_DOCTOR_SERVICE_TIME_FRAME);
         return response.data;
     } catch (error) {
         // console.error('Error fetching doctor services day:', error);

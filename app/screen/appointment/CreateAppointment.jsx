@@ -82,22 +82,24 @@ export default function AppointmentSummary() {
   };
 
   return (
-    <View style={tw`flex-1 bg-gray-100 p-4`}>
+    <View style={tw`flex-1 bg-gray-100`}>
       {webViewVisible ? (
-        <WebView
-          source={{ uri: paymentUrl }}
-          onNavigationStateChange={(event) => {
-            if (event.url.includes('vnp_TransactionStatus=00')) { // Kiểm tra URL thành công
-              handlePaymentSuccess();
-            }
-            if (event.url.includes('vnp_TransactionStatus=02')) {// Mã trả về đã hủy thanh toán
-              handleCloseWebView();
-            }
-          }}
-          style={tw`flex-1`}
-        />
+        <View style={tw`flex-1`}>
+          <WebView
+            source={{ uri: paymentUrl }}
+            onNavigationStateChange={(event) => {
+              if (event.url.includes('vnp_TransactionStatus=00')) { // Kiểm tra URL thành công
+                handlePaymentSuccess();
+              }
+              if (event.url.includes('vnp_TransactionStatus=02')) { // Mã trả về đã hủy thanh toán
+                handleCloseWebView();
+              }
+            }}
+            style={tw`flex-1`}
+          />
+        </View>
       ) : (
-        <>
+        <View style={tw`p-4`}>
           <Text style={tw`text-lg font-bold text-center text-blue-600 mb-4`}>
             Kiểm Tra Thông Tin Lịch Hẹn
           </Text>
@@ -140,7 +142,7 @@ export default function AppointmentSummary() {
               <Text style={tw`text-center text-gray-700 font-bold text-lg`}>Quay lại</Text>
             </TouchableOpacity>
           </View>
-        </>
+        </View>
       )}
     </View>
   );

@@ -10,7 +10,7 @@ export const getServiceSpecialty = async (specialtyId, page, size) => {
         const response = await axios.get(`${REST_API_SERVICE_SPECIALTY}/${specialtyId}`, {
             params: { page, size },
         });
-        console.log(REST_API_SERVICE_SPECIALTY);
+        // console.log(REST_API_SERVICE_SPECIALTY);
         return response.data;
     } catch (error) {
         // console.error('Error fetching:', error);
