@@ -41,11 +41,15 @@ export default function AppointmentList() {
     const handleFilterAppointments = () => {
         let updatedAppointments = [...allAppointments];
 
-        // Lọc theo trạng thái
-        if (filterStatus !== 'all') {
-            updatedAppointments = updatedAppointments.filter(
-                (appointment) => appointment.status === filterStatus
-            );
+        // Chuẩn hóa filterStatus
+        const normalizedFilterStatus = filterStatus.normalize('NFC').trim();
+
+        if (normalizedFilterStatus !== 'all') {
+            updatedAppointments = updatedAppointments.filter((appointment) => {
+                // Chuẩn hóa trạng thái trong JSON
+                const normalizedStatus = appointment.status.normalize('NFC').trim();
+                return normalizedStatus === normalizedFilterStatus;
+            });
         }
 
         // Lọc theo ngày
@@ -65,46 +69,69 @@ export default function AppointmentList() {
         setDisplayAppointments(filteredAppointments.slice(startIndex, endIndex));
     };
 
-    const renderAppointment = ({ item }) => (
-        <View style={tw`bg-white p-4 my-2 rounded-lg shadow relative`}>
-            <Text style={tw`text-lg font-bold`}>{item.id}</Text>
-            <Text>Số thứ tự: {item.orderNumber}</Text>
-            <Text>Ngày khám: {new Date(item.date).toLocaleDateString()}</Text>
-            <Text>Ngày đặt lịch: {new Date(item.dateTime).toLocaleString()}</Text>
-            <Text>Trạng thái: {item.status}</Text>
-            <TouchableOpacity
-                style={tw`absolute bottom-2 right-2 px-3 py-2 bg-blue-500 rounded-lg`}
-                onPress={() =>
-                    router.push({
-                        pathname: 'screen/appointment/AppointmentDetail',
-                        params: { appointmentId: item.id },
-                    })
-                }
-            >
-                <Text style={tw`text-white text-sm font-bold`}>Xem chi tiết</Text>
-            </TouchableOpacity>
-        </View>
-    );
+    const formatDateTime = (dateTime) => {
+        const date = new Date(dateTime);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+
+        let hours = date.getHours();
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const ampm = hours === 24 ? 'AM' : (hours >= 12 ? 'PM' : 'AM');
+        hours = hours % 12 || 12;
+
+        return `${day}/${month}/${year}, ${hours}:${minutes} ${ampm}`;
+    };
+
+    const formatDate = (date) => {
+        const [year, month, day] = date.split('-');
+        return `${day}/${month}/${year}`;
+    };
+
+    const renderAppointment = ({ item }) => {
+        const date = formatDate(item.date);
+        const bookingDate = formatDateTime(item.dateTime);
+        return (
+            <View style={tw`bg-white p-4 my-2 rounded-lg shadow relative`}>
+                <Text style={tw`text-lg font-bold`}>{item.id}</Text>
+                <Text>Số thứ tự: {item.orderNumber}</Text>
+                <Text>Ngày khám: {date}</Text>
+                <Text>Ngày đặt lịch: {bookingDate}</Text>
+                <Text>Trạng thái: {item.status}</Text>
+                <TouchableOpacity
+                    style={tw`absolute bottom-2 right-2 px-3 py-2 bg-blue-500 rounded-lg`}
+                    onPress={() =>
+                        router.push({
+                            pathname: 'screen/appointment/AppointmentDetail',
+                            params: { appointmentId: item.id },
+                        })
+                    }
+                >
+                    <Text style={tw`text-white text-sm font-bold`}>Xem chi tiết</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    };
 
     const renderPagination = () => {
         const totalPages = Math.ceil(filteredAppointments.length / itemsPerPage);
         if (totalPages <= 1) return null;
-    
+
         const visiblePages = 3; // Số lượng trang xung quanh trang hiện tại
         const pages = [];
         const startEllipsis = page > visiblePages + 1;
         const endEllipsis = page < totalPages - visiblePages;
-    
+
         pages.push(1);
         if (startEllipsis) pages.push('startEllipsis');
-    
+
         for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) {
             pages.push(i);
         }
-    
+
         if (endEllipsis) pages.push('endEllipsis');
         pages.push(totalPages);
-    
+
         return (
             <View style={tw`flex-row justify-center items-center flex-wrap mt-4`}>
                 <TouchableOpacity
@@ -114,7 +141,7 @@ export default function AppointmentList() {
                 >
                     <Text>{`<<`}</Text>
                 </TouchableOpacity>
-    
+
                 <TouchableOpacity
                     onPress={() => setPage(page - 1)}
                     disabled={page === 1}
@@ -122,7 +149,7 @@ export default function AppointmentList() {
                 >
                     <Text>{`<`}</Text>
                 </TouchableOpacity>
-    
+
                 {pages.map((pageNumber, index) => {
                     if (pageNumber === 'startEllipsis' || pageNumber === 'endEllipsis') {
                         return <Text key={`ellipsis-${index}`} style={tw`px-4 py-2 text-gray-500`}>...</Text>;
@@ -140,7 +167,7 @@ export default function AppointmentList() {
                         </TouchableOpacity>
                     );
                 })}
-    
+
                 <TouchableOpacity
                     onPress={() => setPage(page + 1)}
                     disabled={page === totalPages}
@@ -148,7 +175,7 @@ export default function AppointmentList() {
                 >
                     <Text>{`>`}</Text>
                 </TouchableOpacity>
-    
+
                 <TouchableOpacity
                     onPress={() => setPage(totalPages)}
                     disabled={page === totalPages}
@@ -158,7 +185,7 @@ export default function AppointmentList() {
                 </TouchableOpacity>
             </View>
         );
-    };    
+    };
 
     return (
         <View style={tw`flex-1 p-4 bg-gray-100`}>
@@ -169,7 +196,7 @@ export default function AppointmentList() {
                     <Text style={tw`text-sm`}>Trạng thái:</Text>
                     {/* Bộ lọc trạng thái */}
                     <View style={tw`flex-row justify-around my-2`}>
-                        {['all', 'Chờ phê duyệt', 'Đã xác nhận', 'Đã có kết quả'].map((status) => (
+                        {['all', 'Chờ phê duyệt', 'Đã xác nhận', 'Đã có kết quả'].map((status) => (
                             <TouchableOpacity
                                 key={status}
                                 onPress={() => setFilterStatus(status)}

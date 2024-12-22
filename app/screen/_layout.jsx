@@ -49,15 +49,15 @@ export default function _layout() {
                                         <TouchableOpacity onPress={toggleMenu}>
                                             <Ionicons
                                                 name="person-circle-outline"
-                                                size={30}
+                                                size={36}
                                                 color="white"
-                                                style={{ marginRight: 16 }}
+                                                style={{ marginRight: 19 }}
                                             />
                                         </TouchableOpacity>
                                     }
                                     contentStyle={{
                                         top: 80,
-                                        left:250
+                                        left:240
                                     }}
                                 >
                                     <Menu.Item onPress={() => console.log('Profile clicked')} title="Hồ sơ" />

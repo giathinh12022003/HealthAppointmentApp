@@ -2,7 +2,7 @@ import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react
 import React, { useState, useCallback } from 'react';
 import tw from 'tailwind-react-native-classnames';
 import { getAllPatientRecord } from '../../service/patient/GetRecordPatient';
-import { useNavigation, useFocusEffect } from 'expo-router';
+import { useNavigation, useFocusEffect, router } from 'expo-router';
 
 export default function RecordPatientList() {
     const [recordPatients, setRecordPatients] = useState([]);
@@ -33,12 +33,48 @@ export default function RecordPatientList() {
         }
     };
 
+    const formatDate = (date) => {
+        const [year, month, day] = date.split('-');
+        return `${day}/${month}/${year}`;
+    };
+
     const renderPatientItem = ({ item }) => (
         <View style={tw`border p-4 mb-2 bg-white rounded-lg`}>
             <Text style={tw`text-lg font-bold`}>{item.id}</Text>
+            <Text>Họ tên: {item.fullName}</Text>
             <Text>Ngày sinh: {item.dateOfBirth}</Text>
             <Text>Giới tính: {item.gender}</Text>
             <Text>Số điện thoại: {item.phoneNumber}</Text>
+            <Text>Hồ sơ đặt cho: {item.relationship}</Text>
+            <TouchableOpacity
+                style={tw`mt-2 p-2 bg-blue-500 rounded-lg`}
+                onPress={() =>
+                    router.push({
+                        pathname: 'screen/patient/RecordPatientDetails',
+                        params: {
+                            patientId: item.id,
+                            fullName: item.fullName,
+                            dateOfBirth: item.dateOfBirth,
+                            gender: item.gender,
+                            phoneNumber: item.phoneNumber,
+                            relationship: item.relationship,
+                            nation: item.nation,
+                            occupation: item.occupation,
+                            email: item.email,
+                            country: item.country,
+                            province: item.province,
+                            district: item.district,
+                            ward: item.ward,
+                            address: item.address,
+                            note: item.note,
+                            insuranceId:item.insuranceId,
+                            identificationCode:item.identificationCode
+                        },
+                    })
+                }
+            >
+                <Text style={tw`text-white text-center`}>Xem chi tiết</Text>
+            </TouchableOpacity>
         </View>
     );
 

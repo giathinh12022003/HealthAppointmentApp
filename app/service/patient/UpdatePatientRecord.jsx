@@ -1,0 +1,33 @@
+import axios from 'axios';
+import { getToken } from '../Token';
+
+const IP = process.env.EXPO_PUBLIC_IP_ADDRESS;
+const API_GET_UPDATE_PATIENT = process.env.EXPO_PUBLIC_API_UPDATE_PATIENT;
+
+const REST_API_UPDATE_PATIENT = `${IP}${API_GET_UPDATE_PATIENT}`;
+
+export const updatePatientRecord = async (id, patientData) => {
+    try {
+        const storedToken = await getToken('accessToken');
+
+        const response = await axios.put(`${REST_API_UPDATE_PATIENT}/${id}`, patientData,
+            {
+                headers: {
+                    'Authorization': `Bearer ${storedToken}`
+                }
+            }
+        );
+
+        if (response.status === 200) {
+            console.log('updated successfully:', response.data);
+        } else {
+            console.error('Failed to update:', response.data || response.statusText);
+        }
+    } catch (error) {
+        console.error('Error updating:', error);
+    }
+};
+
+export default {
+    updatePatientRecord
+};

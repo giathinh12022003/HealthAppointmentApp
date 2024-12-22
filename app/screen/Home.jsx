@@ -1,10 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import tw from 'tailwind-react-native-classnames';
 
 export default function Home() {
+
+  const [isNavigating, setIsNavigating] = useState(false);
+
+  const handleNavigation = (link) => {
+    if (isNavigating) {
+      // Prevent navigation if already navigating
+      return;
+    }
+
+    // Set navigating to true to block further presses
+    setIsNavigating(true);
+
+    // Perform navigation with a timeout to simulate completion
+    router.push(link);
+
+    // Reset navigating status after navigation is completed
+    setTimeout(() => {
+      setIsNavigating(false);
+    }, 500); // Adjust timeout if necessary
+  };
+
   return (
     <View style={tw`flex-1 bg-blue-50`}>
       <StatusBar style="light" />
@@ -22,15 +43,15 @@ export default function Home() {
           { title: "Quy trình khám bệnh", link: "/tab/procedure" },
           { title: "Giải đáp & tư vấn", link: "/tab/faq" },
         ].map((item, index) => (
-          <Link key={index} href={item.link} asChild>
-            <TouchableOpacity
-              style={tw`w-40 h-20 bg-blue-500 m-2 rounded-lg items-center justify-center`}
-            >
-              <Text style={tw`text-white font-semibold text-center`}>
-                {item.title}
-              </Text>
-            </TouchableOpacity>
-          </Link>
+          <TouchableOpacity
+            key={index}
+            style={tw`w-40 h-20 bg-blue-500 m-2 rounded-lg items-center justify-center`}
+            onPress={() => handleNavigation(item.link)}
+          >
+            <Text style={tw`text-white font-semibold text-center`}>
+              {item.title}
+            </Text>
+          </TouchableOpacity>
         ))}
       </View>
 

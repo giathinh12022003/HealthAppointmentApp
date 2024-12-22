@@ -1,6 +1,6 @@
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
-import React, { useState, useEffect,useCallback } from 'react';
-import { useLocalSearchParams, router,useNavigation,useFocusEffect } from 'expo-router';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useLocalSearchParams, router, useNavigation, useFocusEffect } from 'expo-router';
 import { getPatientRecordNonExistsInAppointment } from '../../service/patient/GetRecordPatient';
 import tw from 'tailwind-react-native-classnames';
 
@@ -10,7 +10,7 @@ export default function ChooseRecordPatient() {
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
 
-  const navigation=useNavigation();
+  const navigation = useNavigation();
 
   const { serviceId,
     serviceName,
@@ -32,14 +32,14 @@ export default function ChooseRecordPatient() {
 
   useFocusEffect(
     useCallback(() => {
-        fetchPatientDetails(page);
+      fetchPatientDetails(page);
     }, [page])
-);
+  );
 
   const fetchPatientDetails = async () => {
     setLoading(true);
     try {
-      const data = await getPatientRecordNonExistsInAppointment(page, 4,serviceTimeFrameId,day);
+      const data = await getPatientRecordNonExistsInAppointment(page, 4, serviceTimeFrameId, day);
       if (data?.data) {
         setRecordPatients(data.data);
         setTotalPages(data.totalPages);
@@ -54,9 +54,11 @@ export default function ChooseRecordPatient() {
   const renderPatientItem = ({ item }) => (
     <View style={tw`border p-4 mb-2 bg-white rounded-lg`}>
       <Text style={tw`text-lg font-bold`}>{item.id}</Text>
-      <Text>Ngày sinh: {item.dateOfBirth}</Text>
+      <Text>Họ tên: {item.fullName}</Text>
+      <Text>Ngày sinh: {formatDate(item.dateOfBirth)}</Text>
       <Text>Giới tính: {item.gender}</Text>
       <Text>Số điện thoại: {item.phoneNumber}</Text>
+      <Text>Hồ sơ đặt cho: {item.relationship}</Text>
       <TouchableOpacity
         style={tw`mt-6 bg-blue-600 py-3 rounded-lg shadow`}
         onPress={() => router.replace({
@@ -73,7 +75,7 @@ export default function ChooseRecordPatient() {
             room: room,
             session: session,
             patientId: item.id,
-            unitPrice:unitPrice
+            unitPrice: unitPrice
           }
         })}
       >

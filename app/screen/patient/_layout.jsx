@@ -62,6 +62,17 @@ export default function _layout() {
                         headerRight: () => <HomeIcon />,
                     }}
                 />
+                <Stack.Screen
+                    name='RecordPatientDetails'
+                    options={{
+                        title: 'Chi tiết hồ sơ',
+                        headerBackVisible: true,
+                        headerStyle: {
+                            backgroundColor: '#2563eb',
+                        },
+                        headerTitleStyle: { color: 'white' },
+                    }}
+                />
             </Stack>
             <Modal isVisible={isModalVisible}>
                 <View style={tw`bg-white p-5 rounded-lg items-center`}>
