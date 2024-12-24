@@ -29,13 +29,6 @@ export default function MedicalServiceList() {
     },
     {
       id: 4,
-      title: 'Đặt lịch khám theo ngày',
-      description: 'Chọn ngày khám tiện lợi cho bạn.',
-      image: require('../../../assets/banners/doctor_service_day_banner.jpg'),
-      route: '(tabs)/calendar/CalendarList', // Đường dẫn cho lịch ngày
-    },
-    {
-      id: 5,
       title: 'Đặt lịch tiêm chủng',
       description: 'Lên lịch tiêm chủng dễ dàng.',
       image: require('../../../assets/banners/vaccine_banner.jpg'),

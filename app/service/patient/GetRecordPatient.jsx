@@ -4,10 +4,13 @@ import { getToken } from '../Token';
 const IP = process.env.EXPO_PUBLIC_IP_ADDRESS;
 const API_GET_ALL_PATIENT = process.env.EXPO_PUBLIC_API_GET_ALL_PATIENT;
 const API_GET_PATIENT_NON_EXISTS_APPOINTMENT = process.env.EXPO_PUBLIC_API_GET_PATIENT_NON_EXISTS_APPOINTMENT;
+const API_GET_PATIENT_ID=process.env.EXPO_PUBLIC_API_GET_PATIENT_ID;
 
 const REST_API_GET_PATIENT = `${IP}${API_GET_ALL_PATIENT}`;
 
 const REST_API_GET_PATIENT_NON_EXISTS = `${IP}${API_GET_PATIENT_NON_EXISTS_APPOINTMENT}`;
+
+const REST_API_GET_PATIENT_ID=`${IP}${API_GET_PATIENT_ID}`
 
 export const getAllPatientRecord = async (page, size) => {
   try {
@@ -51,7 +54,28 @@ export const getPatientRecordNonExistsInAppointment = async (page,size,serviceTi
   }
 };
 
+export const getPatientRecordById = async (id) => {
+  try {
+    const storedToken = await getToken('accessToken');
+
+    if (!storedToken) {
+      return { data: []};
+    }
+
+    const response = await axios.get(`${REST_API_GET_PATIENT_ID}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${storedToken}`,
+      }
+    });
+    // console.log(REST_API_GET_PATIENT_NON_EXISTS);
+    return response.data;
+  } catch (error) {
+    return;
+  }
+};
+
 export default {
   getPatientRecordNonExistsInAppointment,
-  getAllPatientRecord
+  getAllPatientRecord,
+  getPatientRecordById
 };

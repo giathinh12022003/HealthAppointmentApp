@@ -2,7 +2,9 @@ import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react
 import React, { useState, useCallback } from 'react';
 import tw from 'tailwind-react-native-classnames';
 import { getAllPatientRecord } from '../../service/patient/GetRecordPatient';
+import { deletePatient } from '../../service/patient/DeletePatientRecord';
 import { useNavigation, useFocusEffect, router } from 'expo-router';
+import Modal from 'react-native-modal';
 
 export default function RecordPatientList() {
     const [recordPatients, setRecordPatients] = useState([]);
@@ -42,7 +44,7 @@ export default function RecordPatientList() {
         <View style={tw`border p-4 mb-2 bg-white rounded-lg`}>
             <Text style={tw`text-lg font-bold`}>{item.id}</Text>
             <Text>Họ tên: {item.fullName}</Text>
-            <Text>Ngày sinh: {item.dateOfBirth}</Text>
+            <Text>Ngày sinh: {formatDate(item.dateOfBirth)}</Text>
             <Text>Giới tính: {item.gender}</Text>
             <Text>Số điện thoại: {item.phoneNumber}</Text>
             <Text>Hồ sơ đặt cho: {item.relationship}</Text>

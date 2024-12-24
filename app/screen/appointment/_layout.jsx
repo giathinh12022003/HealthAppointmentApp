@@ -23,7 +23,7 @@ export default function _layout() {
 
     const HomeIconCancel = () => (
         <TouchableOpacity onPress={toggleModal} style={{ marginRight: 15 }}>
-            <AntDesign name="home" size={24} color="white" />
+            <AntDesign name="home" size={30} color="white" />
         </TouchableOpacity>
     );
 
@@ -32,7 +32,7 @@ export default function _layout() {
             index: 0,
             routes: [{ name: 'screen' }],
         })} style={{ marginRight: 15 }}>
-            <AntDesign name="home" size={24} color="white" />
+            <AntDesign name="home" size={30} color="white" />
         </TouchableOpacity>
     );
 

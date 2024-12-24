@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, FlatList, Text, ActivityIndicator, TouchableOpacity, TextInput } from 'react-native';
 import { getAllAppointment } from '../../service/appointment/GetAppointment';
 import tw from 'tailwind-react-native-classnames';
 import { router } from 'expo-router';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function AppointmentList() {
     const [allAppointments, setAllAppointments] = useState([]); // Dữ liệu gốc
@@ -10,8 +11,12 @@ export default function AppointmentList() {
     const [displayAppointments, setDisplayAppointments] = useState([]); // Dữ liệu trang hiện tại
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
-    const [filter, setFilter] = useState('all'); // Lọc theo ngày
     const [filterStatus, setFilterStatus] = useState('all'); // Lọc theo trạng thái
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
+    const [showStartDatePicker, setShowStartDatePicker] = useState(false);
+    const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+
     const itemsPerPage = 5;
 
     useEffect(() => {
@@ -20,7 +25,7 @@ export default function AppointmentList() {
 
     useEffect(() => {
         handleFilterAppointments();
-    }, [filter, filterStatus, allAppointments]);
+    }, [filterStatus, allAppointments]);
 
     useEffect(() => {
         paginateAppointments();
@@ -51,22 +56,52 @@ export default function AppointmentList() {
                 return normalizedStatus === normalizedFilterStatus;
             });
         }
-
-        // Lọc theo ngày
-        if (filter === 'newest') {
-            updatedAppointments.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
-        } else if (filter === 'oldest') {
-            updatedAppointments.sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
-        }
-
+        setStartDate(new Date());
+        setEndDate(new Date());
         setFilteredAppointments(updatedAppointments);
         setPage(1); // Quay về trang 1 sau khi lọc
     };
+
+    const handleFilterByDate = () => {
+        setLoading(true); // Bật trạng thái loading
+        setTimeout(() => {
+            let updatedAppointments = [...allAppointments];
+
+            const startOfDay = new Date(startDate.setHours(0, 0, 0, 0));
+            const endOfDay = new Date(endDate.setHours(23, 59, 59, 999));
+
+            updatedAppointments = updatedAppointments.filter((appointment) => {
+                const bookingDate = new Date(appointment.dateTime.split(',')[0].split('/').reverse().join('-'));
+                return bookingDate >= startOfDay && bookingDate <= endOfDay;
+            });
+
+            const normalizedFilterStatus = filterStatus.normalize('NFC').trim();
+
+            if (normalizedFilterStatus !== 'all') {
+                updatedAppointments = updatedAppointments.filter((appointment) => {
+                    const normalizedStatus = appointment.status.normalize('NFC').trim();
+                    return normalizedStatus === normalizedFilterStatus;
+                });
+            }
+
+            setFilteredAppointments(updatedAppointments);
+            setPage(1);
+            setLoading(false); // Tắt trạng thái loading
+        }, 500); // Giả lập thời gian xử lý
+    };
+
 
     const paginateAppointments = () => {
         const startIndex = (page - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         setDisplayAppointments(filteredAppointments.slice(startIndex, endIndex));
+    };
+
+    const resetFilters = () => {
+        setFilterStatus('all');
+        setStartDate(new Date());
+        setEndDate(new Date());
+        handleFilterAppointments(); // Reset trạng thái lọc
     };
 
     const formatDateTime = (dateTime) => {
@@ -77,10 +112,17 @@ export default function AppointmentList() {
 
         let hours = date.getHours();
         const minutes = String(date.getMinutes()).padStart(2, '0');
-        const ampm = hours === 24 ? 'AM' : (hours >= 12 ? 'PM' : 'AM');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
         hours = hours % 12 || 12;
 
         return `${day}/${month}/${year}, ${hours}:${minutes} ${ampm}`;
+    };
+
+    const formatDateFilter = (date) => {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
     };
 
     const formatDate = (date) => {
@@ -89,8 +131,8 @@ export default function AppointmentList() {
     };
 
     const renderAppointment = ({ item }) => {
-        const date = formatDate(item.date);
         const bookingDate = formatDateTime(item.dateTime);
+        const date = formatDate(item.date);
         return (
             <View style={tw`bg-white p-4 my-2 rounded-lg shadow relative`}>
                 <Text style={tw`text-lg font-bold`}>{item.id}</Text>
@@ -103,7 +145,11 @@ export default function AppointmentList() {
                     onPress={() =>
                         router.push({
                             pathname: 'screen/appointment/AppointmentDetail',
-                            params: { appointmentId: item.id },
+                            params: {
+                                appointmentId: item.id,
+                                patientId: item.patientsId,
+                                bookDate:bookingDate
+                            },
                         })
                     }
                 >
@@ -122,15 +168,19 @@ export default function AppointmentList() {
         const startEllipsis = page > visiblePages + 1;
         const endEllipsis = page < totalPages - visiblePages;
 
+        // Nút đầu tiên
         pages.push(1);
         if (startEllipsis) pages.push('startEllipsis');
 
+        // Các trang lân cận
         for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) {
             pages.push(i);
         }
 
         if (endEllipsis) pages.push('endEllipsis');
-        pages.push(totalPages);
+
+        // Nút cuối cùng
+        if (totalPages > 1) pages.push(totalPages);
 
         return (
             <View style={tw`flex-row justify-center items-center flex-wrap mt-4`}>
@@ -152,7 +202,11 @@ export default function AppointmentList() {
 
                 {pages.map((pageNumber, index) => {
                     if (pageNumber === 'startEllipsis' || pageNumber === 'endEllipsis') {
-                        return <Text key={`ellipsis-${index}`} style={tw`px-4 py-2 text-gray-500`}>...</Text>;
+                        return (
+                            <Text key={`ellipsis-${index}`} style={tw`px-4 py-2 text-gray-500`}>
+                                ...
+                            </Text>
+                        );
                     }
                     return (
                         <TouchableOpacity
@@ -194,7 +248,6 @@ export default function AppointmentList() {
             ) : (
                 <>
                     <Text style={tw`text-sm`}>Trạng thái:</Text>
-                    {/* Bộ lọc trạng thái */}
                     <View style={tw`flex-row justify-around my-2`}>
                         {['all', 'Chờ phê duyệt', 'Đã xác nhận', 'Đã có kết quả'].map((status) => (
                             <TouchableOpacity
@@ -209,21 +262,70 @@ export default function AppointmentList() {
                         ))}
                     </View>
 
-                    <Text style={tw`text-sm`}>Thời gian:</Text>
-                    {/* Bộ lọc ngày */}
-                    <View style={tw`flex-row my-2 justify-start`}>
-                        {['all', 'newest', 'oldest'].map((type) => (
-                            <TouchableOpacity
-                                key={type}
-                                onPress={() => setFilter(type)}
-                                style={tw`px-3 py-2 rounded-lg ${filter === type ? 'bg-blue-500' : 'bg-gray-200'}`}
-                            >
-                                <Text style={tw`${filter === type ? 'text-white' : 'text-black'} font-semibold`}>
-                                    {type === 'all' ? 'Tất cả' : type === 'newest' ? 'Mới nhất' : 'Cũ nhất'}
-                                </Text>
-                            </TouchableOpacity>
-                        ))}
+                    <Text style={tw`text-sm`}>Giai đoạn:</Text>
+                    <View style={tw`flex-row justify-between items-center mb-4`}>
+                        <Text style={tw`text-sm`}>Từ ngày:</Text>
+                        <TouchableOpacity
+                            style={tw`flex-1 mr-2 px-3 py-2 bg-gray-200 rounded-lg`}
+                            onPress={() => setShowStartDatePicker(true)}
+                        >
+                            <TextInput value={formatDateFilter(startDate)} editable={false} />
+                        </TouchableOpacity>
+
+                        <Text style={tw`text-sm`}>Đến ngày:</Text>
+                        <TouchableOpacity
+                            style={tw`flex-1 ml-2 px-3 py-2 bg-gray-200 rounded-lg`}
+                            onPress={() => setShowEndDatePicker(true)}
+                        >
+                            <TextInput value={formatDateFilter(endDate)} editable={false} />
+                        </TouchableOpacity>
                     </View>
+
+                    <View style={tw`flex-row justify-between my-2`}>
+                        <TouchableOpacity
+                            style={tw`flex-1 mr-2 px-3 py-2 bg-blue-500 rounded-lg flex-row justify-center items-center`}
+                            onPress={handleFilterByDate}
+                            disabled={loading} // Vô hiệu hóa khi đang tải
+                        >
+                            {loading ? (
+                                <ActivityIndicator size="small" color="#fff" />
+                            ) : (
+                                <Text style={tw`text-white text-center font-semibold`}>Tìm</Text>
+                            )}
+                        </TouchableOpacity>
+
+
+                        <TouchableOpacity
+                            style={tw`flex-1 ml-2 px-3 py-2 bg-red-500 rounded-lg`}
+                            onPress={resetFilters}
+                        >
+                            <Text style={tw`text-white text-center font-semibold`}>Đặt lại</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    {showStartDatePicker && (
+                        <DateTimePicker
+                            value={startDate}
+                            mode="date"
+                            display="calendar"
+                            onChange={(e, date) => {
+                                setShowStartDatePicker(false);
+                                setStartDate(date || startDate);
+                            }}
+                        />
+                    )}
+
+                    {showEndDatePicker && (
+                        <DateTimePicker
+                            value={endDate}
+                            mode="date"
+                            display="calendar"
+                            onChange={(e, date) => {
+                                setShowEndDatePicker(false);
+                                setEndDate(date || endDate);
+                            }}
+                        />
+                    )}
 
                     <FlatList
                         data={displayAppointments}
@@ -231,7 +333,6 @@ export default function AppointmentList() {
                         renderItem={renderAppointment}
                         ListEmptyComponent={<Text style={tw`text-center text-gray-600`}>Không có dữ liệu.</Text>}
                     />
-
                     {renderPagination()}
                 </>
             )}

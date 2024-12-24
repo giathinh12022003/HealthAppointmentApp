@@ -23,7 +23,7 @@ export default function _layout() {
 
     const HomeIcon = () => (
         <TouchableOpacity onPress={toggleModal} style={tw`mr-4`}>
-            <AntDesign name="home" size={24} color="white" />
+            <AntDesign name="home" size={30} color="white" />
         </TouchableOpacity>
     );
 

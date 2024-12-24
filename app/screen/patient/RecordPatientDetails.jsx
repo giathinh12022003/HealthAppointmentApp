@@ -3,8 +3,10 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'reac
 import { useLocalSearchParams } from 'expo-router';
 import tw from 'tailwind-react-native-classnames';
 import { updatePatientRecord } from '../../service/patient/UpdatePatientRecord';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function PatientDetail() {
+    const [showDatePicker, setShowDatePicker] = useState(false);
     const params = useLocalSearchParams();
     const {
         patientId,
@@ -85,13 +87,20 @@ export default function PatientDetail() {
         }
     };
 
-    return (
-        <ScrollView style={tw`flex-1 p-4 bg-gray-100`}>
-            <View style={tw`bg-white p-6 rounded-lg shadow-lg mb-4`}>
-                <Text style={tw`text-2xl font-bold text-center mb-4`}>Chi tiết hồ sơ</Text>
+    const formatDate = (date) => {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    };
 
-                <View style={tw`mb-4`}>
-                    <Text style={tw`text-base font-bold text-gray-700 mb-2`}>Họ và tên:</Text>
+    return (
+        <ScrollView style={tw`flex-1 p-4 bg-gray-100 mb-0`}>
+            <View style={tw`bg-white p-6 rounded-lg shadow-lg mb-0`}>
+                <Text style={tw`text-2xl font-bold text-center mb-0`}>Chi tiết hồ sơ</Text>
+
+                <View style={tw`mb-2`}>
+                    <Text style={tw`text-base font-bold text-gray-700 mb-0`}>Họ và tên:</Text>
                     <TextInput
                         value={formData.fullName}
                         editable={editable}
@@ -100,18 +109,44 @@ export default function PatientDetail() {
                     />
                 </View>
 
-                <View style={tw`mb-4`}>
-                    <Text style={tw`text-base font-bold text-gray-700 mb-2`}>Ngày sinh:</Text>
-                    <TextInput
-                        value={formData.dateOfBirth}
-                        editable={editable}
-                        onChangeText={(text) => handleInputChange('dateOfBirth', text)}
-                        style={tw`border p-3 rounded-lg bg-gray-100 ${editable ? 'border-blue-500 bg-white' : 'border-gray-300'}`}
-                    />
+                <View style={tw`mb-2`}>
+                    <Text style={tw`text-base font-bold text-gray-700 mb-0`}>Ngày sinh:</Text>
+                    {editable ? (
+                        <>
+                            <TouchableOpacity
+                                style={tw`border p-3 rounded-lg bg-white border-blue-500`}
+                                onPress={() => setShowDatePicker(true)}
+                            >
+                                <Text style={tw`text-gray-700`}>{formData.dateOfBirth || 'Chọn ngày sinh'}</Text>
+                            </TouchableOpacity>
+                            {showDatePicker && (
+                                <DateTimePicker
+                                    value={forma}
+                                    mode="date"
+                                    display="spinner"
+                                    onChange={(event, selectedDate) => {
+                                        setShowDatePicker(false);
+                                        if (selectedDate) {
+                                            handleInputChange(
+                                                'dateOfBirth',
+                                                selectedDate.toISOString().split('T')[0]
+                                            );
+                                        }
+                                    }}
+                                />
+                            )}
+                        </>
+                    ) : (
+                        <TextInput
+                            value={formData.dateOfBirth}
+                            editable={false}
+                            style={tw`border p-3 rounded-lg bg-gray-100 border-gray-300`}
+                        />
+                    )}
                 </View>
 
-                <View style={tw`mb-4`}>
-                    <Text style={tw`text-base font-bold text-gray-700 mb-2`}>Giới tính:</Text>
+                <View style={tw`mb-2`}>
+                    <Text style={tw`text-base font-bold text-gray-700 mb-0`}>Giới tính:</Text>
                     <TextInput
                         value={formData.gender}
                         editable={editable}
@@ -120,8 +155,8 @@ export default function PatientDetail() {
                     />
                 </View>
 
-                <View style={tw`mb-4`}>
-                    <Text style={tw`text-base font-bold text-gray-700 mb-2`}>Mã bảo hiểm:</Text>
+                <View style={tw`mb-2`}>
+                    <Text style={tw`text-base font-bold text-gray-700 mb-0`}>Mã bảo hiểm:</Text>
                     <TextInput
                         value={formData.insuranceId}
                         editable={editable}
@@ -130,8 +165,8 @@ export default function PatientDetail() {
                     />
                 </View>
 
-                <View style={tw`mb-4`}>
-                    <Text style={tw`text-base font-bold text-gray-700 mb-2`}>Số căn cước:</Text>
+                <View style={tw`mb-2`}>
+                    <Text style={tw`text-base font-bold text-gray-700 mb-0`}>Số căn cước:</Text>
                     <TextInput
                         value={formData.identificationCode}
                         editable={editable}
@@ -140,8 +175,8 @@ export default function PatientDetail() {
                     />
                 </View>
 
-                <View style={tw`mb-4`}>
-                    <Text style={tw`text-base font-bold text-gray-700 mb-2`}>Dân tộc:</Text>
+                <View style={tw`mb-2`}>
+                    <Text style={tw`text-base font-bold text-gray-700 mb-0`}>Dân tộc:</Text>
                     <TextInput
                         value={formData.nation}
                         editable={editable}
@@ -150,8 +185,8 @@ export default function PatientDetail() {
                     />
                 </View>
 
-                <View style={tw`mb-4`}>
-                    <Text style={tw`text-base font-bold text-gray-700 mb-2`}>Nghề nghiệp:</Text>
+                <View style={tw`mb-2`}>
+                    <Text style={tw`text-base font-bold text-gray-700 mb-0`}>Nghề nghiệp:</Text>
                     <TextInput
                         value={formData.occupation}
                         editable={editable}
@@ -160,8 +195,8 @@ export default function PatientDetail() {
                     />
                 </View>
 
-                <View style={tw`mb-4`}>
-                    <Text style={tw`text-base font-bold text-gray-700 mb-2`}>Số điện thoại:</Text>
+                <View style={tw`mb-2`}>
+                    <Text style={tw`text-base font-bold text-gray-700 mb-0`}>Số điện thoại:</Text>
                     <TextInput
                         value={formData.phoneNumber}
                         editable={editable}
@@ -170,8 +205,8 @@ export default function PatientDetail() {
                     />
                 </View>
 
-                <View style={tw`mb-4`}>
-                    <Text style={tw`text-base font-bold text-gray-700 mb-2`}>Địa chỉ email:</Text>
+                <View style={tw`mb-2`}>
+                    <Text style={tw`text-base font-bold text-gray-700 mb-0`}>Địa chỉ email:</Text>
                     <TextInput
                         value={formData.email}
                         editable={editable}
@@ -180,8 +215,8 @@ export default function PatientDetail() {
                     />
                 </View>
 
-                <View style={tw`mb-4`}>
-                    <Text style={tw`text-base font-bold text-gray-700 mb-2`}>Quốc gia sinh sống:</Text>
+                <View style={tw`mb-2`}>
+                    <Text style={tw`text-base font-bold text-gray-700 mb-0`}>Quốc gia sinh sống:</Text>
                     <TextInput
                         value={formData.country}
                         editable={editable}
@@ -190,8 +225,8 @@ export default function PatientDetail() {
                     />
                 </View>
 
-                <View style={tw`mb-4`}>
-                    <Text style={tw`text-base font-bold text-gray-700 mb-2`}>Tỉnh thành:</Text>
+                <View style={tw`mb-2`}>
+                    <Text style={tw`text-base font-bold text-gray-700 mb-0`}>Tỉnh thành:</Text>
                     <TextInput
                         value={formData.province}
                         editable={editable}
@@ -200,8 +235,8 @@ export default function PatientDetail() {
                     />
                 </View>
 
-                <View style={tw`mb-4`}>
-                    <Text style={tw`text-base font-bold text-gray-700 mb-2`}>Thành phố/huyện:</Text>
+                <View style={tw`mb-2`}>
+                    <Text style={tw`text-base font-bold text-gray-700 mb-0`}>Thành phố/huyện:</Text>
                     <TextInput
                         value={formData.district}
                         editable={editable}
@@ -210,8 +245,8 @@ export default function PatientDetail() {
                     />
                 </View>
 
-                <View style={tw`mb-4`}>
-                    <Text style={tw`text-base font-bold text-gray-700 mb-2`}>Phường/xã:</Text>
+                <View style={tw`mb-2`}>
+                    <Text style={tw`text-base font-bold text-gray-700 mb-0`}>Phường/xã:</Text>
                     <TextInput
                         value={formData.ward}
                         editable={editable}
@@ -220,8 +255,8 @@ export default function PatientDetail() {
                     />
                 </View>
 
-                <View style={tw`mb-4`}>
-                    <Text style={tw`text-base font-bold text-gray-700 mb-2`}>Địa chỉ:</Text>
+                <View style={tw`mb-2`}>
+                    <Text style={tw`text-base font-bold text-gray-700 mb-0`}>Địa chỉ:</Text>
                     <TextInput
                         value={formData.address}
                         editable={editable}
@@ -230,8 +265,8 @@ export default function PatientDetail() {
                     />
                 </View>
 
-                <View style={tw`mb-4`}>
-                    <Text style={tw`text-base font-bold text-gray-700 mb-2`}>Quan hệ với bệnh nhân:</Text>
+                <View style={tw`mb-2`}>
+                    <Text style={tw`text-base font-bold text-gray-700 mb-0`}>Quan hệ với bệnh nhân:</Text>
                     <TextInput
                         value={formData.relationship}
                         editable={editable}
@@ -240,8 +275,8 @@ export default function PatientDetail() {
                     />
                 </View>
 
-                <View style={tw`mb-4`}>
-                    <Text style={tw`text-base font-bold text-gray-700 mb-2`}>Ghi chú:</Text>
+                <View style={tw`mb-2`}>
+                    <Text style={tw`text-base font-bold text-gray-700 mb-0`}>Ghi chú:</Text>
                     <TextInput
                         value={formData.note}
                         editable={editable}
@@ -251,7 +286,7 @@ export default function PatientDetail() {
                 </View>
             </View>
 
-            <View style={tw`flex-row justify-between mt-4`}>
+            <View style={tw`flex-row justify-between mt-2`}>
                 <TouchableOpacity
                     style={tw`flex-1 bg-blue-500 p-4 rounded-lg mr-2`}
                     onPress={handleEdit}
