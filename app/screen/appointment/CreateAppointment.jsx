@@ -171,19 +171,21 @@ export default function AppointmentSummary() {
             </View>
           )}
 
-          <TouchableOpacity
-            style={tw`bg-blue-600 py-4 rounded-lg shadow mt-2`}
-            onPress={handleConfirmAppointment}
-          >
-            <Text style={tw`text-center text-white font-bold text-lg`}>Xác nhận đặt lịch</Text>
-          </TouchableOpacity>
+          <View style={tw`w-full mt-4 mb-8`}>
+            <TouchableOpacity
+              style={tw`bg-blue-600 py-4 rounded-lg shadow mb-2`}
+              onPress={handleConfirmAppointment}
+            >
+              <Text style={tw`text-center text-white font-bold text-lg`}>Xác nhận đặt lịch</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={tw`bg-gray-200 py-4 rounded-lg shadow`}
-            onPress={() => router.back()}
-          >
-            <Text style={tw`text-center text-gray-700 font-bold text-lg`}>Quay lại</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={tw`bg-gray-200 py-4 rounded-lg shadow`}
+              onPress={() => router.back()}
+            >
+              <Text style={tw`text-center text-gray-700 font-bold text-lg`}>Quay lại</Text>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       )}
     </View>

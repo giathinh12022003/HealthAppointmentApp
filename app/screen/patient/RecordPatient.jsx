@@ -1,5 +1,5 @@
 import { Text, View, TextInput, Button, ToastAndroid, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigation } from 'expo-router';
 import { RadioButton } from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -59,7 +59,7 @@ export default function PatientRecord() {
         const data = await fetchProvinces();
         setProvinces(data);
       } catch (error) {
-        ToastAndroid.show('Lỗi khi lấy dữ liệu tỉnh thành!', ToastAndroid.BOTTOM);
+        // ToastAndroid.show('Lỗi khi lấy dữ liệu tỉnh thành!', ToastAndroid.BOTTOM);
         // console.error('Error fetching provinces:', error);
       }
     };
@@ -83,7 +83,7 @@ export default function PatientRecord() {
       const data = await fetchDistrictsByProvinceCode(selectedProvinceCode);
       setDistricts(data || []);
     } catch (error) {
-      ToastAndroid.show('Lỗi khi lấy dữ liệu thành phố/huyện!', ToastAndroid.BOTTOM);
+      //ToastAndroid.show('Lỗi khi lấy dữ liệu thành phố/huyện!', ToastAndroid.BOTTOM);
       // console.error('Error fetching districts:', error);
     }
   };
@@ -101,7 +101,7 @@ export default function PatientRecord() {
       const data = await fetchWardsByDistrictCode(selectedDistrictCode);
       setWards(data || []);
     } catch (error) {
-      ToastAndroid.show('Lỗi khi lấy dữ liệu phường/xã!', ToastAndroid.BOTTOM);
+      //ToastAndroid.show('Lỗi khi lấy dữ liệu phường/xã!', ToastAndroid.BOTTOM);
       // console.error('Error fetching wards:', error);
     }
   };
@@ -302,13 +302,12 @@ export default function PatientRecord() {
           <Picker
             mode="dropdown"
             selectedValue={country}
-            onValueChange={(value) => setCountry(value)}
+            onValueChange={(value,index) => setCountry(value)}
             style={tw`w-full mb-4`}
           >
             <Picker.Item label="Chọn quốc gia" value="" />
-            {countries.map((item, index) => (
-              <Picker.Item key={index} label={item.label} value={item.label} />
-            ))}
+            <Picker.Item label="Việt Nam" value="Việt Nam" />
+            <Picker.Item label="Nước ngoài" value="Nước ngoài" />
           </Picker>
 
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Tỉnh thành:</Text>
@@ -323,7 +322,6 @@ export default function PatientRecord() {
               <Picker.Item key={item.code} label={item.fullName} value={item.code} />
             ))}
           </Picker>
-
 
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Thành phố/huyện:</Text>
           <Picker
