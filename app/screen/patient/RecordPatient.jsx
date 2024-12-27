@@ -266,7 +266,7 @@ export default function PatientRecord() {
             onValueChange={(value) => setNation(value)}
             style={tw`w-full mb-4`}
           >
-            <Picker.Item label="Chọn dân tộc" value="" />
+            <Picker.Item label="Chọn dân tộc" value="n/a" />
             {nations.map((item, index) => (
               <Picker.Item key={index} label={item.name} value={item.name} />
             ))}
@@ -274,7 +274,7 @@ export default function PatientRecord() {
 
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Nghề nghiệp:</Text>
           <Picker mode="dropdown" selectedValue={occupation} onValueChange={(value) => setOccupation(value)} style={tw`w-full mb-4`}>
-            <Picker.Item label="Chọn nghề nghiệp" value="" />
+            <Picker.Item label="Chọn nghề nghiệp" value="n/a" />
             {occupations.map((item, index) => (
               <Picker.Item key={index} label={item.name} value={item.name} />
             ))}
@@ -305,7 +305,7 @@ export default function PatientRecord() {
             onValueChange={(value,index) => setCountry(value)}
             style={tw`w-full mb-4`}
           >
-            <Picker.Item label="Chọn quốc gia" value="" />
+            <Picker.Item label="Chọn quốc gia" value="n/a" />
             <Picker.Item label="Việt Nam" value="Việt Nam" />
             <Picker.Item label="Nước ngoài" value="Nước ngoài" />
           </Picker>
@@ -317,7 +317,7 @@ export default function PatientRecord() {
             onValueChange={handleProvinceChange}
             style={tw`w-full mb-4`}
           >
-            <Picker.Item label="Chọn tỉnh thành" value="" />
+            <Picker.Item label="Chọn tỉnh thành" value="n/a" />
             {provinces.map((item) => (
               <Picker.Item key={item.code} label={item.fullName} value={item.code} />
             ))}
@@ -331,7 +331,7 @@ export default function PatientRecord() {
             style={tw`w-full mb-4`}
             enabled={provinceCode !== ''}
           >
-            <Picker.Item label="Chọn thành phố/huyện" value="" />
+            <Picker.Item label="Chọn thành phố/huyện" value="n/a" />
             {districts.map((item) => (
               <Picker.Item key={item.code} label={item.fullName} value={item.code} />
             ))}
@@ -346,7 +346,7 @@ export default function PatientRecord() {
             style={tw`w-full mb-4`}
             enabled={districtCode !== ''}
           >
-            <Picker.Item label="Chọn phường/xã" value="" />
+            <Picker.Item label="Chọn phường/xã" value="n/a" />
             {wards.map((item) => (
               <Picker.Item key={item.code} label={item.fullName} value={item.code} />
             ))}
@@ -370,7 +370,7 @@ export default function PatientRecord() {
 
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Bạn tạo hồ sơ cho:</Text>
           <Picker mode="dropdown" selectedValue={occupation} onValueChange={(value) => setRelationship(value)} style={tw`w-full mb-4`}>
-            <Picker.Item label="Quan hệ với bệnh nhân" value="" />
+            <Picker.Item label="Quan hệ với bệnh nhân" value="n/a" />
             {relationships.map((item) => (
               <Picker.Item key={item.label} label={item.label} value={item.label} />
             ))}

@@ -4,7 +4,9 @@ import { useLocalSearchParams } from 'expo-router';
 import tw from 'tailwind-react-native-classnames';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
+import { RadioButton } from 'react-native-paper';
 import { fetchProvinces, fetchDistrictsByProvinceCode, fetchWardsByDistrictCode } from '../../service/VietNamUnits';
+import { getPatientRecordById } from '../../service/patient/GetRecordPatient';
 import { updatePatientRecord } from '../../service/patient/UpdatePatientRecord';
 import nationsData from '../../data/nations';
 import occupationsData from '../../data/occupation';
@@ -12,7 +14,26 @@ import relationshipsData from '../../data/relationship';
 
 const RecordPatientDetails = () => {
     // Lấy thông tin được push qua từ màn hình trước
-    const params = useLocalSearchParams();
+    const { patientId } = useLocalSearchParams();
+
+    const [formData, setFormData] = useState({
+        fullName: '',
+        dateOfBirth: '',
+        gender: '',
+        insuranceId: '',
+        identificationCode: '',
+        nation: '',
+        occupation: '',
+        phoneNumber: '',
+        email: '',
+        country: '',
+        province: '',
+        district: '',
+        ward: '',
+        address: '',
+        relationship: '',
+        note: '',
+    });
 
     const [provinces, setProvinces] = useState([]);
     const [districts, setDistricts] = useState([]);
@@ -30,13 +51,6 @@ const RecordPatientDetails = () => {
 
     const [showDatePicker, setShowDatePicker] = useState(false);
 
-    const [nation, setNation] = useState('');
-    const [nations, setNations] = useState([]); // 54 dân tộc Việt Nam
-    const [occupation, setOccupation] = useState('');
-    const [occupations, setOccupations] = useState([]);
-    const [relationship, setRelationship] = useState('');
-    const [relationships, setRelationships] = useState([]);
-
     useEffect(() => {
         const loadProvinces = async () => {
             try {
@@ -51,17 +65,36 @@ const RecordPatientDetails = () => {
         loadProvinces();
     }, []);
 
+    useEffect(() => {
+        const fetchPatientRecord = async () => {
+            if (patientId) {
+                const data = await getPatientRecordById(patientId);
+                if (data) {
+                    setFormData(data);
+                }
+            }
+        };
+        fetchPatientRecord();
+    }, [patientId]);
+
     const handleProvinceChange = async (selectedProvinceCode) => {
         const selectedProvince = provinces.find(p => p.code === selectedProvinceCode);
 
         setProvinceCode(selectedProvinceCode);
         setProvinceName(selectedProvince?.fullName || '');
 
+        setFormData((prevState) => ({
+            ...prevState,
+            province: selectedProvince?.fullName || '',
+            district: '', // Xóa dữ liệu cũ
+            ward: '',     // Xóa dữ liệu cũ
+        }));
+
         // Reset district and ward when province changes
-        setDistrictCode('');
-        setDistrictName('');
-        setWardCode('');
-        setWardName('');
+        // setDistrictCode('');
+        // setDistrictName('');
+        // setWardCode('');
+        // setWardName('');
 
         try {
             const data = await fetchDistrictsByProvinceCode(selectedProvinceCode);
@@ -78,9 +111,15 @@ const RecordPatientDetails = () => {
         setDistrictCode(selectedDistrictCode);
         setDistrictName(selectedDistrict?.fullName || '');
 
+        setFormData((prevState) => ({
+            ...prevState,
+            district: selectedDistrict?.fullName || '',
+            ward: '', // Xóa dữ liệu cũ
+        }));
+
         // Reset ward when district changes
-        setWardCode('');
-        setWardName('');
+        // setWardCode('');
+        // setWardName('');
         try {
             const data = await fetchWardsByDistrictCode(selectedDistrictCode);
             setWards(data || []);
@@ -95,28 +134,15 @@ const RecordPatientDetails = () => {
 
         setWardCode(selectedWardCode);
         setWardName(selectedWard?.fullName || '');
+
+        setFormData((prevState) => ({
+            ...prevState,
+            ward: selectedWard?.fullName || '',
+        }));
     };
 
     // Lưu lại các thông tin ban đầu và trạng thái chỉnh sửa
     const [editable, setEditable] = useState(false);
-    const [formData, setFormData] = useState({
-        fullName: params.fullName,
-        dateOfBirth: params.dateOfBirth,
-        gender: params.gender,
-        phoneNumber: params.phoneNumber,
-        relationship: params.relationship,
-        nation: params.nation,
-        occupation: params.occupation,
-        email: params.email,
-        country: params.country,
-        province: params.province,
-        district: params.district,
-        ward: params.ward,
-        address: params.address,
-        note: params.note,
-        insuranceId: params.insuranceId,
-        identificationCode: params.identificationCode,
-    });
 
     // Hàm xử lý thay đổi dữ liệu khi người dùng nhập
     const handleChange = (field, value) => {
@@ -127,33 +153,37 @@ const RecordPatientDetails = () => {
     };
 
     // Hàm hủy thay đổi, trả về giá trị ban đầu
-    const handleCancel = () => {
-        setFormData({
-            fullName: params.fullName,
-            dateOfBirth: params.dateOfBirth,
-            gender: params.gender,
-            phoneNumber: params.phoneNumber,
-            relationship: params.relationship,
-            nation: params.nation,
-            occupation: params.occupation,
-            email: params.email,
-            country: params.country,
-            province: params.province,
-            district: params.district,
-            ward: params.ward,
-            address: params.address,
-            note: params.note,
-            insuranceId: params.insuranceId,
-            identificationCode: params.identificationCode,
-        });
+    const handleCancel = async () => {
+        if (patientId) {
+            const data = await getPatientRecordById(patientId);
+            if (data) {
+                setFormData(data);
+            }
+        }
         setEditable(false); // Hủy chế độ chỉnh sửa
     };
 
     // Hàm lưu thay đổi (Giả sử là lưu vào backend hoặc local storage)
-    const handleSave = () => {
-        // Giả sử đây là lưu dữ liệu, bạn có thể thực hiện logic API hoặc lưu trữ ở đây.
-        Alert.alert('Lưu thành công', 'Thông tin bệnh nhân đã được lưu.');
-        setEditable(false); // Sau khi lưu, không cho phép chỉnh sửa nữa
+    const handleSave = async () => {
+        const patientDataSave = { ...formData };
+        const isFormValid = Object.values(formData).every(
+            (value) => value !== null && value !== "" && value !== "n/a" // Kiểm tra giá trị không null và không rỗng
+        );
+
+        if (!isFormValid) {
+            Alert.alert("Lỗi", "Vui lòng điền đầy đủ tất cả các thông tin trong biểu mẫu.");
+            return;
+        }
+        try {
+            console.log("Form Data:", formData);
+            await updatePatientRecord(patientId, patientDataSave);
+            Alert.alert('Thành công', 'Cập nhật hồ sơ thành công!');
+
+            setEditable(false);
+        } catch (error) {
+            Alert.alert('Lỗi', 'Cập nhật hồ sơ thất bại.');
+            console.error('Error updating record:', error);
+        }
     };
 
     // Hàm xử lý thay đổi giới tính
@@ -184,22 +214,22 @@ const RecordPatientDetails = () => {
             style={tw`flex-1`}
             keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
         >
-            <ScrollView contentContainerStyle={tw`flex-grow justify-center px-5`} keyboardShouldPersistTaps="handled">
+            <ScrollView contentContainerStyle={tw`flex-grow justify-center px-5 pb-14`} keyboardShouldPersistTaps="handled">
                 <View style={tw`p-4`}>
-                    <Text style={tw`text-2xl font-bold mb-4`}>Chi tiết bệnh nhân</Text>
+                    <Text style={tw`text-2xl font-bold mb-4`}>Chi tiết hồ sơ</Text>
 
-                    <Text style={tw`mb-2`}>Họ tên:</Text>
+                    <Text style={tw`mb-2 text-base`}>Họ tên:</Text>
                     <TextInput
                         value={formData.fullName}
                         onChangeText={(value) => handleChange('fullName', value)}
                         editable={editable}
-                        style={tw`h-10 border border-gray-300 rounded-md p-2 mb-4`}
+                        style={tw`h-10 border border-gray-300 rounded-md p-2 mb-4 ${editable ? 'border-blue-500 bg-white' : 'border-gray-300'}`}
                     />
 
-                    <Text style={tw`mb-2`}>Ngày sinh:</Text>
+                    <Text style={tw`mb-2 text-base`}>Ngày sinh:</Text>
                     <TouchableOpacity
                         onPress={() => editable && setShowDatePicker(true)}
-                        style={tw`h-10 border border-gray-300 rounded-md p-2 mb-4 justify-center`}
+                        style={tw`h-10 border border-gray-300 rounded-md p-2 mb-4 justify-center ${editable ? 'border-blue-500 bg-white' : 'border-gray-300'}`}
                         disabled={!editable}
                     >
                         <Text style={tw`${editable ? 'text-black' : 'text-gray-500'}`}>
@@ -217,7 +247,7 @@ const RecordPatientDetails = () => {
                     )}
 
                     {/* Hiển thị giới tính */}
-                    <Text style={tw`mb-2`}>Giới tính:</Text>
+                    <Text style={tw`mb-2 text-base`}>Giới tính:</Text>
                     <View style={tw`flex-row mb-4`}>
                         <TouchableOpacity
                             onPress={() => editable && handleGenderChange('Nam')}
@@ -253,7 +283,41 @@ const RecordPatientDetails = () => {
                         </TouchableOpacity>
                     </View>
 
-                    <Text style={tw`mb-2`}>Nghề nghiệp:</Text>
+                    <Text style={tw`mb-2 text-base`}>Bảo hiểm y tế:</Text>
+                    <TextInput
+                        value={formData.insuranceId}
+                        onChangeText={(value) => handleChange('insuranceId', value)}
+                        editable={editable}
+                        style={tw`h-10 border border-gray-300 rounded-md p-2 mb-4 ${editable ? 'border-blue-500 bg-white' : 'border-gray-300'}`}
+                    />
+
+                    <Text style={tw`mb-2 text-base`}>Số CCCD:</Text>
+                    <TextInput
+                        value={formData.identificationCode}
+                        onChangeText={(value) => handleChange('identificationCode', value)}
+                        editable={editable}
+                        style={tw`h-10 border border-gray-300 rounded-md p-2 mb-4 ${editable ? 'border-blue-500 bg-white' : 'border-gray-300'}`}
+                    />
+
+                    <Text style={tw`mb-2 text-base`}>Dân tộc:</Text>
+                    {editable ? (
+                        <Picker
+                            mode='dropdown'
+                            selectedValue={formData.nation}
+                            onValueChange={(value) => handleChange('nation', value)}
+                            style={tw`h-14 border border-gray-300 rounded-md mb-4`}
+                        >
+                            {nationsData.map((item, index) => (
+                                <Picker.Item key={index} label={item.name} value={item.name} />
+                            ))}
+                        </Picker>
+                    ) : (
+                        <View style={tw`h-10 border border-gray-300 rounded-md p-2 mb-4 justify-center`}>
+                            <Text style={tw`text-gray-500`}>{formData.nation || 'Không xác định'}</Text>
+                        </View>
+                    )}
+
+                    <Text style={tw`mb-2 text-base`}>Nghề nghiệp:</Text>
                     {editable ? (
                         <Picker
                             mode='dropdown'
@@ -266,20 +330,46 @@ const RecordPatientDetails = () => {
                             ))}
                         </Picker>
                     ) : (
-                        <View style={tw`h-10 border border-gray-300 rounded-md p-2 mb-4 justify-center`}>
+                        <View style={tw`h-10 border border-gray-300 rounded-md p-2 mb-4 justify-center ${editable ? 'border-blue-500 bg-white' : 'border-gray-300'}`}>
                             <Text style={tw`text-gray-500`}>{formData.occupation || 'Không xác định'}</Text>
                         </View>
                     )}
 
-                    <Text style={tw`mb-2`}>Số điện thoại:</Text>
+                    <Text style={tw`mb-2 text-base`}>Số điện thoại:</Text>
                     <TextInput
                         value={formData.phoneNumber}
                         onChangeText={(value) => handleChange('phoneNumber', value)}
                         editable={editable}
-                        style={tw`h-10 border border-gray-300 rounded-md p-2 mb-4`}
+                        style={tw`h-10 border border-gray-300 rounded-md p-2 mb-4 ${editable ? 'border-blue-500 bg-white' : 'border-gray-300'}`}
                     />
 
-                    <Text style={tw`mb-2`}>Tỉnh thành:</Text>
+                    <Text style={tw`mb-2 text-base`}>Email:</Text>
+                    <TextInput
+                        value={formData.email}
+                        onChangeText={(value) => handleChange('email', value)}
+                        editable={editable}
+                        style={tw`h-10 border border-gray-300 rounded-md p-2 mb-4 ${editable ? 'border-blue-500 bg-white' : 'border-gray-300'}`}
+                    />
+
+                    <Text style={tw`mb-2 text-base`}>Quốc gia sinh sống:</Text>
+                    {editable ? (
+                        <Picker
+                            mode="dropdown"
+                            selectedValue={formData.country}
+                            onValueChange={(value) => handleChange('country', value)}
+                            style={tw`h-14 border border-gray-300 rounded-md mb-4`}
+                        >
+                            
+                            <Picker.Item label="Việt Nam" value="Việt Nam" />
+                            <Picker.Item label="Nước ngoài" value="Nước ngoài" />
+                        </Picker>
+                    ) : (
+                        <View style={tw`h-10 border border-gray-300 rounded-md p-2 mb-4 justify-center`}>
+                            <Text style={tw`text-gray-500`}>{formData.country || 'Không xác định'}</Text>
+                        </View>
+                    )}
+
+                    <Text style={tw`mb-2 text-base`}>Tỉnh thành:</Text>
                     {editable ? (
                         <Picker
                             mode='dropdown'
@@ -287,7 +377,7 @@ const RecordPatientDetails = () => {
                             onValueChange={handleProvinceChange}
                             style={tw`h-14 border border-gray-300 rounded-md mb-4`}
                         >
-                            <Picker.Item label="Chọn tỉnh thành" value="" />
+                            <Picker.Item label="Chọn tỉnh thành" value="n/a" />
                             {provinces.map((item) => (
                                 <Picker.Item key={item.code} label={item.fullName} value={item.code} />
                             ))}
@@ -298,7 +388,7 @@ const RecordPatientDetails = () => {
                         </View>
                     )}
 
-                    <Text style={tw`mb-2`}>Thành phố/Quận/Huyện:</Text>
+                    <Text style={tw`mb-2 text-base`}>Thành phố/Quận/Huyện:</Text>
                     {editable ? (
                         <Picker
                             mode='dropdown'
@@ -306,7 +396,7 @@ const RecordPatientDetails = () => {
                             onValueChange={handleDistrictChange}
                             style={tw`h-14 border border-gray-300 rounded-md mb-4`}
                         >
-                            <Picker.Item label="Chọn thành phố/quận/huyện" value="" />
+                            <Picker.Item label="Chọn thành phố/quận/huyện" value="n/a"/>
                             {districts.map((item) => (
                                 <Picker.Item key={item.code} label={item.fullName} value={item.code} />
                             ))}
@@ -317,7 +407,7 @@ const RecordPatientDetails = () => {
                         </View>
                     )}
 
-                    <Text style={tw`mb-2`}>Phường/Xã:</Text>
+                    <Text style={tw`mb-2 text-base`}>Phường/Xã:</Text>
                     {editable ? (
                         <Picker
                             mode='dropdown'
@@ -325,7 +415,7 @@ const RecordPatientDetails = () => {
                             onValueChange={handleWardChange}
                             style={tw`h-14 border border-gray-300 rounded-md mb-4`}
                         >
-                            <Picker.Item label="Chọn phường/xã" value="" />
+                            <Picker.Item label="Chọn phường/xã" value="n/a" />
                             {wards.map((item) => (
                                 <Picker.Item key={item.code} label={item.fullName} value={item.code} />
                             ))}
@@ -336,7 +426,7 @@ const RecordPatientDetails = () => {
                         </View>
                     )}
 
-                    <Text style={tw`mb-2`}>Bạn đặt hồ sơ cho:</Text>
+                    <Text style={tw`mb-2 text-base`}>Bạn đặt hồ sơ cho:</Text>
                     {editable ? (
                         <Picker
                             mode='dropdown'
@@ -354,43 +444,56 @@ const RecordPatientDetails = () => {
                         </View>
                     )}
 
-                    {/* Nút chức năng */}
-                    <View style={tw`flex-row justify-between mt-4 mb-4`}>
-                        {/* Nút Sửa */}
-                        <TouchableOpacity
-                            onPress={() => setEditable(true)}
-                            style={tw`flex-1 p-3 bg-blue-500 rounded-md mx-1`}
-                        >
-                            <Text style={tw`text-center text-white`}>Sửa</Text>
-                        </TouchableOpacity>
-
-                        {/* Nút Hủy */}
-                        <TouchableOpacity
-                            onPress={handleCancel}
-                            style={[
-                                tw`flex-1 p-3 rounded-md mx-1`,
-                                { backgroundColor: editable ? 'gray' : '#c1c8bf', opacity: editable ? 1 : 0.85 }
-                            ]}
-                            disabled={!editable}
-                        >
-                            <Text style={tw`text-center text-white`}>Hủy</Text>
-                        </TouchableOpacity>
-
-                        {/* Nút Lưu */}
-                        <TouchableOpacity
-                            onPress={handleSave}
-                            style={[
-                                tw`flex-1 p-3 rounded-md mx-1`,
-                                { backgroundColor: editable ? 'green' : '#96f084', opacity: editable ? 1 : 0.85 }
-                            ]}
-                            disabled={!editable}
-                        >
-                            <Text style={tw`text-center text-white`}>Lưu</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <Text style={tw`mb-2 text-base`}>Ghi chú:</Text>
+                    <TextInput
+                        value={formData.note}
+                        onChangeText={(value) => handleChange('note', value)}
+                        editable={editable}
+                        style={tw`h-10 border border-gray-300 rounded-md p-2 mb-4 ${editable ? 'border-blue-500 bg-white' : 'border-gray-300'}`}
+                    />
                 </View>
             </ScrollView>
-        </KeyboardAvoidingView>
+
+            {/* Nút chức năng */}
+            <View style={[
+                tw`flex-row justify-between p-4 bg-white border-t border-gray-200`,
+                { position: 'absolute', bottom: 0, left: 0, right: 0 }
+            ]}>
+                {/* Nút Sửa */}
+                <TouchableOpacity
+                    onPress={() => {
+                        setEditable(true);
+                    }}
+                    style={tw`flex-1 p-3 bg-blue-500 rounded-md mx-1`}
+                >
+                    <Text style={tw`text-center text-white font-bold`}>Sửa</Text>
+                </TouchableOpacity>
+
+                {/* Nút Hủy */}
+                <TouchableOpacity
+                    onPress={handleCancel}
+                    style={[
+                        tw`flex-1 p-3 rounded-md mx-1`,
+                        { backgroundColor: editable ? 'gray' : '#c1c8bf', opacity: editable ? 1 : 0.85 }
+                    ]}
+                    disabled={!editable}
+                >
+                    <Text style={tw`text-center text-white font-bold`}>Hủy</Text>
+                </TouchableOpacity>
+
+                {/* Nút Lưu */}
+                <TouchableOpacity
+                    onPress={handleSave}
+                    style={[
+                        tw`flex-1 p-3 rounded-md mx-1`,
+                        { backgroundColor: editable ? 'green' : '#96f084', opacity: editable ? 1 : 0.85 }
+                    ]}
+                    disabled={!editable}
+                >
+                    <Text style={tw`text-center text-white font-bold`}>Lưu</Text>
+                </TouchableOpacity>
+            </View>
+        </KeyboardAvoidingView >
     );
 };
 

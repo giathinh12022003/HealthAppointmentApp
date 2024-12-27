@@ -55,22 +55,6 @@ export default function RecordPatientList() {
                         pathname: 'screen/patient/RecordPatientDetails',
                         params: {
                             patientId: item.id,
-                            fullName: item.fullName,
-                            dateOfBirth: item.dateOfBirth,
-                            gender: item.gender,
-                            phoneNumber: item.phoneNumber,
-                            relationship: item.relationship,
-                            nation: item.nation,
-                            occupation: item.occupation,
-                            email: item.email,
-                            country: item.country,
-                            province: item.province,
-                            district: item.district,
-                            ward: item.ward,
-                            address: item.address,
-                            note: item.note,
-                            insuranceId:item.insuranceId,
-                            identificationCode:item.identificationCode
                         },
                     })
                 }
