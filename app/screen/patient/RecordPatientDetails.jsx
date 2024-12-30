@@ -13,7 +13,6 @@ import occupationsData from '../../data/occupation';
 import relationshipsData from '../../data/relationship';
 
 const RecordPatientDetails = () => {
-    // Lấy thông tin được push qua từ màn hình trước
     const { patientId } = useLocalSearchParams();
 
     const [formData, setFormData] = useState({

@@ -1,30 +1,30 @@
+import { View, FlatList, Text, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, Text, ActivityIndicator, TouchableOpacity,Image } from 'react-native';
 import tw from 'tailwind-react-native-classnames';
 import { useLocalSearchParams, router } from 'expo-router';
-import { getDoctorServiceId } from '../../service/medical_services/specialty/GetDoctorServiceIdForSpecialtyService';
+import { getServiceTypeById } from '../../service/medical_services/servicetype/GetServiceType';
 
-export default function DoctorSpecialtyService() {
-    const { serviceId, serviceName } = useLocalSearchParams();
-    const [doctorSpecialtyServices, setDoctorSpecialtyServices] = useState([]);
+export default function ServiceList() {
+    const { serviceTypeId, serviceTypeName } = useLocalSearchParams();
+    const [serviceList, setserviceList] = useState([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
 
     useEffect(() => {
-        if (serviceId) {
-            fetchDoctorSpecialtyServices();
+        if (serviceTypeId) {
+            fetchServices();
         } else {
-            //console.error('serviceId is missing!');
+            console.error('serviceTypeId is missing!');
         }
-    }, [page, serviceId]);
+    }, [page, serviceTypeId]);
 
-    const fetchDoctorSpecialtyServices = async () => {
+    const fetchServices = async () => {
         setLoading(true);
         try {
-            const data = await getDoctorServiceId(serviceId, page, 5);
+            const data = await getServiceTypeById(serviceTypeId, page, 5);
             setTotalPages(data.totalPages);
-            setDoctorSpecialtyServices(data.data);
+            setserviceList(data.data);
         } catch (error) {
             // console.error('Failed to fetch services:', error);
         } finally {
@@ -32,66 +32,25 @@ export default function DoctorSpecialtyService() {
         }
     };
 
-    const getAvatar = (gender, image) => {
-        if (image) {
-            return { uri: image }; // Sử dụng ảnh từ JSON nếu có
-        }
-        // Sử dụng ảnh mặc định nếu không có ảnh trong JSON
-        if (gender === 'Nam') {
-            return require('../../../assets/avatar_doctor/male_doctor_img.jpg');
-        } else if (gender === 'Nữ') {
-            return require('../../../assets/avatar_doctor/female_doctor_img.jpg');
-        }
-    };
+    const renderServiceList = ({ item }) => (
+        <View style={tw`bg-white p-4 my-2 rounded-lg shadow`}>
+            <Text style={tw`text-lg font-bold mb-2`}>{item.name}</Text>
+            <Text>{`Giá dịch vụ: ${item.unitPrice} VND`}</Text>
+            <Text>{`Trạng thái: ${item.status}`}</Text>
+            <TouchableOpacity
+                style={tw`mt-4 bg-blue-500 py-2 px-4 rounded-lg`}
+                onPress={() =>
+                    router.push({
+                        pathname: 'screen/servicetype/DoctorServiceType',
+                        params: { serviceId: item.id, serviceName: item.name },
+                    })
+                }
+            >
+                <Text style={tw`text-center text-white font-bold text-base`}>Chọn dịch vụ</Text>
+            </TouchableOpacity>
+        </View>
+    );
 
-    const renderDoctorSpecialtyService = ({ item }) => {
-        const specialtyNames = item.doctorResponse.specialties.map((specialty) => specialty.specialtyName).join(', ');
-        return (
-            <View style={tw`bg-white p-4 my-2 rounded-lg shadow relative`}>
-                <View style={tw`absolute top-4 right-4`}>
-                    <Image
-                        source={getAvatar(item.doctorResponse.gender, item.doctorResponse.image)}
-                        style={tw`w-20 h-20 rounded-md border border-gray-300`}
-                    />
-                </View>
-                <Text style={tw`text-base font-bold mb-2`}>
-                    {`${item.doctorResponse.qualificationName}: ${item.doctorResponse.fullName}`}
-                </Text>
-                <Text style={tw`text-gray-600 text-sm mb-2`}>
-                    Giới tính: {item.doctorResponse.gender}
-                </Text>
-                <Text style={tw`text-gray-600 text-sm mb-2`}>
-                    Chuyên khoa: {specialtyNames}
-                </Text>
-                <View style={tw`flex-row justify-between mt-4`}>
-                    <TouchableOpacity
-                        style={tw`bg-gray-300 py-2 px-4 rounded-lg flex-1 mr-2`}
-                        onPress={() => {
-                            // Sự kiện onPress cho nút "Xem chi tiết"
-                        }}
-                    >
-                        <Text style={tw`text-center text-black font-bold text-base`}>Xem chi tiết</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={tw`bg-blue-500 py-2 px-4 rounded-lg flex-1`}
-                        onPress={() =>
-                            router.push({
-                                pathname: 'screen/specialty/SpecialtyServiceTimeFrame',
-                                params: {
-                                    doctorServiceId: item.id,
-                                    serviceName: item.service.name,
-                                    doctorName: item.doctorResponse.fullName,
-                                    unitPrice: item.unitPrice
-                                }
-                            })
-                        }
-                    >
-                        <Text style={tw`text-center text-white font-bold text-base`}>Đặt lịch ngay</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        );
-    };
     const renderPagination = () => {
         if (totalPages <= 1) return null;
 
@@ -180,15 +139,15 @@ export default function DoctorSpecialtyService() {
 
     return (
         <View style={tw`flex-1 p-4 bg-gray-100`}>
-            <Text style={tw`text-lg font-bold mb-1 text-left w-full`}>Dịch vụ: {serviceName}</Text>
+            <Text style={tw`text-lg font-bold mb-1 text-left w-full`}>Loại dịch vụ: {serviceTypeName}</Text>
             {loading ? (
                 <ActivityIndicator size="large" color="#0000ff" />
             ) : (
                 <>
                     <FlatList
-                        data={doctorSpecialtyServices}
+                        data={serviceList}
                         keyExtractor={(item) => item.id}
-                        renderItem={renderDoctorSpecialtyService}
+                        renderItem={renderServiceList}
                     />
                     {renderPagination()}
                 </>

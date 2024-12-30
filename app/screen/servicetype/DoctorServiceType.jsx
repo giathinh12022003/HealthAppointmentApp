@@ -2,29 +2,29 @@ import React, { useEffect, useState } from 'react';
 import { View, FlatList, Text, ActivityIndicator, TouchableOpacity,Image } from 'react-native';
 import tw from 'tailwind-react-native-classnames';
 import { useLocalSearchParams, router } from 'expo-router';
-import { getDoctorServiceId } from '../../service/medical_services/specialty/GetDoctorServiceIdForSpecialtyService';
+import { getDoctorServiceId } from '../../service/medical_services/servicetype/GetDoctorServiceIdForServiceType';
 
 export default function DoctorSpecialtyService() {
     const { serviceId, serviceName } = useLocalSearchParams();
-    const [doctorSpecialtyServices, setDoctorSpecialtyServices] = useState([]);
+    const [doctorServiceTypes, setDoctorServiceTypes] = useState([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
 
     useEffect(() => {
         if (serviceId) {
-            fetchDoctorSpecialtyServices();
+            fetchDoctorServiceTypes();
         } else {
             //console.error('serviceId is missing!');
         }
     }, [page, serviceId]);
 
-    const fetchDoctorSpecialtyServices = async () => {
+    const fetchDoctorServiceTypes = async () => {
         setLoading(true);
         try {
             const data = await getDoctorServiceId(serviceId, page, 5);
             setTotalPages(data.totalPages);
-            setDoctorSpecialtyServices(data.data);
+            setDoctorServiceTypes(data.data);
         } catch (error) {
             // console.error('Failed to fetch services:', error);
         } finally {
@@ -44,7 +44,7 @@ export default function DoctorSpecialtyService() {
         }
     };
 
-    const renderDoctorSpecialtyService = ({ item }) => {
+    const renderDoctorServiceType = ({ item }) => {
         const specialtyNames = item.doctorResponse.specialties.map((specialty) => specialty.specialtyName).join(', ');
         return (
             <View style={tw`bg-white p-4 my-2 rounded-lg shadow relative`}>
@@ -76,7 +76,7 @@ export default function DoctorSpecialtyService() {
                         style={tw`bg-blue-500 py-2 px-4 rounded-lg flex-1`}
                         onPress={() =>
                             router.push({
-                                pathname: 'screen/specialty/SpecialtyServiceTimeFrame',
+                                pathname: 'screen/servicetype/ServiceTypeTimeFrame',
                                 params: {
                                     doctorServiceId: item.id,
                                     serviceName: item.service.name,
@@ -186,9 +186,9 @@ export default function DoctorSpecialtyService() {
             ) : (
                 <>
                     <FlatList
-                        data={doctorSpecialtyServices}
+                        data={doctorServiceTypes}
                         keyExtractor={(item) => item.id}
-                        renderItem={renderDoctorSpecialtyService}
+                        renderItem={renderDoctorServiceType}
                     />
                     {renderPagination()}
                 </>

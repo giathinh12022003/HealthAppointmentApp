@@ -76,6 +76,7 @@ export default function _layout() {
                 <Stack.Screen name="patient" options={{ headerShown: false }} />
                 <Stack.Screen name="profile" options={{ headerShown: false }} />
                 <Stack.Screen name="specialty" options={{ headerShown: false }} />
+                <Stack.Screen name="servicetype" options={{ headerShown: false }} />
             </Stack>
         </PaperProvider>
     );

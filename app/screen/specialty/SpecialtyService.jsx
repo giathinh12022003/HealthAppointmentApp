@@ -5,7 +5,7 @@ import { useLocalSearchParams, router } from 'expo-router';
 import { getServiceSpecialty } from '../../service/medical_services/specialty/SpecialtyService'
 
 export default function SpecialtyService() {
-  const { specialtyId } = useLocalSearchParams();
+  const { specialtyId,specialtyName } = useLocalSearchParams();
   const [specialtyServices, setSpecialtyServices] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -46,7 +46,7 @@ export default function SpecialtyService() {
           })
         }
       >
-        <Text style={tw`text-center text-white text-base`}>Chọn dịch vụ</Text>
+        <Text style={tw`text-center text-white font-bold text-base`}>Chọn dịch vụ</Text>
       </TouchableOpacity>
     </View>
   );
@@ -139,6 +139,7 @@ export default function SpecialtyService() {
 
   return (
     <View style={tw`flex-1 p-4 bg-gray-100`}>
+      <Text style={tw`text-lg font-bold mb-1 text-left w-full`}>Dịch vụ chuyên khoa: {specialtyName}</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (

@@ -139,7 +139,7 @@ export default function AppointmentDetail() {
             <Text style={tw`text-base text-gray-700`}>Email: <Text style={tw`font-semibold`}>{email}</Text></Text>
             <Text style={tw`text-base text-gray-700`}>Nghề nghiệp: <Text style={tw`font-semibold`}>{occupation}</Text></Text>
             <Text style={tw`text-base text-gray-700`}>Số BHYT: <Text style={tw`font-semibold`}>{insuranceId}</Text></Text>
-            <Text style={tw`text-base text-gray-700`}>Địa chỉ: <Text style={tw`font-semibold`}>{address}</Text></Text>
+            <Text style={tw`text-base text-gray-700`}>Địa chỉ: <Text style={tw`font-semibold`}>{address}, {ward}, {district}, {province}</Text></Text>
             <Text style={tw`text-base text-gray-700`}>Hồ sơ đặt cho: <Text style={tw`font-semibold`}>{relationship}</Text></Text>
           </View>
         )}

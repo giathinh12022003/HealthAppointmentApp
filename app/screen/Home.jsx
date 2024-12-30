@@ -37,9 +37,9 @@ export default function Home() {
           { title: "Đặt lịch khám", link: "screen/medical_services/MedicalServiceList" },
           { title: "Hồ sơ khám bệnh", link: "screen/patient/RecordPatientList" },
           { title: "Tìm kiếm bác sĩ", link: "screen/doctor/DoctorList" },
-          { title: "Điều trị nội trú", link: "/tab/inpatient-treatment" },
+          { title: "Danh sách chuyên khoa", link: "screen/specialty/SpecialtyList" },
           { title: "Lịch hẹn khám bệnh", link: "screen/appointment/AppointmentList" },
-          { title: "Bảo hiểm y tế", link: "/tab/insurance" },
+          { title: "Danh sách dịch vụ", link: "screen/servicetype/ServiceTypeList" },
           { title: "Quy trình khám bệnh", link: "/tab/procedure" },
           { title: "Giải đáp & tư vấn", link: "/tab/faq" },
         ].map((item, index) => (

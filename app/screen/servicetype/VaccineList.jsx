@@ -2,81 +2,49 @@ import { View, FlatList, Text, ActivityIndicator, TouchableOpacity, Image } from
 import React, { useEffect, useState } from 'react';
 import tw from 'tailwind-react-native-classnames';
 import { router } from 'expo-router';
-import { getSpecialties } from '../../service/medical_services/specialty/SpecialtyList'
+import { getVaccineService } from '../../service/medical_services/servicetype/GetVaccineService'
 
-export default function SpecialtyList() {
-  const [specialties, setSpecialties] = useState([]);
+export default function VaccineList() {
+  const [serviceList, setserviceList] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
-  const [imageName, setImageName] = useState('');
 
   useEffect(() => {
-    fetchSpecialties();
+    fetchServices();
   }, [page]);
 
-  const fetchSpecialties = async () => {
+  const fetchServices = async () => {
     setLoading(true);
     try {
-      const data = await getSpecialties(page, 5);
-      setSpecialties(data.data);
+      const data = await getVaccineService(page, 5);
       setTotalPages(data.totalPages);
+      setserviceList(data.data);
     } catch (error) {
-      // console.error('Failed to fetch:', error);
+      // console.error('Failed to fetch services:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const imageMap = {
-    'tam_than_kinh.webp': require('../../../assets/icons/specialty/tam_than_kinh.webp'),
-    'tai_mui_hong.webp': require('../../../assets/icons/specialty/tai_mui_hong.webp'),
-    '1651821563777-VIEM_GAN.webp': require('../../../assets/icons/specialty/1651821563777-VIEM_GAN.webp'),
-    'tim_mach.webp': require('../../../assets/icons/specialty/tim_mach.webp'),
-    'ho_hap.webp': require('../../../assets/icons/specialty/ho_hap.webp'),
-    'noi_tong_quat.webp': require('../../../assets/icons/specialty/noi_tong_quat.webp'),
-    'tieu_hoa.webp': require('../../../assets/icons/specialty/tieu_hoa.webp'),
-    '1651820887681-SAN_KHOA_CHAN_DOAN_TRUOC_SINH.webp': require('../../../assets/icons/specialty/1651820887681-SAN_KHOA_CHAN_DOAN_TRUOC_SINH.webp'),
-    'da_lieu.webp': require('../../../assets/icons/specialty/da_lieu.webp'),
-    'noi_tiet.webp': require('../../../assets/icons/specialty/noi_tiet.webp'),
-    'noi_co_xuong_khop.webp': require('../../../assets/icons/specialty/noi_co_xuong_khop.webp'),
-    'long_nguc_mach_mau.webp': require('../../../assets/icons/specialty/long_nguc_mach_mau.webp'),
-    'di_ung_mien_dich_lam_sang.webp': require('../../../assets/icons/specialty/di_ung_mien_dich_lam_sang.webp'),
-    'rang_ham_mat.webp': require('../../../assets/icons/specialty/rang_ham_mat.webp'),
-    'mat.webp': require('../../../assets/icons/specialty/mat.webp'),
-    'tong_quat.webp': require('../../../assets/icons/specialty/tong_quat.webp'),
-    'default_placeholder_image.png': require('../../../assets/icons/specialty/default_placeholder_image.png'),
-  }
-
-  const renderSpecialty = ({ item }) => {
-    const imageSource = imageMap[item.image] || imageMap['default_placeholder_image.png'];
-    return (
-      <View style={tw`bg-white p-4 my-2 rounded-lg shadow relative flex-row items-center`}>
-        <Image
-          source={imageSource}
-          style={tw`w-16 h-16 rounded-lg mr-4`}
-          resizeMode="cover"
-        />
-        <View style={tw`flex-1`}>
-          <Text style={tw`text-lg font-bold mb-2`}>{item.specialtyName}</Text>
-        </View>
-        <TouchableOpacity
-          style={tw`bg-blue-500 py-2 px-4 rounded-lg`}
-          onPress={() =>
-            router.push({
-              pathname: 'screen/specialty/SpecialtyService',
-              params: {
-                specialtyId: item.specialtyId,
-                specialtyName: item.specialtyName
-              },
-            })
-          }
-        >
-          <Text style={tw`text-center text-white font-bold text-sm`}>Đặt lịch ngay</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
+  const renderServiceList = ({ item }) => (
+    <View style={tw`bg-white p-4 my-2 rounded-lg shadow`}>
+      <Text style={tw`text-lg font-bold mb-2`}>{item.name}</Text>
+      <Text>{`Giá dịch vụ: ${item.unitPrice} VND`}</Text>
+      <Text>{`Trạng thái: ${item.status}`}</Text>
+      <TouchableOpacity
+        style={tw`mt-4 bg-blue-500 py-2 px-4 rounded-lg`}
+        onPress={() =>
+          router.push({
+            pathname: 'screen/servicetype/DoctorServiceType',
+            params: { serviceId: item.id, serviceName: item.name },
+          })
+        }
+      >
+        <Text style={tw`text-center text-white font-bold text-base`}>Chọn dịch vụ</Text>
+      </TouchableOpacity>
+    </View>
+  );
 
   const renderPagination = () => {
     if (totalPages <= 1) return null;
@@ -164,17 +132,17 @@ export default function SpecialtyList() {
     );
   };
 
-
   return (
     <View style={tw`flex-1 p-4 bg-gray-100`}>
+      <Text style={tw`text-lg font-bold mb-1 text-left w-full`}>Dịch vụ tiêm chủng</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
         <>
           <FlatList
-            data={specialties}
-            keyExtractor={(item) => item.specialtyId}
-            renderItem={renderSpecialty}
+            data={serviceList}
+            keyExtractor={(item) => item.id}
+            renderItem={renderServiceList}
           />
           {renderPagination()}
         </>

@@ -61,43 +61,53 @@ export default function DoctorList() {
                 <Text style={tw`text-gray-600 text-sm mb-2`}>
                     Chuyên khoa: {specialtyNames}
                 </Text>
-                <TouchableOpacity
-                    style={tw`mt-4 bg-blue-500 py-2 px-4 rounded-lg`}
-                    onPress={() =>
-                        router.push({
-                            pathname: 'screen/doctor/DoctorService',
-                            params: { doctorId: item.id, doctorName: item.fullName },
-                        })
-                    }
-                >
-                    <Text style={tw`text-center text-white text-base`}>Đặt lịch ngay</Text>
-                </TouchableOpacity>
+                <View style={tw`flex-row justify-between mt-4`}>
+                    <TouchableOpacity
+                        style={tw`bg-gray-300 py-2 px-4 rounded-lg flex-1 mr-2`}
+                        onPress={() => {
+                            // Sự kiện onPress cho nút "Xem chi tiết"
+                        }}
+                    >
+                        <Text style={tw`text-center text-black font-bold text-base`}>Xem chi tiết</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={tw`bg-blue-500 py-2 px-4 rounded-lg flex-1`}
+                        onPress={() =>
+                            router.push({
+                                pathname: 'screen/doctor/DoctorService',
+                                params: { doctorId: item.id, doctorName: item.fullName },
+                            })
+                        }
+                    >
+                        <Text style={tw`text-center text-white font-bold text-base`}>Đặt lịch ngay</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         );
     };
 
     const renderPagination = () => {
         if (totalPages <= 1) return null;
-    
+
         const visiblePages = 3; // Số lượng trang hiển thị xung quanh trang hiện tại
         const pages = [];
         const startEllipsis = page > visiblePages + 1;
         const endEllipsis = page < totalPages - visiblePages;
-    
+
         // Nút đầu tiên
         pages.push(1);
         if (startEllipsis) pages.push('startEllipsis');
-    
+
         // Các trang lân cận
         for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) {
             pages.push(i);
         }
-    
+
         if (endEllipsis) pages.push('endEllipsis');
-    
+
         // Nút cuối cùng
         if (totalPages > 1) pages.push(totalPages);
-    
+
         return (
             <View style={tw`flex-row justify-center items-center flex-wrap mt-4`}>
                 {/* Nút đi đến trang đầu tiên */}
@@ -108,7 +118,7 @@ export default function DoctorList() {
                 >
                     <Text style={tw`text-center text-base text-black`}>{`<<`}</Text>
                 </TouchableOpacity>
-    
+
                 {/* Nút lùi một trang */}
                 <TouchableOpacity
                     onPress={() => setPage(page - 1)}
@@ -117,7 +127,7 @@ export default function DoctorList() {
                 >
                     <Text style={tw`text-center text-base text-black`}>{`<`}</Text>
                 </TouchableOpacity>
-    
+
                 {/* Hiển thị các trang */}
                 {pages.map((pageNumber, index) => {
                     if (pageNumber === 'startEllipsis' || pageNumber === 'endEllipsis') {
@@ -140,7 +150,7 @@ export default function DoctorList() {
                         </TouchableOpacity>
                     );
                 })}
-    
+
                 {/* Nút tiến một trang */}
                 <TouchableOpacity
                     onPress={() => setPage(page + 1)}
@@ -149,7 +159,7 @@ export default function DoctorList() {
                 >
                     <Text style={tw`text-center text-base text-black`}>{`>`}</Text>
                 </TouchableOpacity>
-    
+
                 {/* Nút đi đến trang cuối */}
                 <TouchableOpacity
                     onPress={() => setPage(totalPages)}
@@ -161,7 +171,7 @@ export default function DoctorList() {
             </View>
         );
     };
-    
+
     return (
         <View style={tw`flex-1 p-4 bg-gray-100`}>
             {loading ? (

@@ -150,7 +150,7 @@ export default function AppointmentSummary() {
                   <Text style={tw`text-gray-700 mb-2 text-base`}>{patient.email}</Text>
 
                   <Text style={tw`text-lg font-bold mb-0`}>Địa chỉ:</Text>
-                  <Text style={tw`text-gray-700 mb-2 text-base`}>{patient.address}</Text>
+                  <Text style={tw`text-gray-700 mb-2 text-base`}>{patient.address}, {patient.ward}, {patient.district}, {patient.province}</Text>
 
                   <Text style={tw`text-lg font-bold mb-0`}>Nghề nghiệp:</Text>
                   <Text style={tw`text-gray-700 mb-2 text-base`}>{patient.occupation}</Text>

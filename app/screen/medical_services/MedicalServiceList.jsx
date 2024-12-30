@@ -25,14 +25,14 @@ export default function MedicalServiceList() {
       title: 'Đặt lịch khám theo dịch vụ',
       description: 'Lựa chọn các dịch vụ y tế phù hợp.',
       image: require('../../../assets/banners/service_banner.jpg'),
-      route: '(tabs)/service/ServiceList', // Đường dẫn cho dịch vụ y tế
+      route: 'screen/servicetype/ServiceTypeList', // Đường dẫn cho dịch vụ y tế
     },
     {
       id: 4,
       title: 'Đặt lịch tiêm chủng',
       description: 'Lên lịch tiêm chủng dễ dàng.',
       image: require('../../../assets/banners/vaccine_banner.jpg'),
-      route: '(tabs)/vaccine/VaccineList', // Đường dẫn cho tiêm chủng
+      route: 'screen/servicetype/VaccineList', // Đường dẫn cho tiêm chủng
     },
   ];
 
