@@ -59,7 +59,7 @@ export default function RecordPatientList() {
                     })
                 }
             >
-                <Text style={tw`text-white text-center`}>Xem chi tiết</Text>
+                <Text style={tw`text-white font-bold text-center`}>Xem chi tiết</Text>
             </TouchableOpacity>
         </View>
     );
@@ -156,10 +156,12 @@ export default function RecordPatientList() {
                 style={tw`bg-blue-500 p-4 rounded-lg mb-4`}
                 onPress={() => navigation.navigate('RecordPatient')}
             >
-                <Text style={tw`text-white font-bold text-center text-lg`}>Thêm Hồ Sơ</Text>
+                <Text style={tw`text-white font-bold text-center text-lg`}>Tạo Hồ Sơ</Text>
             </TouchableOpacity>
             {loading ? (
                 <ActivityIndicator size="large" color="#0000ff" />
+            ) : recordPatients.length === 0 ? (
+                <Text style={tw`text-center text-base text-gray-500`}>Bạn chưa có hồ sơ nào, vui lòng chọn tạo hồ sơ.</Text>
             ) : (
                 <>
                     <FlatList

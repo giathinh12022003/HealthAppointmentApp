@@ -5,6 +5,8 @@ import { RadioButton } from 'react-native-paper';
 import { createUser } from '../service/identity/User';
 import tw from 'tailwind-react-native-classnames';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Ionicons } from '@expo/vector-icons';
+import Modal from 'react-native-modal';
 
 export default function Register() {
   const [fullName, setFullName] = useState('');
@@ -14,6 +16,10 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   const navigator = useNavigation();
 
@@ -55,21 +61,16 @@ export default function Register() {
     try {
       const response = await createUser(userData);
       if (response) {
-        ToastAndroid.show('Tạo tài khoản thành công!', ToastAndroid.BOTTOM);
-        navigator.goBack();
+        setModalMessage('Tạo tài khoản thành công!');
+        setModalVisible(true);
       }
     } catch (error) {
-      // Hiển thị thông báo lỗi từ backend
       if (error.message) {
-        Alert.alert(
-          'Thông báo',
-          error.message,
-          [{ text: 'OK' }],
-          { cancelable: true }
-        );
+        setModalMessage(error.message);
       } else {
-        ToastAndroid.show('Đăng ký thất bại!', ToastAndroid.BOTTOM);
+        setModalMessage('Đăng ký thất bại!');
       }
+      setModalVisible(true);
     }
   };
 
@@ -149,36 +150,63 @@ export default function Register() {
           />
 
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Mật khẩu:</Text>
-          <TextInput
-            style={tw`w-full h-10 border rounded-md px-3 mb-4`}
-            value={password}
-            onChangeText={setPassword}
-            placeholder="Nhập mật khẩu"
-            secureTextEntry={true}
-          />
+          <View style={tw`w-full h-10 border rounded-md flex-row items-center px-3 mb-4`}>
+            <TextInput
+              style={tw`flex-1`}
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Nhập mật khẩu"
+              secureTextEntry={!showPassword}
+            />
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+              <Ionicons name={showPassword ? "eye-off" : "eye"} size={24} color="gray" />
+            </TouchableOpacity>
+          </View>
 
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Xác nhận mật khẩu:</Text>
-          <TextInput
-            style={tw`w-full h-10 border rounded-md px-3 mb-6`}
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            placeholder="Nhập lại mật khẩu"
-            secureTextEntry={true}
-          />
+          <View style={tw`w-full h-10 border rounded-md flex-row items-center px-3 mb-6`}>
+            <TextInput
+              style={tw`flex-1`}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              placeholder="Nhập lại mật khẩu"
+              secureTextEntry={!showConfirmPassword}
+            />
+            <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+              <Ionicons name={showConfirmPassword ? "eye-off" : "eye"} size={24} color="gray" />
+            </TouchableOpacity>
+          </View>
 
           <TouchableOpacity
             style={tw`rounded-full bg-blue-500 p-4 w-full flex items-center justify-center`}
             onPress={handleRegister}
           >
-            <Text style={tw`text-white text-lg`}>Đăng ký</Text>
+            <Text style={tw`text-white font-bold text-lg`}>Đăng ký</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => navigator.goBack()}
           >
-            <Text style={tw`mt-4 text-blue-600`}>Quay lại</Text>
+            <Text style={tw`mt-4 text-base text-blue-600`}>Quay lại</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
+      <Modal isVisible={isModalVisible} onBackdropPress={() => setModalVisible(false)}>
+        <View style={tw`bg-white p-5 rounded-md items-center`}>
+          <Text style={tw`text-lg mb-4`}>{modalMessage}</Text>
+          <TouchableOpacity
+            style={tw`rounded-full bg-blue-500 p-3 w-32 flex items-center`}
+            onPress={() => {
+              setModalVisible(false);
+              if (modalMessage === 'Tạo tài khoản thành công!') {
+                navigator.goBack();
+              }
+            }
+            }
+          >
+            <Text style={tw`text-white font-bold`}>Xác nhận</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </KeyboardAvoidingView>
   );
 }

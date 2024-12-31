@@ -156,6 +156,7 @@ export default function PatientRecord() {
   };
 
   const handlePatient = async () => {
+    // Tạo đối tượng patientData
     const patientData = {
       fullName,
       dateOfBirth: formatDateForAPI(dateOfBirth),
@@ -175,6 +176,22 @@ export default function PatientRecord() {
       note,
     };
 
+    // Kiểm tra các trường ngoại trừ insuranceId và note
+    for (const [key, value] of Object.entries(patientData)) {
+      if (
+        key !== "insuranceId" &&
+        key !== "note" &&
+        key !== "dateOfBirth" &&
+        (value === null || value === "")
+      ) {
+        ToastAndroid.show(
+          `Vui lòng điền đầy đủ thông tin bắt buộc.`,
+          ToastAndroid.BOTTOM
+        );
+        return;
+      }
+    }
+
     try {
       await createPatientRecord(patientData);
       ToastAndroid.show('Đăng ký thông tin bệnh nhân thành công!', ToastAndroid.BOTTOM);
@@ -184,6 +201,7 @@ export default function PatientRecord() {
       // console.error('Registration error:', error);
     }
   };
+
 
   return (
     <KeyboardAvoidingView
@@ -195,15 +213,15 @@ export default function PatientRecord() {
         <Text style={tw`text-lg font-bold mb-1 text-left w-full`}>Thông tin bệnh nhân:</Text>
         <View style={tw`flex-1 items-center`}>
 
-          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Họ và tên (có dấu):</Text>
+          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Họ và tên (có dấu)<Text style={tw`text-sm text-red-700`}>(*)</Text></Text>
           <TextInput
             style={tw`w-full h-10 border rounded-md px-3 mb-4`}
             value={fullName}
             onChangeText={setFullName}
             placeholder="Nhập họ và tên"
           />
-
-          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Ngày sinh:</Text>
+          
+          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Ngày sinh<Text style={tw`text-sm text-red-700`}>(*)</Text></Text>
           <TouchableOpacity
             style={tw`w-full h-10 border rounded-md px-3 justify-center mb-4`}
             onPress={() => setShowDatePicker(true)}
@@ -227,8 +245,8 @@ export default function PatientRecord() {
             />
           )}
 
-          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Giới tính:</Text>
-          <View style={tw`flex-row items-center mb-4 w-full`}>
+          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Giới tính<Text style={tw`text-sm text-red-700`}>(*)</Text></Text>
+          <View style={tw`flex-row items-center mb-0 w-full`}>
             <RadioButton
               value="Nam"
               status={gender === 'Nam' ? 'checked' : 'unchecked'}
@@ -243,7 +261,7 @@ export default function PatientRecord() {
             <Text>Nữ</Text>
           </View>
 
-          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Bảo hiểm y tế:</Text>
+          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Bảo hiểm y tế</Text>
           <TextInput
             style={tw`w-full h-10 border rounded-md px-3 mb-4`}
             value={insuranceId}
@@ -251,7 +269,7 @@ export default function PatientRecord() {
             placeholder="Nhập mã bảo hiểm y tế"
           />
 
-          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Số căn cước:</Text>
+          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Số căn cước<Text style={tw`text-sm text-red-700`}>(*)</Text></Text>
           <TextInput
             style={tw`w-full h-10 border rounded-md px-3 mb-4`}
             value={identificationCode}
@@ -259,28 +277,28 @@ export default function PatientRecord() {
             placeholder="Nhập số căn cước"
           />
 
-          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Dân tộc:</Text>
+          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Dân tộc<Text style={tw`text-sm text-red-700`}>(*)</Text></Text>
           <Picker
             mode="dropdown"
             selectedValue={nation}
             onValueChange={(value) => setNation(value)}
             style={tw`w-full mb-4`}
           >
-            <Picker.Item label="Chọn dân tộc" value="n/a" />
+            <Picker.Item label="Chọn dân tộc" value="" />
             {nations.map((item, index) => (
               <Picker.Item key={index} label={item.name} value={item.name} />
             ))}
           </Picker>
 
-          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Nghề nghiệp:</Text>
-          <Picker mode="dropdown" selectedValue={occupation} onValueChange={(value) => setOccupation(value)} style={tw`w-full mb-4`}>
-            <Picker.Item label="Chọn nghề nghiệp" value="n/a" />
+          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Nghề nghiệp<Text style={tw`text-sm text-red-700`}>(*)</Text></Text>
+          <Picker mode="dropdown" selectedValue={occupation} onValueChange={(value) => setOccupation(value)} style={tw`w-full mb-0`}>
+            <Picker.Item label="Chọn nghề nghiệp" value="" />
             {occupations.map((item, index) => (
               <Picker.Item key={index} label={item.name} value={item.name} />
             ))}
           </Picker>
 
-          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Số điện thoại:</Text>
+          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Số điện thoại<Text style={tw`text-sm text-red-700`}>(*)</Text></Text>
           <TextInput
             style={tw`w-full h-10 border rounded-md px-3 mb-4`}
             value={phoneNumber}
@@ -289,7 +307,7 @@ export default function PatientRecord() {
             keyboardType='phone-pad'
           />
 
-          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Email:</Text>
+          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Email<Text style={tw`text-sm text-red-700`}>(*)</Text></Text>
           <TextInput
             style={tw`w-full h-10 border rounded-md px-3 mb-4`}
             value={email}
@@ -298,32 +316,32 @@ export default function PatientRecord() {
             keyboardType="email-address"
           />
 
-          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Quốc gia sinh sống:</Text>
+          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Quốc gia sinh sống<Text style={tw`text-sm text-red-700`}>(*)</Text></Text>
           <Picker
             mode="dropdown"
             selectedValue={country}
-            onValueChange={(value,index) => setCountry(value)}
+            onValueChange={(value, index) => setCountry(value)}
             style={tw`w-full mb-4`}
           >
-            <Picker.Item label="Chọn quốc gia" value="n/a" />
+            <Picker.Item label="Chọn quốc gia" value="" />
             <Picker.Item label="Việt Nam" value="Việt Nam" />
             <Picker.Item label="Nước ngoài" value="Nước ngoài" />
           </Picker>
 
-          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Tỉnh thành:</Text>
+          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Tỉnh thành <Text style={tw`text-sm text-red-700`}>(*)</Text></Text>
           <Picker
             mode="dropdown"
             selectedValue={provinceCode}
             onValueChange={handleProvinceChange}
             style={tw`w-full mb-4`}
           >
-            <Picker.Item label="Chọn tỉnh thành" value="n/a" />
+            <Picker.Item label="Chọn tỉnh thành" value="" />
             {provinces.map((item) => (
               <Picker.Item key={item.code} label={item.fullName} value={item.code} />
             ))}
           </Picker>
 
-          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Thành phố/huyện:</Text>
+          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Thành phố/huyện<Text style={tw`text-sm text-red-700`}>(*)</Text></Text>
           <Picker
             mode="dropdown"
             selectedValue={districtCode}
@@ -331,14 +349,13 @@ export default function PatientRecord() {
             style={tw`w-full mb-4`}
             enabled={provinceCode !== ''}
           >
-            <Picker.Item label="Chọn thành phố/huyện" value="n/a" />
+            <Picker.Item label="Chọn thành phố/huyện" value="" />
             {districts.map((item) => (
               <Picker.Item key={item.code} label={item.fullName} value={item.code} />
             ))}
           </Picker>
 
-
-          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Phường/xã:</Text>
+          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Phường/xã<Text style={tw`text-sm text-red-700`}>(*)</Text></Text>
           <Picker
             mode="dropdown"
             selectedValue={wardCode}
@@ -346,13 +363,13 @@ export default function PatientRecord() {
             style={tw`w-full mb-4`}
             enabled={districtCode !== ''}
           >
-            <Picker.Item label="Chọn phường/xã" value="n/a" />
+            <Picker.Item label="Chọn phường/xã" value="" />
             {wards.map((item) => (
               <Picker.Item key={item.code} label={item.fullName} value={item.code} />
             ))}
           </Picker>
 
-          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Địa chỉ:</Text>
+          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Địa chỉ<Text style={tw`text-sm text-red-700`}>(*)</Text></Text>
           <TextInput
             style={tw`w-full h-10 border rounded-md px-3 mb-4`}
             value={address}
@@ -368,9 +385,9 @@ export default function PatientRecord() {
             placeholder="Nhập ghi chú"
           />
 
-          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Bạn tạo hồ sơ cho:</Text>
-          <Picker mode="dropdown" selectedValue={occupation} onValueChange={(value) => setRelationship(value)} style={tw`w-full mb-4`}>
-            <Picker.Item label="Quan hệ với bệnh nhân" value="n/a" />
+          <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Bạn tạo hồ sơ cho<Text style={tw`text-sm text-red-700`}>(*)</Text></Text>
+          <Picker mode="dropdown" selectedValue={occupation} onValueChange={(value) => setRelationship(value)} style={tw`w-full mb-0`}>
+            <Picker.Item label="Quan hệ với bệnh nhân" value="" />
             {relationships.map((item) => (
               <Picker.Item key={item.label} label={item.label} value={item.label} />
             ))}

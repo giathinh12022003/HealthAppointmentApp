@@ -77,6 +77,19 @@ const RecordPatientDetails = () => {
     }, [patientId]);
 
     const handleProvinceChange = async (selectedProvinceCode) => {
+        if (selectedProvinceCode === "") {
+            setProvinceCode("");
+            setProvinceName("");
+            setDistricts([]);
+            setWards([]);
+            setFormData((prevState) => ({
+                ...prevState,
+                province: "",
+                district: "",
+                ward: "",
+            }));
+            return;
+        }
         const selectedProvince = provinces.find(p => p.code === selectedProvinceCode);
 
         setProvinceCode(selectedProvinceCode);
@@ -105,6 +118,17 @@ const RecordPatientDetails = () => {
     };
 
     const handleDistrictChange = async (selectedDistrictCode) => {
+        if (selectedDistrictCode === "") {
+            setDistrictCode("");
+            setDistrictName("");
+            setWards([]);
+            setFormData((prevState) => ({
+                ...prevState,
+                district: "",
+                ward: "",
+            }));
+            return;
+        }
         const selectedDistrict = districts.find(d => d.code === selectedDistrictCode);
 
         setDistrictCode(selectedDistrictCode);
@@ -129,6 +153,15 @@ const RecordPatientDetails = () => {
     };
 
     const handleWardChange = (selectedWardCode) => {
+        if (selectedWardCode === "") {
+            setWardCode("");
+            setWardName("");
+            setFormData((prevState) => ({
+                ...prevState,
+                ward: "",
+            }));
+            return;
+        }
         const selectedWard = wards.find(w => w.code === selectedWardCode);
 
         setWardCode(selectedWardCode);
@@ -165,23 +198,46 @@ const RecordPatientDetails = () => {
     // Hàm lưu thay đổi (Giả sử là lưu vào backend hoặc local storage)
     const handleSave = async () => {
         const patientDataSave = { ...formData };
-        const isFormValid = Object.values(formData).every(
-            (value) => value !== null && value !== "" && value !== "n/a" // Kiểm tra giá trị không null và không rỗng
-        );
+
+        // Loại bỏ các trường không bắt buộc khỏi danh sách kiểm tra
+        const requiredFields = {
+            ...formData,
+            insuranceId: undefined, // Không bắt buộc
+            note: undefined,        // Không bắt buộc
+        };
+
+        const isFormValid = Object.entries(requiredFields).every(([key, value]) => {
+            // Chỉ kiểm tra các trường không phải undefined
+            if (value === undefined) return true;
+            return value !== null && value !== ""; // Kiểm tra không null và không rỗng
+        });
 
         if (!isFormValid) {
-            Alert.alert("Lỗi", "Vui lòng điền đầy đủ tất cả các thông tin trong biểu mẫu.");
+            const missingFields = [];
+            if (!formData.fullName) missingFields.push("Họ tên");
+            if (!formData.dateOfBirth) missingFields.push("Ngày sinh");
+            if (!formData.gender) missingFields.push("Giới tính");
+            if (!formData.province) missingFields.push("Tỉnh thành");
+            if (!formData.district) missingFields.push("Thành phố/Quận/Huyện");
+            if (!formData.ward) missingFields.push("Phường/Xã");
+            if (!formData.phoneNumber) missingFields.push("Số điện thoại");
+            if (!formData.email) missingFields.push("Email");
+
+            Alert.alert(
+                "Lỗi",
+                `Vui lòng điền đầy đủ tất cả các thông tin trong biểu mẫu.\nThiếu: ${missingFields.join(", ")}.`
+            );
             return;
         }
-        try {
-            console.log("Form Data:", formData);
-            await updatePatientRecord(patientId, patientDataSave);
-            Alert.alert('Thành công', 'Cập nhật hồ sơ thành công!');
 
+        try {
+            console.log("Form Data:", patientDataSave);
+            await updatePatientRecord(patientId, patientDataSave);
+            Alert.alert("Thành công", "Cập nhật hồ sơ thành công!");
             setEditable(false);
         } catch (error) {
-            Alert.alert('Lỗi', 'Cập nhật hồ sơ thất bại.');
-            console.error('Error updating record:', error);
+            Alert.alert("Lỗi", "Cập nhật hồ sơ thất bại.");
+            console.error("Error updating record:", error);
         }
     };
 
@@ -358,7 +414,7 @@ const RecordPatientDetails = () => {
                             onValueChange={(value) => handleChange('country', value)}
                             style={tw`h-14 border border-gray-300 rounded-md mb-4`}
                         >
-                            
+
                             <Picker.Item label="Việt Nam" value="Việt Nam" />
                             <Picker.Item label="Nước ngoài" value="Nước ngoài" />
                         </Picker>
@@ -376,7 +432,7 @@ const RecordPatientDetails = () => {
                             onValueChange={handleProvinceChange}
                             style={tw`h-14 border border-gray-300 rounded-md mb-4`}
                         >
-                            <Picker.Item label="Chọn tỉnh thành" value="n/a" />
+                            <Picker.Item label="Chọn tỉnh thành" value="" />
                             {provinces.map((item) => (
                                 <Picker.Item key={item.code} label={item.fullName} value={item.code} />
                             ))}
@@ -395,7 +451,7 @@ const RecordPatientDetails = () => {
                             onValueChange={handleDistrictChange}
                             style={tw`h-14 border border-gray-300 rounded-md mb-4`}
                         >
-                            <Picker.Item label="Chọn thành phố/quận/huyện" value="n/a"/>
+                            <Picker.Item label="Chọn thành phố/quận/huyện" value="" />
                             {districts.map((item) => (
                                 <Picker.Item key={item.code} label={item.fullName} value={item.code} />
                             ))}
@@ -414,7 +470,7 @@ const RecordPatientDetails = () => {
                             onValueChange={handleWardChange}
                             style={tw`h-14 border border-gray-300 rounded-md mb-4`}
                         >
-                            <Picker.Item label="Chọn phường/xã" value="n/a" />
+                            <Picker.Item label="Chọn phường/xã" value="" />
                             {wards.map((item) => (
                                 <Picker.Item key={item.code} label={item.fullName} value={item.code} />
                             ))}
