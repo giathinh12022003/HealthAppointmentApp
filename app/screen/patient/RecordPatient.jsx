@@ -12,6 +12,7 @@ import nationsData from '../../data/nations'; // Import file dữ liệu dân t�
 import countriesData from '../../data/countries'; // Import file dữ liệu quốc gia
 import occupationsData from '../../data/occupation';// dữ liệu nghề nghiệp
 import relationshipsData from '../../data/relationship';//mối quan hệ với bệnh nhân
+import Modal from 'react-native-modal';
 
 export default function PatientRecord() {
   const [fullName, setFullName] = useState('');
@@ -52,6 +53,9 @@ export default function PatientRecord() {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const [isInfoConfirmed, setIsInfoConfirmed] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [modalSuccess, setModalSuccess] = useState(false);
 
   useEffect(() => {
     const loadProvinces = async () => {
@@ -179,25 +183,27 @@ export default function PatientRecord() {
     // Kiểm tra các trường ngoại trừ insuranceId và note
     for (const [key, value] of Object.entries(patientData)) {
       if (
-        key !== "insuranceId" &&
-        key !== "note" &&
-        key !== "dateOfBirth" &&
-        (value === null || value === "")
+        key !== 'insuranceId' &&
+        key !== 'note' &&
+        key !== 'dateOfBirth' &&
+        (value === null || value === '')
       ) {
-        ToastAndroid.show(
-          `Vui lòng điền đầy đủ thông tin bắt buộc.`,
-          ToastAndroid.BOTTOM
-        );
+        setModalMessage('Vui lòng điền đầy đủ thông tin bắt buộc.');
+        setModalSuccess(false);
+        setIsModalVisible(true);
         return;
       }
     }
 
     try {
       await createPatientRecord(patientData);
-      ToastAndroid.show('Đăng ký thông tin bệnh nhân thành công!', ToastAndroid.BOTTOM);
-      navigation.goBack('(tabs)/patient/RecordPatientList');
+      setModalMessage('Đăng ký thông tin bệnh nhân thành công!');
+      setModalSuccess(true);
+      setIsModalVisible(true);
     } catch (error) {
-      ToastAndroid.show('Đăng ký thất bại!', ToastAndroid.BOTTOM);
+      setModalMessage('Đăng ký thất bại!');
+      setModalSuccess(false);
+      setIsModalVisible(true);
       // console.error('Registration error:', error);
     }
   };
@@ -220,7 +226,7 @@ export default function PatientRecord() {
             onChangeText={setFullName}
             placeholder="Nhập họ và tên"
           />
-          
+
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Ngày sinh<Text style={tw`text-sm text-red-700`}>(*)</Text></Text>
           <TouchableOpacity
             style={tw`w-full h-10 border rounded-md px-3 justify-center mb-4`}
@@ -413,6 +419,30 @@ export default function PatientRecord() {
           </View>
         </View>
       </ScrollView>
+      <Modal isVisible={isModalVisible} onBackdropPress={() => setIsModalVisible(false)}>
+        <View style={tw`bg-white p-5 rounded-lg items-center`}>
+          <Text style={tw`text-lg font-bold mb-4`}>{modalMessage}</Text>
+          {modalSuccess && (
+            <TouchableOpacity
+              style={tw`bg-blue-500 px-4 py-2 rounded-lg`}
+              onPress={() => {
+                setIsModalVisible(false);
+                navigation.goBack();
+              }}
+            >
+              <Text style={tw`text-white text-center`}>Xác nhận</Text>
+            </TouchableOpacity>
+          )}
+          {!modalSuccess && (
+            <TouchableOpacity
+              style={tw`bg-blue-500 px-4 py-2 rounded-lg`}
+              onPress={() => setIsModalVisible(false)}
+            >
+              <Text style={tw`text-white font-bold text-center`}>Đóng</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </Modal>
     </KeyboardAvoidingView>
   );
 }

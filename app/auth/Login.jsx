@@ -30,7 +30,7 @@ export default function Login() {
       setTimeout(() => {
         setToastVisible(false);
         router.replace({ pathname: 'screen/Home' });
-      }, 2500);
+      }, 1500);
     } else {
       setToastMessage('Thông tin đăng nhập không chính xác!');
       setToastType('error');
