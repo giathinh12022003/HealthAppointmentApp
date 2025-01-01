@@ -185,12 +185,12 @@ export default function PatientRecord() {
       if (
         key !== 'insuranceId' &&
         key !== 'note' &&
-        key !== 'dateOfBirth' &&
         (value === null || value === '')
       ) {
         setModalMessage('Vui lòng điền đầy đủ thông tin bắt buộc.');
         setModalSuccess(false);
         setIsModalVisible(true);
+        console.log(patientData);
         return;
       }
     }
@@ -207,7 +207,6 @@ export default function PatientRecord() {
       // console.error('Registration error:', error);
     }
   };
-
 
   return (
     <KeyboardAvoidingView
@@ -435,7 +434,7 @@ export default function PatientRecord() {
           )}
           {!modalSuccess && (
             <TouchableOpacity
-              style={tw`bg-blue-500 px-4 py-2 rounded-lg`}
+              style={tw`bg-gray-500 px-4 py-2 rounded-lg`}
               onPress={() => setIsModalVisible(false)}
             >
               <Text style={tw`text-white font-bold text-center`}>Đóng</Text>

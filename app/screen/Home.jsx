@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Link, router } from 'expo-router';
+import { FontAwesome, MaterialIcons, Ionicons, FontAwesome6, FontAwesome5 } from '@expo/vector-icons';
 import tw from 'tailwind-react-native-classnames';
+import Modal from 'react-native-modal';
 
 export default function Home() {
 
   const [isNavigating, setIsNavigating] = useState(false);
+  const [isChatVisible, setIsChatVisible] = useState(false);
 
   const handleNavigation = (link) => {
     if (isNavigating) {
@@ -26,29 +29,31 @@ export default function Home() {
     }, 500); // Adjust timeout if necessary
   };
 
+  const buttons = [
+    { title: "Đặt lịch khám", icon: <FontAwesome name="calendar" size={24} color="white" />, link: "screen/medical_services/MedicalServiceList" },
+    { title: "Hồ sơ khám bệnh", icon: <MaterialIcons name="assignment" size={24} color="white" />, link: "screen/patient/RecordPatientList" },
+    { title: "Danh sách bác sĩ", icon: <FontAwesome6 name="user-doctor" size={24} color="white" />, link: "screen/doctor/DoctorList" },
+    { title: "Danh sách chuyên khoa", icon: <MaterialIcons name="category" size={24} color="white" />, link: "screen/specialty/SpecialtyList" },
+    { title: "Lịch hẹn khám bệnh", icon: <FontAwesome name="calendar-check-o" size={24} color="white" />, link: "screen/appointment/AppointmentList" },
+    { title: "Danh sách dịch vụ", icon: <Ionicons name="list" size={24} color="white" />, link: "screen/servicetype/ServiceTypeList" },
+    { title: "Dịch vụ tiêm chủng", icon: <FontAwesome5 name="syringe" size={24} color="white" />, link: "screen/servicetype/VaccineList" },
+    { title: "Quy trình khám bệnh", icon: <MaterialIcons name="timeline" size={24} color="white" />, link: "/tab/procedure" },
+  ];
+
   return (
     <View style={tw`flex-1 bg-blue-50`}>
       <StatusBar style="light" />
 
       {/* Buttons Container */}
       <View style={tw`mt-20 flex-row flex-wrap justify-center`}>
-        {/* Individual Buttons */}
-        {[
-          { title: "Đặt lịch khám", link: "screen/medical_services/MedicalServiceList" },
-          { title: "Hồ sơ khám bệnh", link: "screen/patient/RecordPatientList" },
-          { title: "Tìm kiếm bác sĩ", link: "screen/doctor/DoctorList" },
-          { title: "Danh sách chuyên khoa", link: "screen/specialty/SpecialtyList" },
-          { title: "Lịch hẹn khám bệnh", link: "screen/appointment/AppointmentList" },
-          { title: "Danh sách dịch vụ", link: "screen/servicetype/ServiceTypeList" },
-          { title: "Quy trình khám bệnh", link: "/tab/procedure" },
-          { title: "Giải đáp & tư vấn", link: "/tab/faq" },
-        ].map((item, index) => (
+        {buttons.map((item, index) => (
           <TouchableOpacity
             key={index}
             style={tw`w-40 h-20 bg-blue-500 m-2 rounded-lg items-center justify-center`}
             onPress={() => handleNavigation(item.link)}
           >
-            <Text style={tw`text-white font-semibold text-center`}>
+            {item.icon}
+            <Text style={tw`text-white font-semibold text-center mt-1`}>
               {item.title}
             </Text>
           </TouchableOpacity>
@@ -69,6 +74,38 @@ export default function Home() {
           />
         </ScrollView>
       </View>
+
+      {/* Chat Icon */}
+      <TouchableOpacity
+        style={tw`absolute bottom-6 right-6 w-16 h-16 bg-blue-500 rounded-full items-center justify-center shadow-lg`}
+        onPress={() => setIsChatVisible(true)}
+      >
+        <Ionicons name="chatbubble-ellipses" size={28} color="white" />
+      </TouchableOpacity>
+
+      {/* Chat Modal */}
+      <Modal
+        visible={isChatVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setIsChatVisible(false)}
+      >
+        <View style={tw`flex-1 justify-end bg-black bg-opacity-30`}>
+          <View style={tw`bg-white p-4 rounded-t-lg`}>
+            <Text style={tw`text-lg font-bold mb-4`}>Chat với chúng tôi</Text>
+            {/* Placeholder for Chat Content */}
+            <View style={tw`h-48 bg-gray-100 rounded-lg`}>
+              <Text style={tw`text-center mt-4 text-gray-500`}>Khung chat ở đây</Text>
+            </View>
+            <TouchableOpacity
+              style={tw`mt-4 w-full bg-blue-500 rounded-lg p-3 items-center`}
+              onPress={() => setIsChatVisible(false)}
+            >
+              <Text style={tw`text-white font-bold`}>Đóng</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }

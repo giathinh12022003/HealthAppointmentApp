@@ -36,18 +36,29 @@ export default function ServiceList() {
         <View style={tw`bg-white p-4 my-2 rounded-lg shadow`}>
             <Text style={tw`text-lg font-bold mb-2`}>{item.name}</Text>
             <Text>{`Giá dịch vụ: ${item.unitPrice} VND`}</Text>
-            <Text>{`Trạng thái: ${item.status}`}</Text>
-            <TouchableOpacity
-                style={tw`mt-4 bg-blue-500 py-2 px-4 rounded-lg`}
-                onPress={() =>
-                    router.push({
-                        pathname: 'screen/servicetype/DoctorServiceType',
-                        params: { serviceId: item.id, serviceName: item.name },
-                    })
-                }
-            >
-                <Text style={tw`text-center text-white font-bold text-base`}>Chọn dịch vụ</Text>
-            </TouchableOpacity>
+
+            <View style={tw`flex-row justify-between mt-4`}>
+                <TouchableOpacity
+                    style={tw`bg-gray-300 py-2 px-4 rounded-lg flex-1 mr-2`}
+                    onPress={() => {
+                        // Sự kiện onPress cho nút "Xem chi tiết"
+                    }}
+                >
+                    <Text style={tw`text-center text-black font-bold text-base`}>Xem chi tiết</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={tw`bg-blue-500 py-2 px-4 rounded-lg flex-1`}
+                    onPress={() =>
+                        router.push({
+                            pathname: 'screen/servicetype/DoctorServiceType',
+                            params: { serviceId: item.id, serviceName: item.name },
+                        })
+                    }
+                >
+                    <Text style={tw`text-center text-white font-bold text-base`}>Chọn dịch vụ</Text>
+                </TouchableOpacity>
+            </View>
+
         </View>
     );
 

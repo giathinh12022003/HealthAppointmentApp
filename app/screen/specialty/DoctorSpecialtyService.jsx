@@ -86,7 +86,7 @@ export default function DoctorSpecialtyService() {
                             })
                         }
                     >
-                        <Text style={tw`text-center text-white font-bold text-base`}>Đặt lịch ngay</Text>
+                        <Text style={tw`text-center text-white font-bold text-base`}>Chọn bác sĩ</Text>
                     </TouchableOpacity>
                 </View>
             </View>

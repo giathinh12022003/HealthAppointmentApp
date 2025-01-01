@@ -225,7 +225,7 @@ const RecordPatientDetails = () => {
 
             Alert.alert(
                 "Lỗi",
-                `Vui lòng điền đầy đủ tất cả các thông tin trong biểu mẫu.\nThiếu: ${missingFields.join(", ")}.`
+                `Vui lòng điền đầy đủ tất cả các thông tin trong biểu mẫu.`
             );
             return;
         }
