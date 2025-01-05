@@ -336,6 +336,7 @@ export default function PatientRecord() {
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Tỉnh thành <Text style={tw`text-sm text-red-700`}>(*)</Text></Text>
           <Picker
             mode="dropdown"
+            placeholder=''
             selectedValue={provinceCode}
             onValueChange={handleProvinceChange}
             style={tw`w-full mb-4`}
@@ -349,6 +350,7 @@ export default function PatientRecord() {
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Thành phố/huyện<Text style={tw`text-sm text-red-700`}>(*)</Text></Text>
           <Picker
             mode="dropdown"
+            placeholder=''
             selectedValue={districtCode}
             onValueChange={handleDistrictChange}
             style={tw`w-full mb-4`}
@@ -363,6 +365,7 @@ export default function PatientRecord() {
           <Text style={tw`text-sm font-bold mb-1 text-left w-full`}>Phường/xã<Text style={tw`text-sm text-red-700`}>(*)</Text></Text>
           <Picker
             mode="dropdown"
+            placeholder=''
             selectedValue={wardCode}
             onValueChange={handleWardChange}
             style={tw`w-full mb-4`}

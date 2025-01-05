@@ -249,7 +249,7 @@ export default function AppointmentList() {
                 <>
                     <Text style={tw`text-sm`}>Trạng thái:</Text>
                     <View style={tw`flex-row justify-around my-2`}>
-                        {['all', 'Chờ phê duyệt', 'Đã xác nhận', 'Đã có kết quả'].map((status) => (
+                        {['all', 'Chờ phê duyệt', 'Đã xác nhận', 'Đã khám'].map((status) => (
                             <TouchableOpacity
                                 key={status}
                                 onPress={() => setFilterStatus(status)}

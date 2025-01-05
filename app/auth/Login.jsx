@@ -19,7 +19,8 @@ export default function Login() {
   const [toastType, setToastType] = useState('success');
 
   const handleLogin = async () => {
-    const response = await loginUser(userName, password);
+    const normalizedUserName = userName.trim().toLowerCase();
+    const response = await loginUser(normalizedUserName, password);
 
     if (response) {
       await setToken('accessToken', response.token);

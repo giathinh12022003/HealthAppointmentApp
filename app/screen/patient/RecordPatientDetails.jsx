@@ -428,6 +428,7 @@ const RecordPatientDetails = () => {
                     {editable ? (
                         <Picker
                             mode='dropdown'
+                            placeholder={formData.province}
                             selectedValue={formData.province}
                             onValueChange={handleProvinceChange}
                             style={tw`h-14 border border-gray-300 rounded-md mb-4`}
@@ -447,6 +448,7 @@ const RecordPatientDetails = () => {
                     {editable ? (
                         <Picker
                             mode='dropdown'
+                            placeholder={formData.district}
                             selectedValue={formData.district}
                             onValueChange={handleDistrictChange}
                             style={tw`h-14 border border-gray-300 rounded-md mb-4`}
@@ -466,6 +468,7 @@ const RecordPatientDetails = () => {
                     {editable ? (
                         <Picker
                             mode='dropdown'
+                            placeholder={formData.ward}
                             selectedValue={formData.ward}
                             onValueChange={handleWardChange}
                             style={tw`h-14 border border-gray-300 rounded-md mb-4`}
