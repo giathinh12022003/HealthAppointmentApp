@@ -43,6 +43,10 @@ export default function AppointmentSummary() {
     return `${day}/${month}/${year}`;
   };
 
+  const formatCurrency = (value) => {
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  };
+
   const handleConfirmAppointment = async () => {
     const appointmentData = {
       date: day,
@@ -123,7 +127,7 @@ export default function AppointmentSummary() {
             <Text style={tw`text-gray-700 mb-2 text-base`}>{room}</Text>
 
             <Text style={tw`text-lg font-bold mb-0`}>Phí dịch vụ:</Text>
-            <Text style={tw`text-gray-700 text-base`}>{unitPrice.toLocaleString('vi-VN')} VNĐ</Text>
+            <Text style={tw`text-gray-700 text-base`}>{formatCurrency(unitPrice)} VNĐ</Text>
           </View>
 
           {patient && (
