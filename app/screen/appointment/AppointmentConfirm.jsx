@@ -77,7 +77,7 @@ export default function AppointmentConfirm() {
         <Text style={tw`text-gray-700 mb-4 text-base`}>{room}</Text>
 
         <Text style={tw`text-lg font-bold mb-0`}>Phí khám:</Text>
-        <Text style={tw`text-gray-700 mb-4 text-base`}>{unitPrice}</Text>
+        <Text style={tw`text-gray-700 mb-4 text-base`}>{unitPrice} VNĐ</Text>
 
         <Text style={tw`text-lg font-bold mb-0`}>Trạng thái:</Text>
         <Text style={tw`text-gray-700 text-base`}>Chờ phê duyệt</Text>

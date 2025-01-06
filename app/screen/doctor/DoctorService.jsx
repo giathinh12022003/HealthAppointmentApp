@@ -48,7 +48,7 @@ export default function DoctorService() {
   const renderService = ({ item }) => (
     <View style={tw`bg-white p-4 my-2 rounded-lg shadow`}>
       <Text style={tw`text-lg font-bold mb-2`}>{item.service.name}</Text>
-      <Text>{`Giá dịch vụ: ${item.unitPrice} VND`}</Text>
+      <Text>{`Giá dịch vụ: ${item.unitPrice} VNĐ`}</Text>
 
       <View style={tw`flex-row justify-between mt-4`}>
         <TouchableOpacity

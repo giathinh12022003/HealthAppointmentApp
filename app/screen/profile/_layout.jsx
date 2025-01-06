@@ -10,7 +10,7 @@ export default function _layout() {
             <Stack.Screen
                 name='UserProfile'
                 options={{
-                    title: 'Register',
+                    title: 'Thông tin tài khoản',
                     headerBackVisible: true,
                     headerStyle: {
                         backgroundColor: '#2563eb',

@@ -25,5 +25,6 @@ export default [
     { name: "Lập trình viên" },
     { name: "Tài xế" },
     { name: "Nhân viên bán hàng" },
-    { name: "Phiên dịch viên" }
+    { name: "Phiên dịch viên" },
+    { name: "Khác" },
 ];

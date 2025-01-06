@@ -27,6 +27,11 @@ export default function _layout() {
         }
     };
 
+    const gotoProfile = async () => {
+        closeMenu();
+        router.push('screen/profile/UserProfile');
+    };
+
     return (
         <PaperProvider>
             <Stack>
@@ -60,7 +65,7 @@ export default function _layout() {
                                         left:240
                                     }}
                                 >
-                                    <Menu.Item onPress={() => console.log('Profile clicked')} title="Hồ sơ" />
+                                    <Menu.Item onPress={gotoProfile} title="Tài khoản" />
                                     <Menu.Item onPress={() => console.log('Setting clicked')} title="Tùy chỉnh" />
                                     <Menu.Item onPress={handleLogOut} title="Đăng xuất" />
                                 </Menu>
