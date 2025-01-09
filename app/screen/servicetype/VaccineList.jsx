@@ -31,7 +31,6 @@ export default function VaccineList() {
     <View style={tw`bg-white p-4 my-2 rounded-lg shadow`}>
       <Text style={tw`text-lg font-bold mb-2`}>{item.name}</Text>
       <Text>{`Giá dịch vụ: ${item.unitPrice} VND`}</Text>
-      <Text>{`Trạng thái: ${item.status}`}</Text>
 
       <View style={tw`flex-row justify-between mt-4`}>
         <TouchableOpacity

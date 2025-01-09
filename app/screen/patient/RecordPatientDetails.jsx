@@ -11,6 +11,7 @@ import { updatePatientRecord } from '../../service/patient/UpdatePatientRecord';
 import nationsData from '../../data/nations';
 import occupationsData from '../../data/occupation';
 import relationshipsData from '../../data/relationship';
+import Modal from 'react-native-modal';
 
 const RecordPatientDetails = () => {
     const { patientId } = useLocalSearchParams();
@@ -49,6 +50,9 @@ const RecordPatientDetails = () => {
     const [wardName, setWardName] = useState('');
 
     const [showDatePicker, setShowDatePicker] = useState(false);
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
 
     useEffect(() => {
         const loadProvinces = async () => {
@@ -221,22 +225,24 @@ const RecordPatientDetails = () => {
             if (!formData.district) missingFields.push("Thành phố/Quận/Huyện");
             if (!formData.ward) missingFields.push("Phường/Xã");
             if (!formData.phoneNumber) missingFields.push("Số điện thoại");
+            if (!formData.identificationCode) missingFields.push("Số CCCD/Hộ chiếu");
             if (!formData.email) missingFields.push("Email");
 
-            Alert.alert(
-                "Lỗi",
-                `Vui lòng điền đầy đủ tất cả các thông tin trong biểu mẫu.`
-            );
+            setModalMessage(`Vui lòng điền đầy đủ thông tin các trường: ${missingFields.join(", ")}.`);
+            setModalVisible(true);
             return;
         }
 
         try {
             console.log("Form Data:", patientDataSave);
             await updatePatientRecord(patientId, patientDataSave);
-            Alert.alert("Thành công", "Cập nhật hồ sơ thành công!");
+            setModalMessage("Cập nhật hồ sơ thành công!");
+            setModalVisible(true);
             setEditable(false);
         } catch (error) {
             Alert.alert("Lỗi", "Cập nhật hồ sơ thất bại.");
+            setModalMessage("Cập nhật hồ sơ thất bại.");
+            setModalVisible(true);
             console.error("Error updating record:", error);
         }
     };
@@ -551,6 +557,21 @@ const RecordPatientDetails = () => {
                     <Text style={tw`text-center text-white font-bold`}>Lưu</Text>
                 </TouchableOpacity>
             </View>
+            <Modal
+                isVisible={modalVisible}
+                onBackdropPress={() => setModalVisible(false)}
+                contentContainerStyle={tw`bg-white mx-8 py-6 px-4 rounded-lg shadow-md`}
+            >
+                <View style={tw`bg-white p-5 rounded-lg items-center`}>
+                    <Text style={tw`text-lg font-semibold text-center mb-4`}>{modalMessage}</Text>
+                    <TouchableOpacity
+                        style={tw`bg-blue-500 px-4 py-2 rounded-lg`}
+                        onPress={() => setModalVisible(false)}
+                    >
+                        <Text style={tw`text-center text-white font-bold`}>Đóng</Text>
+                    </TouchableOpacity>
+                </View>
+            </Modal>
         </KeyboardAvoidingView >
     );
 };

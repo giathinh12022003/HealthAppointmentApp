@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View, TextInput, ToastAndroid, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from 'react-native';
 import React from 'react'
-import { useNavigation, router, Link } from 'expo-router'
+import { useNavigation, router } from 'expo-router'
 import { useState } from 'react';
 import tw from 'tailwind-react-native-classnames';
 import { setToken } from '../service/Token';
@@ -45,8 +45,16 @@ export default function Login() {
   };
 
   return (
-    <View style={tw`flex-1 bg-white items-center justify-center p-5`}>
+    <View style={tw`flex-1 bg-white items-center justify-center p-5 pt-0 pb-20`}>
       <StatusBar style="light" />
+
+      {/* Thêm hình ảnh phía trên */}
+      <Image
+        source={require('../../assets/logo/logophongkham.png')} // Thay 'YOUR_IMAGE_URL' bằng đường dẫn hình ảnh của bạn
+        style={tw`w-32 h-32 mb-6`} // Kích thước hình vuông 96px x 96px (24 x 24 Tailwind unit)
+        resizeMode="contain" // Điều chỉnh hình ảnh để giữ nguyên tỉ lệ
+      />
+
       <Text style={tw`text-lg font-bold mb-1 text-left w-full`}>Email hoặc Số điện thoại:</Text>
       <TextInput
         style={tw`w-full h-12 border border-gray-300 rounded-md px-3 mb-4 text-lg`}

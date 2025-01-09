@@ -11,7 +11,7 @@ export default function _layout() {
         name='index'
         options={{
           gestureEnabled: false,
-          title: 'Ứng dụng đặt lịch khám trực tuyến',
+          title: 'Phòng Khám Đa Khoa Gia Định',
           headerStyle: {
             backgroundColor: '#2563eb',
           },

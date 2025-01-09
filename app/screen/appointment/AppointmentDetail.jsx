@@ -157,7 +157,7 @@ export default function AppointmentDetail() {
 
       {/* Check Results */}
       <View style={tw`bg-white p-6 m-4 rounded-lg shadow-lg`}>
-        <Text style={tw`text-xl font-bold text-blue-600 mb-4 text-center`}>Kết quả khám</Text>
+        <Text style={tw`text-xl font-bold text-blue-600 mb-4 text-center`}>Kết quả và đơn thuốc</Text>
         <View style={tw`border-b border-gray-300 mb-2`} />
         {checkResultResponseList?.length > 0 ? (
           checkResultResponseList.map((result) => (

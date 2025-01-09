@@ -180,21 +180,52 @@ export default function PatientRecord() {
       note,
     };
 
-    // Kiểm tra các trường ngoại trừ insuranceId và note
-    for (const [key, value] of Object.entries(patientData)) {
-      if (
-        key !== 'insuranceId' &&
-        key !== 'note' &&
-        (value === null || value === '')
-      ) {
-        setModalMessage('Vui lòng điền đầy đủ thông tin bắt buộc.');
-        setModalSuccess(false);
-        setIsModalVisible(true);
-        console.log(patientData);
-        return;
-      }
+    // Danh sách các trường bắt buộc (ngoại trừ insuranceId và note)
+    const requiredFields = Object.keys(patientData).filter(
+      (key) => key !== 'insuranceId' && key !== 'note'
+    );
+
+    // Mảng chứa các trường còn thiếu
+    const missingFields = requiredFields.filter((key) => {
+      const value = patientData[key];
+      return value === null || value === '';
+    });
+
+    // Nếu có trường còn thiếu, hiển thị modal thông báo
+    if (missingFields.length > 0) {
+      const missingFieldNames = missingFields
+        .map((field) => {
+          // Tùy chỉnh tên trường hiển thị
+          const fieldMapping = {
+            fullName: 'Họ và tên',
+            dateOfBirth: 'Ngày sinh',
+            gender: 'Giới tính',
+            identificationCode: 'Số căn cước',
+            phoneNumber: 'Số điện thoại',
+            nation: 'Dân tộc',
+            occupation: 'Nghề nghiệp',
+            email: 'Email',
+            country: 'Quốc gia',
+            province: 'Tỉnh thành',
+            district: 'Thành phố/huyện',
+            ward: 'Phường/xã',
+            address: 'Địa chỉ',
+            relationship: 'Quan hệ với bệnh nhân',
+          };
+          return fieldMapping[field] || field;
+        })
+        .join(', ');
+
+      setModalMessage(
+        `Vui lòng điền đầy đủ thông tin bắt buộc: ${missingFieldNames}.`
+      );
+      setModalSuccess(false);
+      setIsModalVisible(true);
+      console.log(patientData);
+      return;
     }
 
+    // Tiến hành tạo hồ sơ nếu tất cả các trường đều hợp lệ
     try {
       await createPatientRecord(patientData);
       setModalMessage('Đăng ký thông tin bệnh nhân thành công!');
@@ -207,6 +238,7 @@ export default function PatientRecord() {
       // console.error('Registration error:', error);
     }
   };
+
 
   return (
     <KeyboardAvoidingView
@@ -432,7 +464,7 @@ export default function PatientRecord() {
                 navigation.goBack();
               }}
             >
-              <Text style={tw`text-white text-center`}>Xác nhận</Text>
+              <Text style={tw`text-white font-bold text-center`}>Xác nhận</Text>
             </TouchableOpacity>
           )}
           {!modalSuccess && (
