@@ -5,12 +5,51 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_IP_ADDRESS2": "http://192.168.1.4:8080",
+        "EXPO_PUBLIC_IP_ADDRESS": "https://immune-remotely-krill.ngrok-free.app",
+        "EXPO_PUBLIC_IP_ADDRESS3": "https://magical-correctly-pangolin.ngrok-free.app",
+        "EXPO_PUBLIC_API_REGISTER": "/api/v1/identity/customer/create",
+        "EXPO_PUBLIC_API_LOGIN": "/api/v1/identity/auth/customer/log-in",
+        "EXPO_PUBLIC_API_LOGOUT": "/api/v1/identity/auth/log-out",
+        "EXPO_PUBLIC_API_GET_CUSTOMER_INFO": "/api/v1/identity/customer/get-info",
+        "EXPO_PUBLIC_API_UPDATE_CUSTOMER_INFO": "/api/v1/identity/customer/update",
+        "EXPO_PUBLIC_API_GET_DOCTOR_DATA": "/api/v1/doctor/public/get-all",
+        "EXPO_PUBLIC_API_GET_DOCTOR_SERVICE": "/api/v1/medical/doctor-service/public/doctor-id",
+        "EXPO_PUBLIC_API_GET_DOCTOR_SERVICE_DAY": "/api/v1/medical/service-time-frame/public/available-days",
+        "EXPO_PUBLIC_API_GET_DOCTOR_SERVICE_TIME_FRAME": "/api/v1/medical/service-time-frame/public/get-by-doctor-service-and-day",
+        "EXPO_PUBLIC_API_GET_SPECIALTY": "/api/v1/doctor/specialty/public/get-all",
+        "EXPO_PUBLIC_API_GET_SERVICE_SPECIALTY": "/api/v1/medical/service/public/specialty",
+        "EXPO_PUBLIC_API_GET_DOCTOR_SERVICE_ID": "/api/v1/medical/doctor-service/public/get-doctor-services-by-service-id",
+        "EXPO_PUBLIC_API_GET_ALL_SERVICE_TYPE": "/api/v1/medical/service-type/public/get-all",
+        "EXPO_PUBLIC_API_GET_SERVICE_BY_SERVICE_TYPE_ID": "/api/v1/medical/service/public/service-type/",
+        "EXPO_PUBLIC_API_CREATE_APPOINTMENT": "/api/v1/appointment/register",
+        "EXPO_PUBLIC_API_GET_ALL_APPOINTMENT": "/api/v1/appointment/customer/get-all",
+        "EXPO_PUBLIC_API_GET_APPOINTMENT_BY_ID": "/api/v1/appointment/customer/id",
+        "EXPO_PUBLIC_API_GET_APPOINTMENT_BY_STATUS": "/api/v1/appointment/customer/status",
+        "EXPO_PUBLIC_API_CREATE_PATIENT": "/api/v1/patient/create-patient",
+        "EXPO_PUBLIC_API_GET_ALL_PATIENT": "/api/v1/patient/customer/patient-details",
+        "EXPO_PUBLIC_API_GET_PATIENT_ID": "/api/v1/patient/id",
+        "EXPO_PUBLIC_API_UPDATE_PATIENT": "/api/v1/patient/update-patient",
+        "EXPO_PUBLIC_API_DELETE_PATIENT": "/api/v1/patient/delete-patient",
+        "EXPO_PUBLIC_API_GET_PATIENT_NON_EXISTS_APPOINTMENT": "/api/v1/patient/customer/unbooked-patient-details",
+        "EXPO_PUBLIC_API_GET_PROVINCE": "/api/v1/patient/vietnam-units/province",
+        "EXPO_PUBLIC_API_GET_DISTRICT_BY_PROVINCE": "/api/v1/patient/vietnam-units/district/province-code",
+        "EXPO_PUBLIC_API_GET_WARD_BY_DISTRICT": "/api/v1/patient/vietnam-units/ward/district-code"
+      }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_IP_ADDRESS": "https://preview-url.ngrok-free.app"
+      }
     },
-    "production": {}
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_IP_ADDRESS": "https://production-url.ngrok-free.app"
+      }
+    }
   },
   "submit": {
     "production": {}
