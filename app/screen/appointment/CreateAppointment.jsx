@@ -5,6 +5,7 @@ import tw from 'tailwind-react-native-classnames';
 import { WebView } from 'react-native-webview';
 import { createAppointment } from '../../service/appointment/CreateAppointment';
 import { getPatientRecordById } from '../../service/patient/GetRecordPatient';
+import Modal from 'react-native-modal';
 
 export default function AppointmentSummary() {
   const [patient, setPatient] = useState(null);
@@ -12,6 +13,9 @@ export default function AppointmentSummary() {
   const [webViewVisible, setWebViewVisible] = useState(false);
   const [paymentUrl, setPaymentUrl] = useState('');
   const [orderNumber, setOrderNumber] = useState('');
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   const {
     serviceName,
@@ -60,7 +64,8 @@ export default function AppointmentSummary() {
       setOrderNumber(data.paymentRequest.orderNumber);
       setWebViewVisible(true);
     } catch (error) {
-      Alert.alert('Lỗi', 'Đã xảy ra lỗi khi tạo lịch hẹn. Vui lòng thử lại.');
+      setModalMessage('Đã xảy ra lỗi khi tạo lịch hẹn. Vui lòng thử lại.');
+      setModalVisible(true);
     }
   };
 
@@ -83,11 +88,8 @@ export default function AppointmentSummary() {
 
   const handleCloseWebView = () => {
     setWebViewVisible(false);
-    Alert.alert(
-      'Thông báo',
-      'Bạn đã hủy thanh toán. Nếu muốn thanh toán lại, vui lòng xác nhận đặt lịch.',
-      [{ text: 'OK', onPress: () => { } }]
-    );
+    setModalMessage('Bạn đã hủy thanh toán. Nếu muốn thanh toán lại, vui lòng xác nhận đặt lịch.');
+    setModalVisible(true);
   };
 
   return (
@@ -180,7 +182,7 @@ export default function AppointmentSummary() {
               style={tw`bg-blue-600 py-4 rounded-lg shadow mb-2`}
               onPress={handleConfirmAppointment}
             >
-              <Text style={tw`text-center text-white font-bold text-lg`}>Xác nhận đặt lịch</Text>
+              <Text style={tw`text-center text-white font-bold text-lg`}>Xác nhận thanh toán</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -192,6 +194,19 @@ export default function AppointmentSummary() {
           </View>
         </ScrollView>
       )}
+
+      <Modal isVisible={modalVisible} onBackdropPress={() => setModalVisible(false)}>
+        <View style={tw`bg-white p-5 rounded-lg`}>
+          <Text style={tw`text-lg font-bold mb-2 text-center`}>Thông báo</Text>
+          <Text style={tw`text-gray-700 mb-4 text-center`}>{modalMessage}</Text>
+          <TouchableOpacity
+            style={tw`bg-blue-600 py-3 rounded-lg`}
+            onPress={() => setModalVisible(false)}
+          >
+            <Text style={tw`text-center text-white font-bold`}>OK</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 }

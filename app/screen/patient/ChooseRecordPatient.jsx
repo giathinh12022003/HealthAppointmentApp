@@ -182,6 +182,10 @@ export default function ChooseRecordPatient() {
       </TouchableOpacity>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
+      ) : recordPatients.length === 0 ? (
+        <Text style={tw`text-center text-blue-700 text-base mt-4`}>
+          Không có hồ sơ khả dụng cho khung giờ này, vui lòng tạo hồ sơ mới hoặc chọn khung giờ khám khác.
+        </Text>
       ) : (
         <>
           <FlatList
