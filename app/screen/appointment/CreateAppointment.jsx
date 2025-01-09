@@ -203,7 +203,7 @@ export default function AppointmentSummary() {
             style={tw`bg-blue-600 py-3 rounded-lg`}
             onPress={() => setModalVisible(false)}
           >
-            <Text style={tw`text-center text-white font-bold`}>OK</Text>
+            <Text style={tw`text-center text-white font-bold`}>Xác nhận</Text>
           </TouchableOpacity>
         </View>
       </Modal>
