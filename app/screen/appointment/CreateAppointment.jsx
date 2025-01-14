@@ -88,7 +88,7 @@ export default function AppointmentSummary() {
 
   const handleCloseWebView = () => {
     setWebViewVisible(false);
-    setModalMessage('Bạn đã hủy thanh toán. Nếu muốn thanh toán lại, vui lòng xác nhận đặt lịch.');
+    setModalMessage('Bạn đã hủy thanh toán. Nếu muốn thanh toán lại, vui lòng xác nhận thanh toán.');
     setModalVisible(true);
   };
 
