@@ -262,7 +262,7 @@ export default function AppointmentList() {
                         ))}
                     </View>
 
-                    <Text style={tw`text-sm`}>Giai đoạn:</Text>
+                    <Text style={tw`text-sm`}>Thời gian:</Text>
                     <View style={tw`flex-row justify-between items-center mb-4`}>
                         <Text style={tw`text-sm`}>Từ ngày:</Text>
                         <TouchableOpacity

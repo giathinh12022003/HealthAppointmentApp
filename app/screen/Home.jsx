@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Link, router } from 'expo-router';
-import { FontAwesome, MaterialIcons, Ionicons, FontAwesome6, FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome, MaterialIcons, Ionicons, FontAwesome6, FontAwesome5, Entypo } from '@expo/vector-icons';
 import tw from 'tailwind-react-native-classnames';
 import Modal from 'react-native-modal';
 
@@ -37,7 +37,7 @@ export default function Home() {
     { title: "Lịch hẹn khám bệnh", icon: <FontAwesome name="calendar-check-o" size={24} color="white" />, link: "screen/appointment/AppointmentList" },
     { title: "Danh sách dịch vụ", icon: <Ionicons name="list" size={24} color="white" />, link: "screen/servicetype/ServiceTypeList" },
     { title: "Dịch vụ tiêm chủng", icon: <FontAwesome5 name="syringe" size={24} color="white" />, link: "screen/servicetype/VaccineList" },
-    { title: "Quy trình khám bệnh", icon: <MaterialIcons name="timeline" size={24} color="white" />, link: "/tab/procedure" },
+    { title: "Thông báo", icon: <Entypo name="notification" size={24} color="white" />, link: "/tab/procedure" },
   ];
 
   return (
@@ -82,30 +82,6 @@ export default function Home() {
       >
         <Ionicons name="chatbubble-ellipses" size={28} color="white" />
       </TouchableOpacity>
-
-      {/* Chat Modal */}
-      <Modal
-        visible={isChatVisible}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setIsChatVisible(false)}
-      >
-        <View style={tw`flex-1 justify-end bg-black bg-opacity-30`}>
-          <View style={tw`bg-white p-4 rounded-t-lg`}>
-            <Text style={tw`text-lg font-bold mb-4`}>Chat với chúng tôi</Text>
-            {/* Placeholder for Chat Content */}
-            <View style={tw`h-48 bg-gray-100 rounded-lg`}>
-              <Text style={tw`text-center mt-4 text-gray-500`}>Khung chat ở đây</Text>
-            </View>
-            <TouchableOpacity
-              style={tw`mt-4 w-full bg-blue-500 rounded-lg p-3 items-center`}
-              onPress={() => setIsChatVisible(false)}
-            >
-              <Text style={tw`text-white font-bold`}>Đóng</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 }

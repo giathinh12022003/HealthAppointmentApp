@@ -1,7 +1,7 @@
 {
   "expo": {
     "newArchEnabled": true,
-    "name": "HealthAppointmentApp",
+    "name": "Phòng Khám Đa Khoa Gia Định",
     "slug": "HealthAppointmentApp",
     "version": "1.0.0",
     "orientation": "portrait",

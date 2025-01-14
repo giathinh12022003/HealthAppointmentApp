@@ -39,7 +39,7 @@ export default function _layout() {
                     name='Home'
                     options={{
                         gestureEnabled:false,
-                        title: 'Trang chủ',
+                        title: 'Phòng Khám Đa Khoa Gia Định',
                         headerBackVisible: false,
                         headerStyle: {
                             backgroundColor: '#2563eb',
