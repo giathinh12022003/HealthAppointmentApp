@@ -47,12 +47,10 @@ export default function Login() {
   return (
     <View style={tw`flex-1 bg-white items-center justify-center p-5 pt-0 pb-20`}>
       <StatusBar style="light" />
-
-      {/* Thêm hình ảnh phía trên */}
       <Image
-        source={require('../../assets/logo/logophongkham.png')} // Thay 'YOUR_IMAGE_URL' bằng đường dẫn hình ảnh của bạn
-        style={tw`w-32 h-32 mb-6`} // Kích thước hình vuông 96px x 96px (24 x 24 Tailwind unit)
-        resizeMode="contain" // Điều chỉnh hình ảnh để giữ nguyên tỉ lệ
+        source={require('../../assets/logo/logophongkham.png')}
+        style={tw`w-32 h-32 mb-6`}
+        resizeMode="contain"
       />
 
       <Text style={tw`text-lg font-bold mb-1 text-left w-full`}>Email hoặc Số điện thoại:</Text>
